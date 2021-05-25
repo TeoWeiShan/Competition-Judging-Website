@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+<html>
+<head>
+    <!-- Use Unicode character encoding - multi-language compatibity -->
+    <meta charset="utf-8">
+    <!-- Set the initial view zooming scale for mobile device -->
+    <meta name="viewport" content="width = device-width,
+ initial-scale = 1" />
+    <title>Login</title>
+    <!-- Reference to customized styling for this website -->
+    <link rel="stylesheet" type="text/css" href="~/css/Site.css">
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <!-- 1st row -->
+        <div class="flex-container">
+
+            <!-- Flexbox for staff login -->
+            <div>
+                <form method="post" action="~/Home/Login">
+                    <fieldset class="loginFieldset">
+                        <legend>Login</legend>
+                        <label for="txtLoginID">Login ID:</label>
+                        <input type="email" name="txtLoginID"
+                               id="txtLoginID" required /><br />
+                        <label for="txtPassword">Password:</label>
+                        <input type="password" name="txtPassword"
+                               id="txtPassword" style="width:100px"
+                               required />
+                        <input type="submit" id="btnStaffLogin"
+                               class="myButton" value="Login" />
+                        <br />
+                        <span style="color:red;">@TempData["Message"]</span>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

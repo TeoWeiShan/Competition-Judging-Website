@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,9 +24,57 @@ namespace WEB2021Apr_P04_T4.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult About()
         {
             return View();
+        }
+
+        public IActionResult Login()
+        {
+            return View();
+
+        }
+
+        [HttpPost]
+        public ActionResult Login(IFormCollection formData)
+        {
+            // Read inputs from textboxes
+            // Email address converted to lowercase
+            string loginID = formData["txtLoginID"].ToString().ToLower();
+            string password = formData["txtPassword"].ToString();
+            if (loginID == "admin1@lcu.edu.sg" && password == "p@55Admin")
+            {
+                // Store Login ID in session with the key “LoginID”
+                HttpContext.Session.SetString("LoginID", loginID);
+                // Store user role “Staff” as a string in session with the key “Role” 
+                HttpContext.Session.SetString("Role", "Admin");
+                return RedirectToAction("AdminMain");
+            }
+            else
+            {
+                // Store an error message in TempData for display at the index view
+                TempData["Message"] = "Invalid Login Credentials!";
+
+                // Redirect user back to the index view through an action
+                return RedirectToAction("Login");
+            }
+        }
+
+        public ActionResult AdminMain()
+        {
+            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Admin"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
+        }
+
+        public ActionResult LogOut()
+        {
+            // Clear all key-values pairs stored in session state
+            HttpContext.Session.Clear();
+            // Call the Index action of Home controller
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
