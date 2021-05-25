@@ -13,6 +13,10 @@
         {
             @await Html.PartialAsync("_AdminMenu.cshtml")
         }
+        @if (Context.Session.GetString("Role") == "Judge")
+        {
+            @await Html.PartialAsync("_JudgeMenu.cshtml")
+        }
         else
         {
             @await Html.PartialAsync("_MainMenu.cshtml")

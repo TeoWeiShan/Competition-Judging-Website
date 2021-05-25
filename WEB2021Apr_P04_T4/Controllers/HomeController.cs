@@ -50,6 +50,14 @@ namespace WEB2021Apr_P04_T4.Controllers
                 HttpContext.Session.SetString("Role", "Admin");
                 return RedirectToAction("AdminMain");
             }
+            else if (loginID == "abc1@lcu.edu.sg" && password == "p@55Judge")
+            {
+                // Store Login ID in session with the key “LoginID”
+                HttpContext.Session.SetString("LoginID", loginID);
+                // Store user role “Judge” as a string in session with the key “Role” 
+                HttpContext.Session.SetString("Role", "Judge");
+                return RedirectToAction("JudgeMain");
+            }
             else
             {
                 // Store an error message in TempData for display at the index view
@@ -69,6 +77,14 @@ namespace WEB2021Apr_P04_T4.Controllers
             return View();
         }
 
+        public ActionResult JudgeMain()
+        {
+            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Judge"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
+        }
         public ActionResult LogOut()
         {
             // Clear all key-values pairs stored in session state
