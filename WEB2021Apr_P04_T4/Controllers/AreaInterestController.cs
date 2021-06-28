@@ -16,8 +16,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         // GET: AreaInterestController
         public ActionResult Index()
         {
-            if ((HttpContext.Session.GetString("Role") == null) ||
- (HttpContext.Session.GetString("Role") != "Admin"))
+            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Admin"))
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -86,24 +85,35 @@ namespace WEB2021Apr_P04_T4.Controllers
         }
 
         // GET: AreaInterestController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id)
         {
-            return View();
+            // Stop accessing the action if not logged in or account not in the "Admin" role
+            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Admin"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if (id == null)
+            {
+                //Return to listing page, not allowed to edit
+                return RedirectToAction("Index");
+            }
+            AreaInterest areaInterest = areaInterestContext.GetDetails(id.Value);
+            if (areaInterest == null)
+            {
+                //Return to listing page, not allowed to edit
+                return RedirectToAction("Index");
+            }
+            return View(areaInterest);
         }
 
         // POST: AreaInterestController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(AreaInterest areaInterest)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            // Delete the interest record from database
+            areaInterestContext.Delete(areaInterest.AreaInterestID);
+            return RedirectToAction("Index");
         }
     }
 }
