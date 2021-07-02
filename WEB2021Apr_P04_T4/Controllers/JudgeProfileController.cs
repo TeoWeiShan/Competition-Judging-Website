@@ -15,7 +15,8 @@ namespace WEB2021Apr_P04_T4.Controllers
         // GET: JudgeProfileController
         public ActionResult Index()
         {
-            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Admin"))
+            if ((HttpContext.Session.GetString("Role") == null) ||
+                (HttpContext.Session.GetString("Role") != "Judge"))
             {
                 return RedirectToAction("Index", "Home");
             }

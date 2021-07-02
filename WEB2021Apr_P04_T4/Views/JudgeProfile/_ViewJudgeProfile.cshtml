@@ -1,0 +1,42 @@
+﻿@model IEnumerable<WEB2021Apr_P04_T4.Models.JudgeProfile>
+
+@if (Model.ToList().Count > 0)
+{
+    <div class="table-responsive">
+        <table id="viewStaff" class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Judge ID</th>
+                    <th>Name</th>
+                    <th>Area of Interest</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>@item.JudgeID.ToString()</td>
+                    <td>@item.JudgeName</td>
+                    <td>@item.AreaOfInterest</td>
+                    <td>@item.JudgeEmail</td>
+                    <td>@item.JudgePassword</td>
+                    <td>
+                        <a asp-action="Edit" asp-controller="AreaInterest"
+                           asp-route-id="@item.JudgeID">Edit</a> |
+                        <a asp-action="Details" asp-controller="AreaInterest"
+                           asp-route-id="@item.JudgeID">Details</a> |
+                        <a asp-action="Delete" asp-controller="AreaInterest"
+                           asp-route-id="@item.JudgeID">Delete</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <span style="color:red">No record found!</span>
+}
