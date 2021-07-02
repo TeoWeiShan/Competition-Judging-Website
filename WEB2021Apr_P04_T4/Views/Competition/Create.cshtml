@@ -1,0 +1,51 @@
+﻿@model WEB2021Apr_P04_T4.Models.Competition
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h4 class="PageTitle">Create Competition</h4>
+<hr />
+
+
+<form asp-action="Create">
+    <fieldset class="FormContent">
+        <div class="form-group row">
+            <label asp-for="CompetitionName"
+                   class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9 col-md-5">
+                <input asp-for="CompetitionName" class="form-control" />
+                <span asp-validation-for="CompetitionName"
+                      class="text-danger"></span>
+            </div>
+        </div>
+
+
+        <div class="form-group row">
+            <label asp-for="AreaInterestID"
+                   class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9 col-md-5">
+                <!-- Drop-down list displaying Branch Address,
+    with Branch Number as returned value -->
+                <select asp-for="AreaInterestID"
+                        asp-items="@(new SelectList(
+ @ViewData["InterestList"] as List <AreaInterest>,
+ "AreaInterestID", "Name"))"
+                        class="form-control"></select>
+                <span asp-validation-for="AreaInterestID"
+                      class="text-danger"></span>
+            </div>
+        </div>
+        
+
+        <div class="form-group row">
+            <div class="col-sm-9 offset-sm-3">
+                <input type="submit" value="Create"
+                       class="btn btn-primary" />
+            </div>
+        </div>
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </fieldset>
+</form>
