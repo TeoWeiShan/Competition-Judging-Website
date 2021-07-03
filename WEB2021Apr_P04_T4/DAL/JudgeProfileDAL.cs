@@ -29,29 +29,30 @@ namespace WEB2021Apr_P04_T4.DAL
             conn = new SqlConnection(strConn);
         }
 
-        public List<Judge> GetAllJudgeProfile()
+        public List<Judge> GetAllJudge()
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify the SELECT SQL statement
-            cmd.CommandText = @"SELECT * FROM JudgeProfile ORDER BY JudgeID";
+            cmd.CommandText = @"SELECT * FROM Judge ORDER BY JudgeID";
             //Open a database connection
             conn.Open();
             //Execute the SELECT SQL through a DataReader
             SqlDataReader reader = cmd.ExecuteReader();
 
             //Read all records until the end, save data into a staff list
-            List<Judge> judgeProfileList = new List<Judge>();
+            List<Judge> judgeList = new List<Judge>();
             while (reader.Read())
             {
-                judgeProfileList.Add(
+                judgeList.Add(
                 new Judge
                 {
                     JudgeID = reader.GetInt32(0), //0: 1st column
                     JudgeName = reader.GetString(1), //1: 2nd column
-                    AreaInterestID = reader.GetString(2),
-                    EmailAddr = reader.GetString(3),
-                    JudgePassword = reader.GetString(4)
+                    Salutation = reader.GetString(2),
+                    AreaInterestID = reader.GetInt32(3),
+                    EmailAddr = reader.GetString(4),
+                    JudgePassword = reader.GetString(5)
                     //Get the first character of a string
                 }
                 );
@@ -61,39 +62,39 @@ namespace WEB2021Apr_P04_T4.DAL
             //Close the database connection
             conn.Close();
 
-            return judgeProfileList;
+            return judgeList;
         }
 
-        public int Add(Judge judgeProfile)
+        public int Add(Judge judge)
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify an INSERT SQL statement which will
             //return the auto-generated StaffID after insertion
-            cmd.CommandText = @"INSERT INTO JudgeProfile (JudgeName)
+            cmd.CommandText = @"INSERT INTO Judge (JudgeName)
             OUTPUT INSERTED.JudgeID VALUES(@name)";
             //Define the parameters used in SQL statement, value for each parameter
             //is retrieved from respective class's property.
-            cmd.Parameters.AddWithValue("@name", judgeProfile.JudgeName);
+            cmd.Parameters.AddWithValue("@name", judge.JudgeName);
             //A connection to database must be opened before any operations made.
             conn.Open();
             //ExecuteScalar is used to retrieve the auto-generated
             //StaffID after executing the INSERT SQL statement
-            judgeProfile.JudgeID = (int)cmd.ExecuteScalar();
+            judge.JudgeID = (int)cmd.ExecuteScalar();
             //A connection should be closed after operations.
             conn.Close();
             //Return id when no error occurs.
-            return judgeProfile.JudgeID;
+            return judge.JudgeID;
         }
 
         public Judge GetDetails(int judgeId)
         {
-            Judge judgeProfile = new Judge();
+            Judge judge = new Judge();
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify the SELECT SQL statement that
             //retrieves all attributes of a staff record.
-            cmd.CommandText = @"SELECT * FROM JudgeProfile
+            cmd.CommandText = @"SELECT * FROM Judge
             WHERE JudgeID = @selectedJudgeID";
             //Define the parameter used in SQL statement, value for the
             //parameter is retrieved from the method parameter “judgeId”.
@@ -108,18 +109,19 @@ namespace WEB2021Apr_P04_T4.DAL
                 while (reader.Read())
                 {
                     // Fill staff object with values from the data reader
-                    judgeProfile.JudgeID = judgeId;
-                    judgeProfile.JudgeName = !reader.IsDBNull(1) ? reader.GetString(1) : null;
-                    judgeProfile.AreaInterestID = !reader.IsDBNull(1) ? reader.GetString(1) : null;
-                    judgeProfile.EmailAddr = !reader.IsDBNull(1) ? reader.GetString(1) : null;
-                    judgeProfile.JudgePassword = !reader.IsDBNull(1) ? reader.GetString(1) : null;
+                    judge.JudgeID = judgeId;
+                    judge.JudgeName = judgeName;
+                    judge.Salutation = !reader.IsDBNull(2) ? reader.GetString(2) : null;
+                    judge.AreaInterestID = areaInterestId;
+                    judge.EmailAddr = emailAddr;
+                    judge.JudgePassword = judgePassword;
                 }
             }
             //Close DataReader
             reader.Close();
             //Close the database connection
             conn.Close();
-            return judgeProfile;
+            return judge;
         }
 
         public int Delete(int judgeId)
@@ -127,7 +129,7 @@ namespace WEB2021Apr_P04_T4.DAL
             //Instantiate a SqlCommand object, supply it with a DELETE SQL statement
             //to delete a area interest record specified by a Judge ID
             SqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = @"DELETE FROM judgeProfile WHERE JudgeID = @selectJudgeID";
+            cmd.CommandText = @"DELETE FROM judge WHERE JudgeID = @selectJudgeID";
             cmd.Parameters.AddWithValue("@selectJudgeID", judgeId);
             //Open a database connection
             conn.Open();

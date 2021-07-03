@@ -11,7 +11,7 @@ namespace WEB2021Apr_P04_T4.Controllers
 {
     public class JudgeProfileController : Controller
     {
-       private JudgeProfileDAL judgeProfileContext = new JudgeProfileDAL();
+       private JudgeProfileDAL judgeContext = new JudgeProfileDAL();
         // GET: JudgeProfileController
         public ActionResult Index()
         {
@@ -20,8 +20,8 @@ namespace WEB2021Apr_P04_T4.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            List<Judge> judgeProfileList = judgeProfileContext.GetAllJudgeProfile();
-            return View(judgeProfileList);
+            List<Judge> judgeList = judgeContext.GetAllJudge();
+            return View(judgeList);
         }
 
         // GET: JudgeProfileController/Details/5
@@ -46,12 +46,12 @@ namespace WEB2021Apr_P04_T4.Controllers
         // POST: JudgeProfileController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Judge judgeProfile)
+        public ActionResult Create(Judge judge)
         {
             if (ModelState.IsValid)
             {
                 //Add staff record to database
-                judgeProfile.JudgeID = judgeProfileContext.Add(judgeProfile);
+                judge.JudgeID = judgeContext.Add(judge);
                 //Redirect user to Staff/Index view
                 return RedirectToAction("Index");
             }
@@ -59,7 +59,7 @@ namespace WEB2021Apr_P04_T4.Controllers
             {
                 //Input validation fails, return to the Create view
                 //to display error message
-                return View(judgeProfile);
+                return View(judge);
             }
         }
 
@@ -98,22 +98,22 @@ namespace WEB2021Apr_P04_T4.Controllers
                 //Return to listing page, not allowed to edit
                 return RedirectToAction("Index");
             }
-            Judge judgeProfile = judgeProfileContext.GetDetails(id.Value);
-            if (judgeProfile == null)
+            Judge judge = judgeContext.GetDetails(id.Value);
+            if (judge == null)
             {
                 //Return to listing page, not allowed to edit
                 return RedirectToAction("Index");
             }
-            return View(judgeProfile);
+            return View(judge);
         }
 
         // POST: JudgeProfileController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(Judge judgeProfile)
+        public ActionResult Delete(Judge judge)
         {
             // Delete the interest record from database
-            judgeProfileContext.Delete(judgeProfile.JudgeID);
+            judgeContext.Delete(judge.JudgeID);
             return RedirectToAction("Index");
         }
     }

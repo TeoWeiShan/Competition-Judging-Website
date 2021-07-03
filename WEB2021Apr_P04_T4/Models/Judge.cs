@@ -20,7 +20,7 @@ namespace WEB2021Apr_P04_T4.Models
 
         [Required(ErrorMessage = "Please select an area of interest.")]
         [Display(Name = "Area Of Interest")]
-        public string AreaInterestID { get; set; }
+        public int AreaInterestID { get; set; }
 
         [Required(ErrorMessage = "Please enter an email.")]
         [RegularExpression(@"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")]
