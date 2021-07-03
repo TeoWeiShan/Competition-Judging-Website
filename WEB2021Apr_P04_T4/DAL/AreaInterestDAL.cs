@@ -144,6 +144,32 @@ OUTPUT INSERTED.AreaInterestID VALUES(@name)";
             return areaInterest;
         }
 
+        public bool IsDeletable(int areaInterestID)
+        {
+            bool recordFound = false;
+            //Create a SqlCommand object and specify the SQL statement
+            //to get a staff record with the email address to be validated
+            SqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = @"SELECT AreaInterestID FROM Competition
+ WHERE AreaInterestID=@selectedInterestID";
+            cmd.Parameters.AddWithValue("@selectedInterestID",areaInterestID);
+            //Open a database connection and execute the SQL statement
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            { //Records found
+              recordFound = true;
+            }
+            else
+            { //No record
+                recordFound = false; 
+            }
+            reader.Close();
+            conn.Close();
+
+            return recordFound;
+        }
+
         public int Delete(int areaInterestId)
         {
             //Instantiate a SqlCommand object, supply it with a DELETE SQL statement

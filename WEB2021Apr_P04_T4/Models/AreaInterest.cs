@@ -9,6 +9,7 @@ namespace WEB2021Apr_P04_T4.Models
     public class AreaInterest
     {
         [Display(Name = "ID")]
+        [ValidateInterestDeletion]
         public int AreaInterestID { get; set; }
 
         [Required]

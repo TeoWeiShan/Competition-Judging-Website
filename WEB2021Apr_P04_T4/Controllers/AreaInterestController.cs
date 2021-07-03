@@ -111,9 +111,20 @@ namespace WEB2021Apr_P04_T4.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(AreaInterest areaInterest)
         {
-            // Delete the interest record from database
-            areaInterestContext.Delete(areaInterest.AreaInterestID);
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                // Delete the interest record from database
+                areaInterestContext.Delete(areaInterest.AreaInterestID);
+                //Redirect user to Staff/Index view
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                //Input validation fails, return to the Create view
+                //to display error message
+                return View(areaInterest);
+            }
+            
         }
     }
 }
