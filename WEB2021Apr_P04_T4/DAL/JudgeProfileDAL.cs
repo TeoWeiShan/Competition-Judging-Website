@@ -49,8 +49,8 @@ namespace WEB2021Apr_P04_T4.DAL
                 {
                     JudgeID = reader.GetInt32(0), //0: 1st column
                     JudgeName = reader.GetString(1), //1: 2nd column
-                    AreaOfInterest = reader.GetString(2),
-                    JudgeEmail = reader.GetString(3),
+                    AreaInterestID = reader.GetString(2),
+                    EmailAddr = reader.GetString(3),
                     JudgePassword = reader.GetString(4)
                     //Get the first character of a string
                 }
@@ -110,8 +110,8 @@ namespace WEB2021Apr_P04_T4.DAL
                     // Fill staff object with values from the data reader
                     judgeProfile.JudgeID = judgeId;
                     judgeProfile.JudgeName = !reader.IsDBNull(1) ? reader.GetString(1) : null;
-                    judgeProfile.AreaOfInterest = !reader.IsDBNull(1) ? reader.GetString(1) : null;
-                    judgeProfile.JudgeEmail = !reader.IsDBNull(1) ? reader.GetString(1) : null;
+                    judgeProfile.AreaInterestID = !reader.IsDBNull(1) ? reader.GetString(1) : null;
+                    judgeProfile.EmailAddr = !reader.IsDBNull(1) ? reader.GetString(1) : null;
                     judgeProfile.JudgePassword = !reader.IsDBNull(1) ? reader.GetString(1) : null;
                 }
             }
