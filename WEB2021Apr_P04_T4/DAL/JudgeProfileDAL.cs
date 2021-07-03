@@ -49,6 +49,9 @@ namespace WEB2021Apr_P04_T4.DAL
                 {
                     JudgeID = reader.GetInt32(0), //0: 1st column
                     JudgeName = reader.GetString(1), //1: 2nd column
+                    AreaOfInterest = reader.GetString(2),
+                    JudgeEmail = reader.GetString(3),
+                    JudgePassword = reader.GetString(4)
                     //Get the first character of a string
                 }
                 );
