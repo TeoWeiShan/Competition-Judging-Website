@@ -161,5 +161,49 @@ VALUES(@interest, @name)";
             conn.Close();
             return competition;
         }
+
+        public bool IsDeletable(int competitionID)
+        {
+            bool recordFound = false;
+            //Create a SqlCommand object and specify the SQL statement
+            //to get a staff record with the email address to be validated
+            SqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = @"SELECT CompetitionID FROM CompetitionSubmission
+ WHERE CompetitionID=@selectedCompetitionID";
+            cmd.Parameters.AddWithValue("@selectedCompetitionID", competitionID);
+            //Open a database connection and execute the SQL statement
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            { //Records found
+                recordFound = true;
+            }
+            else
+            { //No record
+                recordFound = false;
+            }
+            reader.Close();
+            conn.Close();
+
+            return recordFound;
+        }
+
+        public int Delete(int competitionID)
+        {
+            //Instantiate a SqlCommand object, supply it with a DELETE SQL statement
+            //to delete a area interest record specified by a AreaInterest ID
+            SqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = @"DELETE FROM Competition WHERE CompetitionID = @selectCompetitionID";
+            cmd.Parameters.AddWithValue("@selectCompetitionID", competitionID);
+            //Open a database connection
+            conn.Open();
+            int rowAffected = 0;
+            //Execute the DELETE SQL to remove the staff record
+            rowAffected += cmd.ExecuteNonQuery();
+            //Close database connection
+            conn.Close();
+            //Return number of row of staff record updated or deleted
+            return rowAffected;
+        }
     }
 }

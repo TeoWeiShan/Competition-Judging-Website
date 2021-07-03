@@ -118,23 +118,44 @@ namespace WEB2021Apr_P04_T4.Controllers
         }
 
         // GET: CompetitionController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id)
         {
-            return View();
+            // Stop accessing the action if not logged in or account not in the "Admin" role
+            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Admin"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if (id == null)
+            {
+                //Return to listing page, not allowed to edit
+                return RedirectToAction("Index");
+            }
+            Competition competition= competitionContext.GetDetails(id.Value);
+            if (competition == null)
+            {
+                //Return to listing page, not allowed to edit
+                return RedirectToAction("Index");
+            }
+            return View(competition);
         }
 
         // POST: CompetitionController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(Competition competition)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                // Delete the interest record from database
+                competitionContext.Delete(competition.CompetitionID);
+                //Redirect user to Staff/Index view
+                return RedirectToAction("Index");
             }
-            catch
+            else
             {
-                return View();
+                //Input validation fails, return to the Create view
+                //to display error message
+                return View(competition);
             }
         }
     }

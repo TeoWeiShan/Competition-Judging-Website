@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using WEB2021Apr_P04_T4.Models.Validation;
 
 namespace WEB2021Apr_P04_T4.Models
 {
     public class Competition
     {
         [Display(Name = "Competition ID")]
+        [ValidateCompetitionDeletion]
         public int CompetitionID { get; set; }
 
         [Display(Name = "Interest ID")]
-        [ValidateInterestDefault]
         public int AreaInterestID { get; set; }
 
         [Display(Name = "Competition Name")]
