@@ -8,6 +8,7 @@
                 <tr>
                     <th>Judge ID</th>
                     <th>Name</th>
+                    <th>Salutation</th>
                     <th>Area of Interest</th>
                     <th>Email</th>
                     <th>Password</th>
@@ -19,8 +20,9 @@
                 <tr>
                     <td>@item.JudgeID.ToString()</td>
                     <td>@item.JudgeName</td>
-                    <td>@item.AreaOfInterest</td>
-                    <td>@item.JudgeEmail</td>
+                    <td>@item.Salutation</td>
+                    <td>@item.AreaInterestID</td>
+                    <td>@item.EmailAddr</td>
                     <td>@item.JudgePassword</td>
                     <td>
                         <a asp-action="Edit" asp-controller="JudgeProfile"
