@@ -110,11 +110,11 @@ namespace WEB2021Apr_P04_T4.DAL
                 {
                     // Fill staff object with values from the data reader
                     judge.JudgeID = judgeId;
-                    judge.JudgeName = judgeName;
+                    judge.JudgeName = reader.GetString(1);
                     judge.Salutation = !reader.IsDBNull(2) ? reader.GetString(2) : null;
-                    judge.AreaInterestID = areaInterestId;
-                    judge.EmailAddr = emailAddr;
-                    judge.JudgePassword = judgePassword;
+                    judge.AreaInterestID = reader.GetInt32(3);
+                    judge.EmailAddr = reader.GetString(4);
+                    judge.JudgePassword = reader.GetString(5);
                 }
             }
             //Close DataReader

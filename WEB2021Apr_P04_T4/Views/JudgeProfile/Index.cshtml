@@ -1,4 +1,4 @@
-﻿@model WEB2021Apr_P04_T4.Models.Judge
+﻿@model IEnumerable<WEB2021Apr_P04_T4.Models.Judge>
 
 @{
     ViewData["Title"] = "Index";
@@ -6,3 +6,7 @@
 
 <h4 class="PageTitle">View Judge Profile</h4>
 
+<p><a asp-action="Create">Create New Judge</a></p>
+<!-- Add a partial view to display a list of staff records
+ in a tabular format. -->
+<partial name="~/Views/JudgeProfile/_ViewJudgeProfile.cshtml" model="@Model" />
