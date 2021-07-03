@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WEB2021Apr_P04_T4.Models
 {
-    public class JudgeProfile
+    public class Judge
     {
         [Display(Name = "Judge ID")]
         public int JudgeID { get; set; }
@@ -16,14 +16,16 @@ namespace WEB2021Apr_P04_T4.Models
         [Display(Name = "Name")]
         public string JudgeName { get; set; }
 
+        public string Salutation { get; set; }
+
         [Required(ErrorMessage = "Please select an area of interest.")]
         [Display(Name = "Area Of Interest")]
-        public string AreaOfInterest { get; set; }
+        public string AreaInterestID { get; set; }
 
         [Required(ErrorMessage = "Please enter an email.")]
         [RegularExpression(@"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")]
         [Display(Name = "Email")]
-        public string JudgeEmail { get; set; }
+        public string EmailAddr { get; set; }
 
         [Compare("Email")]
         public string EmailConfirm { get; set; }

@@ -20,7 +20,7 @@ namespace WEB2021Apr_P04_T4.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            List<JudgeProfile> judgeProfileList = judgeProfileContext.GetAllJudgeProfile();
+            List<Judge> judgeProfileList = judgeProfileContext.GetAllJudgeProfile();
             return View(judgeProfileList);
         }
 
@@ -46,7 +46,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         // POST: JudgeProfileController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(JudgeProfile judgeProfile)
+        public ActionResult Create(Judge judgeProfile)
         {
             if (ModelState.IsValid)
             {
@@ -98,7 +98,7 @@ namespace WEB2021Apr_P04_T4.Controllers
                 //Return to listing page, not allowed to edit
                 return RedirectToAction("Index");
             }
-            JudgeProfile judgeProfile = judgeProfileContext.GetDetails(id.Value);
+            Judge judgeProfile = judgeProfileContext.GetDetails(id.Value);
             if (judgeProfile == null)
             {
                 //Return to listing page, not allowed to edit
@@ -110,7 +110,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         // POST: JudgeProfileController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(JudgeProfile judgeProfile)
+        public ActionResult Delete(Judge judgeProfile)
         {
             // Delete the interest record from database
             judgeProfileContext.Delete(judgeProfile.JudgeID);

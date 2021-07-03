@@ -29,7 +29,7 @@ namespace WEB2021Apr_P04_T4.DAL
             conn = new SqlConnection(strConn);
         }
 
-        public List<JudgeProfile> GetAllJudgeProfile()
+        public List<Judge> GetAllJudgeProfile()
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
@@ -41,11 +41,11 @@ namespace WEB2021Apr_P04_T4.DAL
             SqlDataReader reader = cmd.ExecuteReader();
 
             //Read all records until the end, save data into a staff list
-            List<JudgeProfile> judgeProfileList = new List<JudgeProfile>();
+            List<Judge> judgeProfileList = new List<Judge>();
             while (reader.Read())
             {
                 judgeProfileList.Add(
-                new JudgeProfile
+                new Judge
                 {
                     JudgeID = reader.GetInt32(0), //0: 1st column
                     JudgeName = reader.GetString(1), //1: 2nd column
@@ -64,7 +64,7 @@ namespace WEB2021Apr_P04_T4.DAL
             return judgeProfileList;
         }
 
-        public int Add(JudgeProfile judgeProfile)
+        public int Add(Judge judgeProfile)
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
@@ -86,9 +86,9 @@ namespace WEB2021Apr_P04_T4.DAL
             return judgeProfile.JudgeID;
         }
 
-        public JudgeProfile GetDetails(int judgeId)
+        public Judge GetDetails(int judgeId)
         {
-            JudgeProfile judgeProfile = new JudgeProfile();
+            Judge judgeProfile = new Judge();
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify the SELECT SQL statement that
