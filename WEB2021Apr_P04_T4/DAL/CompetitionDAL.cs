@@ -161,7 +161,40 @@ VALUES(@interest, @name)";
             conn.Close();
             return competition;
         }
-
+        public int Update(Competition competition)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify an UPDATE SQL statement
+            cmd.CommandText = @"UPDATE Competition SET AreaInterestID=@interestID,
+ CompetitionName=@name, StartDate = @startDate, EndDate = @endDate, ResultReleasedDate = @resultDate
+WHERE CompetitionID = @selectedCompetitionID";
+            //Define the parameters used in SQL statement, value for each parameter
+            //is retrieved from respective class's property.
+            cmd.Parameters.AddWithValue("@name", competition.CompetitionName);
+            cmd.Parameters.AddWithValue("@interestID", competition.AreaInterestID);
+            
+            if (competition.StartDate != null)
+                cmd.Parameters.AddWithValue("@startDate", competition.StartDate.Value);
+            else 
+                cmd.Parameters.AddWithValue("@startDate", DBNull.Value);
+            if (competition.EndDate != null)
+                cmd.Parameters.AddWithValue("@endDate", competition.EndDate.Value);
+            else
+                cmd.Parameters.AddWithValue("@endDate", DBNull.Value);
+            if (competition.ResultReleasedDate != null)
+                cmd.Parameters.AddWithValue("@resultDate", competition.ResultReleasedDate.Value);
+            else
+                cmd.Parameters.AddWithValue("@resultDate", DBNull.Value);
+            cmd.Parameters.AddWithValue("@selectedCompetitionID", competition.CompetitionID);
+            //Open a database connection
+            conn.Open();
+            //ExecuteNonQuery is used for UPDATE and DELETE
+            int count = cmd.ExecuteNonQuery();
+            //Close the database connection
+            conn.Close();
+            return count;
+        }
         public bool IsDeletable(int competitionID)
         {
             bool recordFound = false;

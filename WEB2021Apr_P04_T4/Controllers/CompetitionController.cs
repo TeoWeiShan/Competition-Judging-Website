@@ -92,7 +92,7 @@ namespace WEB2021Apr_P04_T4.Controllers
               //Return to listing page, not allowed to edit
                 return RedirectToAction("Index");
             }
-            ViewData["AreaInterestList"] = GetAllAreaInterests();
+            ViewData["InterestList"] = GetAllAreaInterests();
             Competition competition = competitionContext.GetDetails(id.Value);
             if (competition == null)
             {
@@ -105,15 +105,20 @@ namespace WEB2021Apr_P04_T4.Controllers
         // POST: CompetitionController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Competition competition)
         {
-            try
+            ViewData["InterestList"] = GetAllAreaInterests();
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                //Update staff record to database
+                competitionContext.Update(competition);
+                return RedirectToAction("Index");
             }
-            catch
+            else
             {
-                return View();
+                //Input validation fails, return to the view
+                //to display error message
+                return View(competition);
             }
         }
 
