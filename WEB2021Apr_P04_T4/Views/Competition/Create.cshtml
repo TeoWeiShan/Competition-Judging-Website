@@ -26,7 +26,7 @@
                    class="col-sm-3 col-form-label"></label>
             <div class="col-sm-9 col-md-5">
                 <!-- Drop-down list displaying Branch Address,
-    with Branch Number as returned value -->
+            with Branch Number as returned value -->
                 <select asp-for="AreaInterestID"
                         asp-items="@(new SelectList(
  @ViewData["InterestList"] as List <AreaInterest>,
@@ -36,7 +36,33 @@
                       class="text-danger"></span>
             </div>
         </div>
-        
+        <div class="form-group row">
+            <label asp-for="StartDate"
+                   class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9 col-md-5">
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate"
+                      class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="EndDate"
+                   class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9 col-md-5">
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate"
+                      class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="ResultReleasedDate"
+                   class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9 col-md-5">
+                <input asp-for="ResultReleasedDate" class="form-control" />
+                <span asp-validation-for="ResultReleasedDate"
+                      class="text-danger"></span>
+            </div>
+        </div>
 
         <div class="form-group row">
             <div class="col-sm-9 offset-sm-3">
