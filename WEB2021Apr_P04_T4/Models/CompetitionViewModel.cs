@@ -13,9 +13,6 @@ namespace WEB2021Apr_P04_T4.Models
         [ValidateCompetitionDeletion]
         public int CompetitionID { get; set; }
 
-        [Display(Name = "Interest ID")]
-        public int AreaInterestID { get; set; }
-
         [Display(Name = "Area Interest")]
         public string Name { get; set; }
 

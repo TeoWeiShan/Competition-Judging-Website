@@ -28,7 +28,41 @@ namespace WEB2021Apr_P04_T4.Controllers
         // GET: CompetitionController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Admin"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            Competition competition = competitionContext.GetDetails(id);
+            CompetitionViewModel competitionVM = MapToCompetitionVM(competition);
+            return View(competitionVM);
+        }
+
+        public CompetitionViewModel MapToCompetitionVM(Competition competition)
+        {
+            string interestName = "";
+            if (competition.CompetitionID != null)
+            {
+                List<AreaInterest> interestList = areaInterestContext.GetAllAreaInterest();
+                foreach (AreaInterest interest in interestList)
+                {
+                    if (interest.AreaInterestID == competition.AreaInterestID)
+                    {
+                        interestName = interest.Name;
+                        //Exit the foreach loop once the name is found
+                        break;
+                    }
+                }
+            }
+            CompetitionViewModel competitionVM = new CompetitionViewModel
+            {
+                CompetitionID = competition.CompetitionID,
+                Name = interestName,
+                CompetitionName = competition.CompetitionName,
+                StartDate = competition.StartDate,
+                EndDate = competition.EndDate,
+                ResultReleasedDate = competition.ResultReleasedDate
+            };
+            return competitionVM;
         }
 
         private List<AreaInterest> GetAllAreaInterests()
