@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 using WEB2021Apr_P04_T4.DAL;
 
-namespace WEB2021Apr_P04_T4.Models.Validation
+namespace WEB2021Apr_P04_T4.Models
 {
     public class ValidateEmailExists : ValidationAttribute
     {
-        private JudgeProfileDAL staffContext = new JudgeProfileDAL();
+        private JudgeProfileDAL judgeContext = new JudgeProfileDAL();
         protected override ValidationResult IsValid(
         object value, ValidationContext validationContext)
         {
@@ -19,7 +19,8 @@ namespace WEB2021Apr_P04_T4.Models.Validation
             Judge judge = (Judge)validationContext.ObjectInstance;
             // Get the Judge Id from the judge instance
             int judgeID = judge.JudgeID;
-            if (staffContext.IsEmailExist(emailaddr, judgeID))
+
+            if (judgeContext.IsEmailExist(emailaddr, judgeID))
                 // validation failed
                 return new ValidationResult
                 ("Email address already exists!");

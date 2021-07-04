@@ -25,6 +25,8 @@ namespace WEB2021Apr_P04_T4.Models
         [Required(ErrorMessage = "Please enter an email.")]
         [RegularExpression(@"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")]
         [Display(Name = "Email")]
+        //Validation attribute to check whether email exists
+        [ValidateEmailExists]
         public string EmailAddr { get; set; }
 
         [Required(ErrorMessage = "Please enter a password.")]

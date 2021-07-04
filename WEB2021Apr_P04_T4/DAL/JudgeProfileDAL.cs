@@ -104,17 +104,19 @@ namespace WEB2021Apr_P04_T4.DAL
             //to get a staff record with the email address to be validated
             SqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = @"SELECT JudgeID FROM Judge 
- WHERE EmailAddr=@selectedEmail";
-            cmd.Parameters.AddWithValue("@selectedEmail", emailaddr);
+                              WHERE EmailAddr=@selectedEmailAddr";
+            cmd.Parameters.AddWithValue("@selectedEmailAddr", emailaddr);
+
             //Open a database connection and execute the SQL statement
             conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();
+
             if (reader.HasRows)
             { //Records found
                 while (reader.Read())
                 {
                     if (reader.GetInt32(0) != judgeID)
-                        //The email address is used by another staff
+                        //The email address is used by another judge
                         emailFound = true;
                 }
             }
