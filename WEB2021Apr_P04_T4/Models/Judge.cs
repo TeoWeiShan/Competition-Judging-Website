@@ -27,12 +27,9 @@ namespace WEB2021Apr_P04_T4.Models
         [Display(Name = "Email")]
         public string EmailAddr { get; set; }
 
-        [Compare("Email")]
-        public string EmailConfirm { get; set; }
-
         [Required(ErrorMessage = "Please enter a password.")]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$")]
         [Display(Name = "Password")]
-        public string JudgePassword { get; set; }
+        public string Password { get; set; }
     }
 }

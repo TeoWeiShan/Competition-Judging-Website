@@ -13,6 +13,7 @@ namespace WEB2021Apr_P04_T4.Controllers
     public class JudgeProfileController : Controller
     {
        private JudgeProfileDAL judgeContext = new JudgeProfileDAL();
+        private AreaInterestDAL areaInterestContext = new AreaInterestDAL();
 
         // GET: JudgeProfileController
         public ActionResult Index()
@@ -32,6 +33,21 @@ namespace WEB2021Apr_P04_T4.Controllers
             return View();
         }
 
+        private List<AreaInterest> GetAllAreaInterests()
+        {
+            // Get a list of branches from database
+            List<AreaInterest> areaInterestList = areaInterestContext.GetAllAreaInterest();
+            Console.WriteLine(areaInterestList);
+            // Adding a select prompt at the first row of the branch list
+            areaInterestList.Insert(0, new AreaInterest
+            {
+                AreaInterestID = 0,
+                Name = "--Select--"
+            });
+            Console.WriteLine(areaInterestList);
+            return areaInterestList;
+        }
+
         // GET: JudgeProfileController/Create
         public ActionResult Create()
         {
@@ -42,6 +58,7 @@ namespace WEB2021Apr_P04_T4.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
+            ViewData["InterestList"] = GetAllAreaInterests();
             return View();
         }
 
@@ -50,6 +67,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Judge judge)
         {
+            ViewData["InterestList"] = GetAllAreaInterests();
             if (ModelState.IsValid)
             {
                 //Add judge record to database
