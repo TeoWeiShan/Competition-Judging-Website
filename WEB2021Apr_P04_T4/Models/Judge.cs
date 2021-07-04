@@ -31,7 +31,7 @@ namespace WEB2021Apr_P04_T4.Models
         public string EmailConfirm { get; set; }
 
         [Required(ErrorMessage = "Please enter a password.")]
-        [RegularExpression(@"[^(?=.*[a - z])(?=.*[A - Z])(?=.*\d)(?=.*[^\da - zA - Z]).{8, 15}$")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$")]
         [Display(Name = "Password")]
         public string JudgePassword { get; set; }
     }

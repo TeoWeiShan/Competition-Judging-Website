@@ -71,16 +71,26 @@ namespace WEB2021Apr_P04_T4.DAL
             SqlCommand cmd = conn.CreateCommand();
             //Specify an INSERT SQL statement which will
             //return the auto-generated StaffID after insertion
-            cmd.CommandText = @"INSERT INTO Judge (JudgeName)
-            OUTPUT INSERTED.JudgeID VALUES(@name)";
+            cmd.CommandText = @"INSERT INTO Judge (JudgeName, Salutation, AreaInterestID,
+            EmailAddr, JudgePassword)
+            OUTPUT INSERTED.JudgeID
+            VALUES(@name, @salutation, @areainterestid, @emailaddr, @password)";
+
             //Define the parameters used in SQL statement, value for each parameter
             //is retrieved from respective class's property.
             cmd.Parameters.AddWithValue("@name", judge.JudgeName);
+            cmd.Parameters.AddWithValue("@salutation", judge.Salutation);
+            cmd.Parameters.AddWithValue("@areainterestid", judge.AreaInterestID);
+            cmd.Parameters.AddWithValue("@emailaddr", judge.EmailAddr);
+            cmd.Parameters.AddWithValue("@password", judge.JudgePassword);
+
             //A connection to database must be opened before any operations made.
             conn.Open();
+
             //ExecuteScalar is used to retrieve the auto-generated
             //StaffID after executing the INSERT SQL statement
             judge.JudgeID = (int)cmd.ExecuteScalar();
+
             //A connection should be closed after operations.
             conn.Close();
             //Return id when no error occurs.

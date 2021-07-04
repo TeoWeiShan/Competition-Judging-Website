@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace WEB2021Apr_P04_T4.Controllers
     public class JudgeProfileController : Controller
     {
        private JudgeProfileDAL judgeContext = new JudgeProfileDAL();
+
         // GET: JudgeProfileController
         public ActionResult Index()
         {
@@ -34,7 +36,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         public ActionResult Create()
         {
             // Stop accessing the action if not logged in
-            // or account not in the "Staff" role
+            // or account not in the "Judge" role
             if ((HttpContext.Session.GetString("Role") == null) ||
             (HttpContext.Session.GetString("Role") != "Judge"))
             {
@@ -50,9 +52,9 @@ namespace WEB2021Apr_P04_T4.Controllers
         {
             if (ModelState.IsValid)
             {
-                //Add staff record to database
+                //Add judge record to database
                 judge.JudgeID = judgeContext.Add(judge);
-                //Redirect user to Staff/Index view
+                //Redirect user to Judge/Index view
                 return RedirectToAction("Index");
             }
             else
