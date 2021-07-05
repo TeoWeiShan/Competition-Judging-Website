@@ -19,7 +19,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         public ActionResult Index()
         {
             if ((HttpContext.Session.GetString("Role") == null) ||
-                (HttpContext.Session.GetString("Role") != "Judge"))
+                (HttpContext.Session.GetString("Role") != "Judge") || (HttpContext.Session.GetString("Role") != "Admin"))
             {
                 return RedirectToAction("Index", "Home");
             }
