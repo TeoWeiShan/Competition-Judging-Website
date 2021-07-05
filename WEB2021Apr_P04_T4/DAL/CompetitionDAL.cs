@@ -207,7 +207,7 @@ WHERE CompetitionID = @selectedCompetitionID";
             conn.Close();
             return count;
         }
-        public bool IsDeletable(int competitionID)
+        public bool IsModifiable(int competitionID)
         {
             bool recordFound = false;
             //Create a SqlCommand object and specify the SQL statement
