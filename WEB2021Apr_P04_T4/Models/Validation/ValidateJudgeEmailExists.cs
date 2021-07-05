@@ -7,7 +7,7 @@ using WEB2021Apr_P04_T4.DAL;
 
 namespace WEB2021Apr_P04_T4.Models
 {
-    public class ValidateEmailExists : ValidationAttribute
+    public class ValidateJudgeEmailExists : ValidationAttribute
     {
         private JudgeProfileDAL judgeContext = new JudgeProfileDAL();
         protected override ValidationResult IsValid(

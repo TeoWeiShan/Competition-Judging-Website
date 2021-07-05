@@ -136,7 +136,7 @@ namespace WEB2021Apr_P04_T4.DAL
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify the SELECT SQL statement that
-            //retrieves all attributes of a staff record.
+            //retrieves all attributes of a judge record.
             cmd.CommandText = @"SELECT * FROM Judge
             WHERE JudgeID = @selectedJudgeID";
             //Define the parameter used in SQL statement, value for the
@@ -164,10 +164,43 @@ namespace WEB2021Apr_P04_T4.DAL
             reader.Close();
             //Close the database connection
             conn.Close();
+
             return judge;
         }
 
-        public int Delete(int judgeId)
+        public int Update(Judge judge)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+
+            //Specify an UPDATE SQL statement
+            cmd.CommandText = @"UPDATE Judge SET JudgeName=@name, Salutation=@salutation,
+            AreaInterestID=@interest, EmailAddr=@emailaddr, Password=@password
+            WHERE JudgeID = @selectedJudgeID";
+
+            //Define the parameters used in SQL statement, value for each parameter
+            //is retrieved from respective class's property.
+            cmd.Parameters.AddWithValue("@selectedJudgeID", judge.JudgeID);
+            cmd.Parameters.AddWithValue("@name", judge.JudgeName);
+            cmd.Parameters.AddWithValue("@interest", judge.AreaInterestID);
+            cmd.Parameters.AddWithValue("@emailaddr", judge.EmailAddr);
+            cmd.Parameters.AddWithValue("@password", judge.Password);
+
+            if (judge.Salutation != null)
+                cmd.Parameters.AddWithValue("@salutation", judge.Salutation);
+            else
+                cmd.Parameters.AddWithValue("@salutation", DBNull.Value);
+            //Open a database connection
+            conn.Open();
+            //ExecuteNonQuery is used for UPDATE and DELETE
+            int count = cmd.ExecuteNonQuery();
+            //Close the database connection
+            conn.Close();
+            return count;
+
+        }
+
+            public int Delete(int judgeId)
         {
             //Instantiate a SqlCommand object, supply it with a DELETE SQL statement
             //to delete a area interest record specified by a Judge ID
