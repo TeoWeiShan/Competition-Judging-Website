@@ -58,6 +58,14 @@ namespace WEB2021Apr_P04_T4.Controllers
                 HttpContext.Session.SetString("Role", "Judge");
                 return RedirectToAction("JudgeMain");
             }
+            else if (loginID == "abc2@lcu.edu.sg" && password == "p@55Competitor")
+            {
+                // Store Login ID in session with the key “LoginID”
+                HttpContext.Session.SetString("LoginID", loginID);
+                // Store user role “Judge” as a string in session with the key “Role” 
+                HttpContext.Session.SetString("Role", "Competitor");
+                return RedirectToAction("CompetitorMain");
+            }
             else
             {
                 // Store an error message in TempData for display at the index view
