@@ -14,16 +14,18 @@ namespace WEB2021Apr_P04_T4.Models.Validation
         object value, ValidationContext validationContext)
         {
             // Get the email value to validate
-            DateTime startDate = Convert.ToDateTime(value);
-            if (startDate == DateTime.MinValue)
-                return ValidationResult.Success;
-            else if (startDate < DateTime.Now)
-                // validation failed
-                return new ValidationResult
-                ("Start Date cannot earlier than Today's Date!");
-            else
-                // validation passed
-                return ValidationResult.Success;
+            if (value != null)
+            {
+                DateTime startDate = Convert.ToDateTime(value);
+                if (startDate < DateTime.Today)
+                    // validation failed
+                    return new ValidationResult
+                    ("Start Date cannot earlier than Today's Date!");
+                else
+                    // validation passed
+                    return ValidationResult.Success;
+            }
+            else { return ValidationResult.Success; }
         }
 
     }
