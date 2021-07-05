@@ -90,6 +90,39 @@ namespace WEB2021Apr_P04_T4.DAL
             throw new NotImplementedException();
         }
 
+        public bool IsEmailExist(string EmailAddr, int competitorID)
+        {
+            bool emailFound = false;
+            //Create a SqlCommand object and specify the SQL statement 
+            //to get a staff record with the email address to be validated
+            SqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = @"SELECT CompetitorID FROM Competitor 
+                              WHERE EmailAddr=@selectedEmailAddr";
+            cmd.Parameters.AddWithValue("@selectedEmailAddr", EmailAddr);
+
+            //Open a database connection and execute the SQL statement
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.HasRows)
+            { //Records found
+                while (reader.Read())
+                {
+                    if (reader.GetInt32(0) != competitorID)
+                        //The email address is used by another judge
+                        emailFound = true;
+                }
+            }
+            else
+            { //No record
+                emailFound = false; // The email address given does not exist
+            }
+            reader.Close();
+            conn.Close();
+
+            return emailFound;
+        }
+
         public Competitor GetDetails(int competitorId)
         {
             Competitor competitor = new Competitor();

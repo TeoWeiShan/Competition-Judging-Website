@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using WEB2021Apr_P04_T4.Models.Validation;
 
 namespace WEB2021Apr_P04_T4.Models
 {
@@ -30,7 +31,7 @@ namespace WEB2021Apr_P04_T4.Models
         [Required]
         [StringLength(50)]
         [EmailAddress]
-        [ValidateEmailExists]
+        [ValidateCompetitorEmail]
         public string EmailAddr { get; set; }
 
         [Display(Name = "Password")]
