@@ -25,14 +25,13 @@ namespace WEB2021Apr_P04_T4.Models
         [Required(ErrorMessage = "Please enter an email.")]
         [RegularExpression(@"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")]
         [Display(Name = "Email")]
+        //Validation attribute to check whether email exists
+        [ValidateEmailExists]
         public string EmailAddr { get; set; }
-
-        [Compare("Email")]
-        public string EmailConfirm { get; set; }
 
         [Required(ErrorMessage = "Please enter a password.")]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$")]
         [Display(Name = "Password")]
-        public string JudgePassword { get; set; }
+        public string Password { get; set; }
     }
 }

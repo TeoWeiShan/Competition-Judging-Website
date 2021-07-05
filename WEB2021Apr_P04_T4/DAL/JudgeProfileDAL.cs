@@ -52,7 +52,7 @@ namespace WEB2021Apr_P04_T4.DAL
                     Salutation = reader.GetString(2),
                     AreaInterestID = reader.GetInt32(3),
                     EmailAddr = reader.GetString(4),
-                    JudgePassword = reader.GetString(5)
+                    Password = reader.GetString(5)
                     //Get the first character of a string
                 }
                 );
@@ -72,17 +72,17 @@ namespace WEB2021Apr_P04_T4.DAL
             //Specify an INSERT SQL statement which will
             //return the auto-generated StaffID after insertion
             cmd.CommandText = @"INSERT INTO Judge (JudgeName, Salutation, AreaInterestID,
-            EmailAddr, JudgePassword)
+            EmailAddr, Password)
             OUTPUT INSERTED.JudgeID
-            VALUES(@name, @salutation, @areainterestid, @emailaddr, @password)";
+            VALUES(@name, @salutation, @interest, @emailaddr, @password)";
 
             //Define the parameters used in SQL statement, value for each parameter
             //is retrieved from respective class's property.
             cmd.Parameters.AddWithValue("@name", judge.JudgeName);
             cmd.Parameters.AddWithValue("@salutation", judge.Salutation);
-            cmd.Parameters.AddWithValue("@areainterestid", judge.AreaInterestID);
+            cmd.Parameters.AddWithValue("@interest", judge.AreaInterestID);
             cmd.Parameters.AddWithValue("@emailaddr", judge.EmailAddr);
-            cmd.Parameters.AddWithValue("@password", judge.JudgePassword);
+            cmd.Parameters.AddWithValue("@password", judge.Password);
 
             //A connection to database must be opened before any operations made.
             conn.Open();
@@ -95,6 +95,39 @@ namespace WEB2021Apr_P04_T4.DAL
             conn.Close();
             //Return id when no error occurs.
             return judge.JudgeID;
+        }
+
+        public bool IsEmailExist(string emailaddr, int judgeID)
+        {
+            bool emailFound = false;
+            //Create a SqlCommand object and specify the SQL statement 
+            //to get a staff record with the email address to be validated
+            SqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = @"SELECT JudgeID FROM Judge 
+                              WHERE EmailAddr=@selectedEmailAddr";
+            cmd.Parameters.AddWithValue("@selectedEmailAddr", emailaddr);
+
+            //Open a database connection and execute the SQL statement
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.HasRows)
+            { //Records found
+                while (reader.Read())
+                {
+                    if (reader.GetInt32(0) != judgeID)
+                        //The email address is used by another judge
+                        emailFound = true;
+                }
+            }
+            else
+            { //No record
+                emailFound = false; // The email address given does not exist
+            }
+            reader.Close();
+            conn.Close();
+
+            return emailFound;
         }
 
         public Judge GetDetails(int judgeId)
@@ -124,7 +157,7 @@ namespace WEB2021Apr_P04_T4.DAL
                     judge.Salutation = !reader.IsDBNull(2) ? reader.GetString(2) : null;
                     judge.AreaInterestID = reader.GetInt32(3);
                     judge.EmailAddr = reader.GetString(4);
-                    judge.JudgePassword = reader.GetString(5);
+                    judge.Password = reader.GetString(5);
                 }
             }
             //Close DataReader

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h4 class="PageTitle">Add Staff Record</h4>
+<h4 class="PageTitle">Add Judge Record</h4>
 <hr />
 <form asp-action="Create">
     <fieldset class="FormContent">
@@ -17,6 +17,7 @@
                       class="text-danger"></span>
             </div>
         </div>
+
         <div class="form-group row">
             <label asp-for="Salutation"
                    class="col-sm-3 col-form-label"></label>
@@ -55,15 +56,23 @@
                 </div>
             </div>
         </div>
+
         <div class="form-group row">
             <label asp-for="AreaInterestID"
                    class="col-sm-3 col-form-label"></label>
             <div class="col-sm-9 col-md-5">
-                <input asp-for="AreaInterestID" class="form-control" />
+                <!-- Drop-down list displaying Branch Address,
+        with Branch Number as returned value -->
+                <select asp-for="AreaInterestID"
+                        asp-items="@(new SelectList(
+ @ViewData["InterestList"] as List <AreaInterest>,
+ "AreaInterestID", "Name"))"
+                        class="form-control"></select>
                 <span asp-validation-for="AreaInterestID"
                       class="text-danger"></span>
             </div>
         </div>
+
         <div class="form-group row">
             <label asp-for="EmailAddr"
                    class="col-sm-3 col-form-label"></label>
@@ -74,11 +83,11 @@
             </div>
         </div>
         <div class="form-group row">
-            <label asp-for="JudgePassword"
+            <label asp-for="Password"
                    class="col-sm-3 col-form-label"></label>
             <div class="col-sm-9 col-md-5">
-                <input asp-for="JudgePassword" class="form-control" />
-                <span asp-validation-for="JudgePassword"
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password"
                       class="text-danger"></span>
             </div>
         </div>

@@ -21,9 +21,9 @@
                     <td>@item.JudgeID.ToString()</td>
                     <td>@item.JudgeName</td>
                     <td>@item.Salutation</td>
-                    <td>@item.AreaInterestID</td>
+                    <td>@item.AreaInterestID.ToString()</td>
                     <td>@item.EmailAddr</td>
-                    <td>@item.JudgePassword</td>
+                    <td>@item.Password</td>
                     <td>
                         <a asp-action="Edit" asp-controller="JudgeProfile"
                            asp-route-id="@item.JudgeID">Edit</a> |
