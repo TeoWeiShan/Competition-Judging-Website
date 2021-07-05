@@ -132,11 +132,11 @@ namespace WEB2021Apr_P04_T4.DAL
             SqlCommand cmd = conn.CreateCommand();
 
             //Specify the SELECT SQL statement that
-            //retrieves all attributes of a judge record.
+            //retrieves all attributes of a criteria record.
             cmd.CommandText = @"SELECT * FROM Criteria
             WHERE CriteriaID = @selectedCriteriaID";
             //Define the parameter used in SQL statement, value for the
-            //parameter is retrieved from the method parameter “judgeId”.
+            //parameter is retrieved from the method parameter “CriteriaId”.
             cmd.Parameters.AddWithValue("@selectedCriteriaID", criteriaId);
             //Open a database connection
             conn.Open();
@@ -185,6 +185,24 @@ namespace WEB2021Apr_P04_T4.DAL
             //Close the database connection
             conn.Close();
             return count;
+        }
+
+        public int Delete(int criteriaId)
+        {
+            //Instantiate a SqlCommand object, supply it with a DELETE SQL statement
+            //to delete a area interest record specified by a CriteriaID
+            SqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = @"DELETE FROM Criteria WHERE CriteriaID = @selectCriteriaID";
+            cmd.Parameters.AddWithValue("@selectCriteriaID", criteriaId);
+            //Open a database connection
+            conn.Open();
+            int rowAffected = 0;
+            //Execute the DELETE SQL to remove the Criteria record
+            rowAffected += cmd.ExecuteNonQuery();
+            //Close database connection
+            conn.Close();
+            //Return number of row of Criteria record updated or deleted
+            return rowAffected;
         }
     }
 }

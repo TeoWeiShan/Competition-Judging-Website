@@ -19,7 +19,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         public ActionResult Index()
         {
             // Stop accessing the action if not logged in
-            // or account not in the "Judge" role
+            // or account not in the "Criteria" role
             if ((HttpContext.Session.GetString("Role") == null) ||
             (HttpContext.Session.GetString("Role") != "Judge"))
             {
@@ -49,7 +49,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         public ActionResult Create()
         {
             // Stop accessing the action if not logged in
-            // or account not in the "Judge" role
+            // or account not in the "Criteria" role
             if ((HttpContext.Session.GetString("Role") == null) ||
             (HttpContext.Session.GetString("Role") != "Judge"))
             {
@@ -67,9 +67,9 @@ namespace WEB2021Apr_P04_T4.Controllers
             ViewData["CompetitionList"] = GetAllCompetition();
             if (ModelState.IsValid)
             {
-                //Add judge record to database
+                //Add criteria record to database
                 criteria.CriteriaID = criteriaContext.Add(criteria);
-                //Redirect user to Judge/Index view
+                //Redirect user to Criteria/Index view
                 return RedirectToAction("Index");
             }
             else
@@ -105,7 +105,7 @@ namespace WEB2021Apr_P04_T4.Controllers
             return View(criteria);
         }
 
-        // POST: JudgeProfileController/Edit/5
+        // POST: CriteriaController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Criteria criteria)
@@ -113,7 +113,7 @@ namespace WEB2021Apr_P04_T4.Controllers
             ViewData["CompetitionList"] = GetAllCompetition();
             if (ModelState.IsValid)
             {
-                //Update judge record to database
+                //Update criteria record to database
                 criteriaContext.Update(criteria);
                 return RedirectToAction("Index");
             }
@@ -123,6 +123,39 @@ namespace WEB2021Apr_P04_T4.Controllers
                 //to display error message
                 return View(criteria);
             }
+        }
+
+        // GET: CriteriaController/Delete/5
+        public ActionResult Delete(int? id)
+        {
+            // Stop accessing the action if not logged in or account not in the "Judge" role
+            if ((HttpContext.Session.GetString("Role") == null) ||
+                (HttpContext.Session.GetString("Role") != "Judge"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if (id == null)
+            {
+                //Return to listing page, not allowed to edit
+                return RedirectToAction("Index");
+            }
+            Criteria criteria = criteriaContext.GetDetails(id.Value);
+            if (criteria == null)
+            {
+                //Return to listing page, not allowed to edit
+                return RedirectToAction("Index");
+            }
+            return View(criteria);
+        }
+
+        // POST: CriteriaController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(Criteria criteria)
+        {
+            // Delete the interest record from database
+            criteriaContext.Delete(criteria.CriteriaID);
+            return RedirectToAction("Index");
         }
     }
 }

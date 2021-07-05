@@ -13,7 +13,7 @@ namespace WEB2021Apr_P04_T4.Models
         public int CriteriaID { get; set; }
 
         [Required(ErrorMessage = "Competition cannot be null.")]
-        [Display(Name = "Competition")]
+        [Display(Name = "Competition ID")]
         public int CompetitionID { get; set; }
 
         [Required(ErrorMessage = "Please enter a criteria.")]
