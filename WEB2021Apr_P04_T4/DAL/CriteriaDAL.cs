@@ -62,5 +62,66 @@ namespace WEB2021Apr_P04_T4.DAL
             return criteriaList;
         }
 
+        public int Add(Criteria criteria)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify an INSERT SQL statement which will
+            //return the auto-generated StaffID after insertion
+            cmd.CommandText = @"INSERT INTO Criteria (CompetitionID, CriteriaName, Weightage)
+            OUTPUT INSERTED.CriteriaID
+            VALUES(@competitionid, @criterianame, @weightage)";
+
+            //Define the parameters used in SQL statement, value for each parameter
+            //is retrieved from respective class's property.
+            cmd.Parameters.AddWithValue("@competitionid", criteria.CompetitionID);
+            cmd.Parameters.AddWithValue("@criterianame", criteria.CriteriaName);
+            cmd.Parameters.AddWithValue("@weightage", criteria.Weightage);
+
+            //A connection to database must be opened before any operations made.
+            conn.Open();
+
+            //ExecuteScalar is used to retrieve the auto-generated
+            //StaffID after executing the INSERT SQL statement
+            criteria.CriteriaID = (int)cmd.ExecuteScalar();
+
+            //A connection should be closed after operations.
+            conn.Close();
+            //Return id when no error occurs.
+            return criteria.CriteriaID;
+        }
+
+        public bool IsCriteriaNameExist(string criteriaName, int criteriaID)
+        {
+            bool criteriaFound = false;
+            //Create a SqlCommand object and specify the SQL statement 
+            //to get a staff record with the email address to be validated
+            SqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = @"SELECT CriteriaID FROM Criteria 
+                              WHERE CriteriaName=@selectedCriteriaName";
+            cmd.Parameters.AddWithValue("@selectedCriteriaName", criteriaName);
+
+            //Open a database connection and execute the SQL statement
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.HasRows)
+            { //Records found
+                while (reader.Read())
+                {
+                    if (reader.GetInt32(0) != criteriaID)
+                        //Criteria is already present in database
+                        criteriaFound = true;
+                }
+            }
+            else
+            { //No record
+                criteriaFound = false; // The email address given does not exist
+            }
+            reader.Close();
+            conn.Close();
+
+            return criteriaFound;
+        }
     }
 }
