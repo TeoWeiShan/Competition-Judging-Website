@@ -83,24 +83,49 @@ namespace WEB2021Apr_P04_T4.Controllers
             }
         }
 
+        
         // GET: JudgeProfileController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            return View();
+            // Stop accessing the action if not logged in
+            // or account not in the "Staff" role
+            if ((HttpContext.Session.GetString("Role") == null) ||
+            (HttpContext.Session.GetString("Role") != "Judge"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if (id == null)
+            { //Query string parameter not provided
+              //Return to listing page, not allowed to edit
+                return RedirectToAction("Index");
+            }
+            ViewData["InterestList"] = GetAllAreaInterests();
+            Judge judge = judgeContext.GetDetails(id.Value);
+            if (judge == null)
+            {
+                //Return to listing page, not allowed to edit
+                return RedirectToAction("Index");
+            }            
+            return View(judge);
         }
 
         // POST: JudgeProfileController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Judge judge)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
+            ViewData["InterestList"] = GetAllAreaInterests();
+
+            if (ModelState.IsValid) {
+                //Update judge record to database
+                judgeContext.Update(judge);
+                return RedirectToAction("Index");
             }
-            catch
+            else
             {
-                return View();
+                //Input validation fails, return to the view
+                //to display error message
+                return View(judge);
             }
         }
 
