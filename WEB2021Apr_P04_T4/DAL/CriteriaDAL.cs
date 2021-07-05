@@ -123,5 +123,68 @@ namespace WEB2021Apr_P04_T4.DAL
 
             return criteriaFound;
         }
+
+        public Criteria GetDetails(int criteriaId)
+        {
+            Criteria criteria = new Criteria();
+
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+
+            //Specify the SELECT SQL statement that
+            //retrieves all attributes of a judge record.
+            cmd.CommandText = @"SELECT * FROM Criteria
+            WHERE CriteriaID = @selectedCriteriaID";
+            //Define the parameter used in SQL statement, value for the
+            //parameter is retrieved from the method parameter “judgeId”.
+            cmd.Parameters.AddWithValue("@selectedCriteriaID", criteriaId);
+            //Open a database connection
+            conn.Open();
+            //Execute SELCT SQL through a DataReader
+            SqlDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                //Read the record from database
+                while (reader.Read())
+                {
+                    // Fill staff object with values from the data reader
+                    criteria.CriteriaID = criteriaId;
+                    criteria.CompetitionID = reader.GetInt32(1);
+                    criteria.CriteriaName = reader.GetString(2);
+                    criteria.Weightage = reader.GetInt32(3);
+                }
+            }
+            //Close DataReader
+            reader.Close();
+            //Close the database connection
+            conn.Close();
+
+            return criteria;
+        }
+        public int Update(Criteria criteria)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+
+            //Specify an UPDATE SQL statement
+            cmd.CommandText = @"UPDATE Criteria SET CompetitionID=@compid, CriteriaName=@name,
+            Weightage=@weightage WHERE CriteriaID = @selectedCriteriaID";
+
+            //Define the parameters used in SQL statement, value for each parameter
+            //is retrieved from respective class's property.
+            cmd.Parameters.AddWithValue("@selectedCriteriaID", criteria.CriteriaID);
+            cmd.Parameters.AddWithValue("@compid", criteria.CompetitionID);
+            cmd.Parameters.AddWithValue("@name", criteria.CriteriaName);
+            cmd.Parameters.AddWithValue("@weightage", criteria.Weightage);
+
+            //Open a database connection
+            conn.Open();
+            //ExecuteNonQuery is used for UPDATE and DELETE
+            int count = cmd.ExecuteNonQuery();
+
+            //Close the database connection
+            conn.Close();
+            return count;
+        }
     }
 }
