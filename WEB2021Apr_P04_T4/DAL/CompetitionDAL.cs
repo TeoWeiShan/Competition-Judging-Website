@@ -256,7 +256,9 @@ WHERE CompetitionID = @selectedCompetitionID";
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify the SQL statement that select all branches
-            cmd.CommandText = @"SELECT * FROM CompetitionJudge WHERE CompetitionID = @selectedCompetitionID";
+            cmd.CommandText = @"SELECT Judge.JudgeID,JudgeName, Salutation, Judge.AreaInterestID, EmailAddr, Judge.Password FROM ((CompetitionJudge
+INNER JOIN Competition ON Competition.CompetitionID = CompetitionJudge.CompetitionID)
+INNER JOIN Judge ON Judge.JudgeID = CompetitionJudge.JudgeID) Where CompetitionJudge.CompetitionID = @selectedCompetitionID";
             //Define the parameter used in SQL statement, value for the
             //parameter is retrieved from the method parameter “branchNo”.
             cmd.Parameters.AddWithValue("@selectedCompetitionID", competitionID);
