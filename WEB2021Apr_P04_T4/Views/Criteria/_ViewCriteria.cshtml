@@ -1,0 +1,40 @@
+﻿@model IEnumerable<WEB2021Apr_P04_T4.Models.Criteria>
+
+@if (Model.ToList().Count > 0)
+{
+    <div class="table-responsive">
+        <table id="viewCriteria" class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Criteria ID</th>
+                    <th>Competition ID</th>
+                    <th>Criteria Name</th>
+                    <th>Weightage</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.CriteriaID.ToString()</td>
+                        <td>@item.CompetitionID.ToString()</td>
+                        <td>@item.CriteriaName</td>
+                        <td>@item.Weightage.ToString()</td>
+                        <td>
+                            <a asp-action="Edit" asp-controller="Criteria"
+                               asp-route-id="@item.CriteriaID">Edit</a> |
+                            <a asp-action="Details" asp-controller="Criteria"
+                               asp-route-id="@item.CriteriaID">Details</a> |
+                            <a asp-action="Delete" asp-controller="Criteria"
+                               asp-route-id="@item.CriteriaID">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <span style="color:red">No record found!</span>
+}
