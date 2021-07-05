@@ -67,13 +67,25 @@ namespace WEB2021Apr_P04_T4.DAL
             //Specify an INSERT SQL statement which will
             //return the auto-generated StaffID after insertion
             //, StartDate, EndDate,ResultReleaseDate  //, @start, @end, @result
-            cmd.CommandText = @"INSERT INTO Competition (AreaInterestID, CompetitionName)
+            cmd.CommandText = @"INSERT INTO Competition (AreaInterestID, CompetitionName, StartDate, EndDate, ResultReleasedDate)
 OUTPUT INSERTED.CompetitionID
-VALUES(@interest, @name)";
+VALUES(@interest, @name, @startDate, @endDate, @resultDate)";
             //Define the parameters used in SQL statement, value for each parameter
             //is retrieved from respective class's property.
             cmd.Parameters.AddWithValue("@interest", competition.AreaInterestID);
             cmd.Parameters.AddWithValue("@name", competition.CompetitionName);
+            if (competition.StartDate != null)
+                cmd.Parameters.AddWithValue("@startDate", competition.StartDate.Value);
+            else
+                cmd.Parameters.AddWithValue("@startDate", DBNull.Value);
+            if (competition.EndDate != null)
+                cmd.Parameters.AddWithValue("@endDate", competition.EndDate.Value);
+            else
+                cmd.Parameters.AddWithValue("@endDate", DBNull.Value);
+            if (competition.ResultReleasedDate != null)
+                cmd.Parameters.AddWithValue("@resultDate", competition.ResultReleasedDate.Value);
+            else
+                cmd.Parameters.AddWithValue("@resultDate", DBNull.Value);
             //cmd.Parameters.AddWithValue("@start", competition.StartDate);
             //cmd.Parameters.AddWithValue("@end", competition.EndDate);
             //cmd.Parameters.AddWithValue("@result", competition.ResultReleasedDate);
