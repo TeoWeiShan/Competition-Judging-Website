@@ -142,6 +142,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         public ActionResult Edit(Competition competition)
         {
             ViewData["InterestList"] = GetAllAreaInterests();
+
             if (ModelState.IsValid)
             {
                 //Update staff record to database
@@ -183,6 +184,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(Competition competition)
         {
+            ModelState.Remove("AreaInterestID");
             if (ModelState.IsValid)
             {
                 // Delete the interest record from database
