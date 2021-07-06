@@ -91,15 +91,16 @@ namespace WEB2021Apr_P04_T4.DAL
             return criteria.CriteriaID;
         }
 
-        public bool IsCriteriaNameExist(string criteriaName, int criteriaID)
+        public bool IsCriteriaNameExist(string criteriaName, int criteriaID, int competitionID)
         {
             bool criteriaFound = false;
             //Create a SqlCommand object and specify the SQL statement 
             //to get a staff record with the email address to be validated
             SqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = @"SELECT CriteriaID FROM Criteria 
-                              WHERE CriteriaName=@selectedCriteriaName";
+                              WHERE CriteriaName=@selectedCriteriaName AND CompetitionID=@selectedCompetitionID";
             cmd.Parameters.AddWithValue("@selectedCriteriaName", criteriaName);
+            cmd.Parameters.AddWithValue("@selectedCompetitionID", competitionID);
 
             //Open a database connection and execute the SQL statement
             conn.Open();

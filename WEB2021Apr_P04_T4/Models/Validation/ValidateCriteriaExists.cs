@@ -18,8 +18,8 @@ namespace WEB2021Apr_P04_T4.Models.Validation
             Criteria criteria = (Criteria)validationContext.ObjectInstance;
 
             int criteriaID = criteria.CriteriaID;
-
-            if (criteriaContext.IsCriteriaNameExist(criteriaName, criteriaID))
+            int competitionID = criteria.CompetitionID;
+            if (criteriaContext.IsCriteriaNameExist(criteriaName, criteriaID, competitionID))
                 return new ValidationResult("Criteria already exists!");
             else
                 return ValidationResult.Success;
