@@ -15,6 +15,10 @@ namespace WEB2021Apr_P04_T4.Controllers
         // GET: CompetitionJudgeController
         public ActionResult Index(int? id)
         {
+            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Admin"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
             CompetitionJudgeViewModel competitionJudgeVM = new CompetitionJudgeViewModel();
             competitionJudgeVM.competitionList = competitionContext.GetAllCompetition();
             // Check if BranchNo (id) presents in the query string
@@ -35,8 +39,16 @@ namespace WEB2021Apr_P04_T4.Controllers
         // GET: CompetitionJudgeController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Admin"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            Competition competition = competitionContext.GetDetails(id);
+            //CompetitionJudgeViewModel competitionVM = MapToCompetitionJudgeVM(competition);
+            return View(competition);
         }
+
+       
 
         // GET: CompetitionJudgeController/Create
         public ActionResult Create()
