@@ -12,7 +12,6 @@
             <tr>
                 <th>ID</th>
                 <th>Competition Name</th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -30,7 +29,9 @@
                     <td>@item.CompetitionName</td>
                     <td>
                         <a asp-action="Index" asp-controller="CompetitionJudge"
-                           asp-route-id="@item.CompetitionID">View Judges</a>
+                           asp-route-id="@item.CompetitionID">View Judges</a> |
+                        <a asp-action="Index" asp-controller="CompetitionJudge"
+                           asp-route-id="@item.CompetitionID">Assign Judges</a> 
                     </td>
                 </tr>
             }
@@ -47,11 +48,11 @@
             Judges in Competition
             @ViewData["selectedCompetitionNo"].ToString() :
         </h5>
-        <partial name="~/Views/JudgeProfile/_ViewJudgeProfile.cshtml"
+        <partial name="~/Views/CompetitionJudge/_ViewCompetitionJudge.cshtml"
                  model="@Model.judgeList" />
     }
     else
     {
-        <h5>No staff for selected branch!</h5>
+        <h5>No judges for selected competition!</h5>
     }
 } 
