@@ -7,11 +7,14 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using WEB2021Apr_P04_T4.Models;
+using WEB2021Apr_P04_T4.DAL;
 
 namespace WEB2021Apr_P04_T4.Controllers
 {
     public class HomeController : Controller
     {
+        private JudgeProfileDAL judgeContext = new JudgeProfileDAL();
+        private CompetitorDAL competitorContext = new CompetitorDAL();
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -42,6 +45,34 @@ namespace WEB2021Apr_P04_T4.Controllers
             // Email address converted to lowercase
             string loginID = formData["txtLoginID"].ToString().ToLower();
             string password = formData["txtPassword"].ToString();
+            //Check if login is Judge
+            List<Judge> judgeList = judgeContext.GetAllJudge();
+            foreach (Judge judge in judgeList)
+            {
+                if (judge.EmailAddr.ToLower() == loginID && judge.Password == password)
+                {
+                    // Store Login ID in session with the key “LoginID”
+                    HttpContext.Session.SetString("LoginID", loginID);
+                    // Store user role “Judge” as a string in session with the key “Role” 
+                    HttpContext.Session.SetString("Role", "Judge");
+                    return RedirectToAction("JudgeMain");
+                }
+            }
+            //Check if login is Competitor
+            List<Competitor> competitorList = competitorContext.GetAllCompetitor();
+            foreach (Competitor competitor in competitorList)
+            {
+                if (competitor.EmailAddr.ToLower() == loginID && competitor.Password == password)
+                {
+                    // Store Login ID in session with the key “LoginID”
+                    HttpContext.Session.SetString("LoginID", loginID);
+                    // Store user role “Judge” as a string in session with the key “Role” 
+                    HttpContext.Session.SetString("Role", "Competitor");
+                    return RedirectToAction("CompetitorMain");
+
+                }
+            }
+            //Check if login is Admin, else invalid credentials
             if (loginID == "admin1@lcu.edu.sg" && password == "p@55Admin")
             {
                 // Store Login ID in session with the key “LoginID”
@@ -49,7 +80,7 @@ namespace WEB2021Apr_P04_T4.Controllers
                 // Store user role “Staff” as a string in session with the key “Role” 
                 HttpContext.Session.SetString("Role", "Admin");
                 return RedirectToAction("AdminMain");
-            }
+            }/*
             else if (loginID == "abc1@lcu.edu.sg" && password == "p@55Judge")
             {
                 // Store Login ID in session with the key “LoginID”
@@ -65,7 +96,7 @@ namespace WEB2021Apr_P04_T4.Controllers
                 // Store user role “Judge” as a string in session with the key “Role” 
                 HttpContext.Session.SetString("Role", "Competitor");
                 return RedirectToAction("CompetitorMain");
-            }
+            }*/
             else
             {
                 // Store an error message in TempData for display at the index view
