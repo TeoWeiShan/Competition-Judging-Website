@@ -1,0 +1,58 @@
+﻿@model WEB2021Apr_P04_T4.Models.Criteria
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h4 class="PageTitle">Edit Criteria Record</h4>
+<hr />
+<form asp-action="Edit">
+    <fieldset class="FormContent">
+        <div class="form-group row">
+            <label asp-for="CriteriaID"
+                   class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9 col-md-5">
+                <input asp-for="CriteriaID" readonly
+                       class="form-control-plaintext" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label asp-for="CompetitionID"
+                   class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9 col-md-5">
+                <input asp-for="CompetitionID" readonly
+                       class="form-control-plaintext" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label asp-for="CriteriaName"
+                   class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9 col-md-5">
+                <input asp-for="CriteriaName" class="form-control" />
+                <span asp-validation-for="CriteriaName"
+                      class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label asp-for="Weightage"
+                   class="col-sm-3 col-form-label"></label>
+            <div class="col-sm-9 col-md-5">
+                <input asp-for="Weightage" class="form-control" />
+                <span asp-validation-for="Weightage"
+                      class="text-danger"></span>
+            </div>
+        </div>
+       
+        <div class="form-group row">
+            <div class="col-sm-9 offset-sm-3">
+                <input type="submit" value="Save"
+                       class="btn btn-primary" />
+            </div>
+        </div>
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </fieldset>
+</form>

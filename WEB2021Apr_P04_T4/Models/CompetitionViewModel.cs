@@ -10,7 +10,7 @@ namespace WEB2021Apr_P04_T4.Models
     public class CompetitionViewModel
     {
         [Display(Name = "Competition ID")]
-        [ValidateCompetitionDeletion]
+        [ValidateCompetitionModification]
         public int CompetitionID { get; set; }
 
         [Display(Name = "Area Interest")]
