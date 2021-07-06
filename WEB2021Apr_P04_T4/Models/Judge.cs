@@ -30,7 +30,9 @@ namespace WEB2021Apr_P04_T4.Models
         public string EmailAddr { get; set; }
 
         [Required(ErrorMessage = "Please enter a password.")]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$",
+                ErrorMessage = ("Your password must contain at least 8 characters with a mix of lower and upper case letters,  numerics and special characters."))]
+        [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
     }
