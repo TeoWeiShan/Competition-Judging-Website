@@ -30,8 +30,46 @@ namespace WEB2021Apr_P04_T4.Controllers
         // GET: JudgeProfileController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            // Stop accessing the action if not logged in
+            // or account not in the "Judge" role
+            if ((HttpContext.Session.GetString("Role") == null) ||
+            (HttpContext.Session.GetString("Role") != "Judge"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            Judge judge = judgeContext.GetDetails(id);
+            JudgeViewModel judgeVM = MapToJudgeVM(judge);
+            return View(judgeVM);
         }
+
+        public JudgeViewModel MapToJudgeVM(Judge judge)
+        {
+            string interestName = "";
+            if (judge.JudgeID != null)
+            {
+                List<AreaInterest> interestList = areaInterestContext.GetAllAreaInterest();
+                foreach (AreaInterest interest in interestList)
+                {
+                    if (interest.AreaInterestID == judge.AreaInterestID)
+                    {
+                        interestName = interest.Name;
+                        //Exit the foreach loop once the name is found
+                        break;
+                    }
+                }
+            }
+            JudgeViewModel judgeVM = new JudgeViewModel
+            {
+                JudgeID = judge.JudgeID,
+                JudgeName = judge.JudgeName,
+                Salutation = judge.Salutation,
+                AreaInterestID = judge.AreaInterestID,
+                EmailAddr = judge.EmailAddr,
+                Password = judge.Password,
+            };
+            return judgeVM;        
+    }
 
         private List<AreaInterest> GetAllAreaInterests()
         {
