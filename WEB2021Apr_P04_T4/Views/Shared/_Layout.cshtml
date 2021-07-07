@@ -17,6 +17,10 @@
         {
             @await Html.PartialAsync("_JudgeMenu.cshtml")
         }
+        else if (Context.Session.GetString("Role") == "Competitor")
+        {
+            @await Html.PartialAsync("_CompetitorMenu.cshtml")
+        }
         else
         {
             @await Html.PartialAsync("_MainMenu.cshtml")
