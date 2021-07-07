@@ -16,7 +16,7 @@
         mr-auto: right margin auto-adjusted -->
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/JudgeProfile/Index">View Profile</a>
+                <a class="nav-link" href="/JudgeProfile/Details/@Context.Session.GetString("LoginID")">View Profile</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/Criteria/Index">Judging Criteria</a>
@@ -29,7 +29,7 @@
             </li>
         </ul>
         <!-- Links that are aligned to the right,
-            ml-auto: left margin auto-adjusted -->
+        ml-auto: left margin auto-adjusted -->
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <!-- A link for logging out user -->
