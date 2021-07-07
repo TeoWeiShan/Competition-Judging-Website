@@ -17,7 +17,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         // GET: CompetitorController
         public ActionResult Index()
         {
-            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Admin"))
+            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Competitor"))
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -37,7 +37,7 @@ namespace WEB2021Apr_P04_T4.Controllers
             // Stop accessing the action if not logged in
             // or account not in the "Staff" role
             if ((HttpContext.Session.GetString("Role") == null) ||
-            (HttpContext.Session.GetString("Role") != "Admin"))
+            (HttpContext.Session.GetString("Role") != "Competitor"))
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -89,7 +89,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         public ActionResult Delete(int? id)
         {
             // Stop accessing the action if not logged in or account not in the "Admin" role
-            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Admin"))
+            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Competitor"))
             {
                 return RedirectToAction("Index", "Home");
             }
