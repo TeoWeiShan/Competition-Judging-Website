@@ -158,7 +158,7 @@ namespace WEB2021Apr_P04_T4.Controllers
             if (ModelState.IsValid) {
                 //Update judge record to database
                 judgeContext.Update(judge);
-                return RedirectToAction("Index");
+                return RedirectToAction("Details");
             }
             else
             {
