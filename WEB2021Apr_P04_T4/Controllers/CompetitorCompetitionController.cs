@@ -4,11 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WEB2021Apr_P04_T4.DAL;
+using WEB2021Apr_P04_T4.Models;
 
 namespace WEB2021Apr_P04_T4.Controllers
 {
     public class CompetitorCompetitionController : Controller
     {
+        private CompetitorDAL competitorContext = new CompetitorDAL();
+
         // GET: CompetitorCompetitionController
         public ActionResult Index()
         {
@@ -18,7 +22,13 @@ namespace WEB2021Apr_P04_T4.Controllers
         // GET: CompetitorCompetitionController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Competitor"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            Competitor competitor = competitorContext.GetDetails(id);
+            //CompetitionJudgeViewModel competitionVM = MapToCompetitionJudgeVM(competition);
+            return View(competitor);
         }
 
         // GET: CompetitorCompetitionController/Create
