@@ -7,27 +7,27 @@ using System.Threading.Tasks;
 
 namespace WEB2021Apr_P04_T4.Controllers
 {
-    public class CompetitorCompetition : Controller
+    public class CompetitorCompetitionController : Controller
     {
-        // GET: CompetitorCompetition
+        // GET: CompetitorCompetitionController
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: CompetitorCompetition/Details/5
+        // GET: CompetitorCompetitionController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: CompetitorCompetition/Create
+        // GET: CompetitorCompetitionController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: CompetitorCompetition/Create
+        // POST: CompetitorCompetitionController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -42,13 +42,13 @@ namespace WEB2021Apr_P04_T4.Controllers
             }
         }
 
-        // GET: CompetitorCompetition/Edit/5
+        // GET: CompetitorCompetitionController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: CompetitorCompetition/Edit/5
+        // POST: CompetitorCompetitionController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -63,13 +63,13 @@ namespace WEB2021Apr_P04_T4.Controllers
             }
         }
 
-        // GET: CompetitorCompetition/Delete/5
+        // GET: CompetitorCompetitionController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: CompetitorCompetition/Delete/5
+        // POST: CompetitorCompetitionController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
