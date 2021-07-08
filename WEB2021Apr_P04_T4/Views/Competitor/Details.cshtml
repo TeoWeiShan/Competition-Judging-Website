@@ -1,0 +1,93 @@
+﻿@model WEB2021Apr_P04_T4.Models.Competitor
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h4 class="PageTitle">View Competitor Details</h4>
+<hr />
+<fieldset class="FormContent">
+    <div class="form-group row">
+        <label asp-for="CompetitorID"
+               class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("CompetitorID")
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="CompetitorName" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("CompetitorName")
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="Salutation" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("Salutation")
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="Salutation" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9">
+            <div class="form-group form-check-inline">
+                <label class="col-form-label">
+                    <input asp-for="Salutation" type="radio" value="Dr"
+                           class="form-check-input" disabled />
+                    <span style="font-weight:normal;
+ padding-right:20px">Dr</span>
+                </label>
+                <label class="col-form-label">
+                    <input asp-for="Salutation" type="radio" value="Mr"
+                           class="form-check-input" disabled />
+                    <span style="font-weight:normal;
+ padding-right:20px">Mr</span>
+                </label>
+                <label class="col-form-label">
+                    <input asp-for="Salutation" type="radio" value="Ms"
+                           class="form-check-input" disabled />
+                    <span style="font-weight:normal;
+ padding-right:20px">Ms</span>
+                </label>
+                <label class="col-form-label">
+                    <input asp-for="Salutation" type="radio" value="Mrs"
+                           class="form-check-input" disabled />
+                    <span style="font-weight:normal;
+ padding-right:20px">Mrs</span>
+                </label>
+                <label class="col-form-label">
+                    <input asp-for="Salutation" type="radio" value="Mdm"
+                           class="form-check-input" disabled />
+                    <span style="font-weight:normal;
+ padding-right:20px">Mdm</span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="CompetitorID" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("CompetitorID")
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="EmailAddr"
+               class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("EmailAddr")
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="Password" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("Password")
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-9 offset-sm-3">
+            <a asp-action="Edit" asp-controller="CompetitorProfile"
+               asp-route-id="@Model.CompetitorID">Edit</a> |
+            <a asp-action="Index"
+               asp-controller="CompetitorProfile">Back to Competitor List</a>
+        </div>
+    </div>
+</fieldset>

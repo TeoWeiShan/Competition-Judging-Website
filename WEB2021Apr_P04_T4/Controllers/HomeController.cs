@@ -65,7 +65,7 @@ namespace WEB2021Apr_P04_T4.Controllers
                 if (competitor.EmailAddr.ToLower() == loginID && competitor.Password == password)
                 {
                     // Store Login ID in session with the key “LoginID”
-                    HttpContext.Session.SetString("LoginID", loginID);
+                    HttpContext.Session.SetString("LoginID", competitor.CompetitorID.ToString());
                     // Store user role “Judge” as a string in session with the key “Role” 
                     HttpContext.Session.SetString("Role", "Competitor");
                     return RedirectToAction("CompetitorMain");
