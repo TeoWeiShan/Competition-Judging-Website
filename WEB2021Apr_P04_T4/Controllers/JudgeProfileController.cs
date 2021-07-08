@@ -12,27 +12,28 @@ namespace WEB2021Apr_P04_T4.Controllers
 {
     public class JudgeProfileController : Controller
     {
-       private JudgeProfileDAL judgeContext = new JudgeProfileDAL();
+        private JudgeProfileDAL judgeContext = new JudgeProfileDAL();
         private AreaInterestDAL areaInterestContext = new AreaInterestDAL();
 
-        // GET: JudgeProfileController
         public ActionResult Index()
         {
+            var loginID = HttpContext.Session.GetString("LoginID");
             if ((HttpContext.Session.GetString("Role") == null) ||
-                (HttpContext.Session.GetString("Role") != "Judge"))
+            (HttpContext.Session.GetString("Role") != "Judge"))
             {
                 return RedirectToAction("Index", "Home");
             }
-            List<Judge> judgeList = judgeContext.GetAllJudge();
-            return View(judgeList);
+            //List<Judge> judgeList = judgeContext.GetAllJudge();
+            return View();
         }
 
         // GET: JudgeProfileController/Details/5
         public ActionResult Details(int id)
         {
+            var loginID = HttpContext.Session.GetString("LoginID");
             // Stop accessing the action if not logged in
             // or account not in the "Judge" role
-            if ((HttpContext.Session.GetString("Role") == null) ||
+            if ((HttpContext.Session.GetString("LoginID") != id.ToString()) ||
             (HttpContext.Session.GetString("Role") != "Judge"))
             {
                 return RedirectToAction("Index", "Home");
@@ -41,7 +42,7 @@ namespace WEB2021Apr_P04_T4.Controllers
             Judge judge = judgeContext.GetDetails(id);
             JudgeViewModel judgeVM = MapToJudgeVM(judge);
             return View(judgeVM);
-        }
+        }       
 
         public JudgeViewModel MapToJudgeVM(Judge judge)
         {
@@ -64,7 +65,7 @@ namespace WEB2021Apr_P04_T4.Controllers
                 JudgeID = judge.JudgeID,
                 JudgeName = judge.JudgeName,
                 Salutation = judge.Salutation,
-                AreaInterestID = judge.AreaInterestID,
+                AreaInterestID = interestName,
                 EmailAddr = judge.EmailAddr,
                 Password = judge.Password,
             };
@@ -167,6 +168,7 @@ namespace WEB2021Apr_P04_T4.Controllers
             }
         }
 
+        /*
         // GET: JudgeProfileController/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -198,6 +200,6 @@ namespace WEB2021Apr_P04_T4.Controllers
             // Delete the interest record from database
             judgeContext.Delete(judge.JudgeID);
             return RedirectToAction("Index");
-        }
+        } */
     }
 }

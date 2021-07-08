@@ -125,6 +125,42 @@ namespace WEB2021Apr_P04_T4.DAL
             return criteriaFound;
         }
 
+        /*
+        public bool IsCriteriaWeightage100(string criteriaName, int criteriaID, int competitionID)
+        {
+            bool WeightageOver100 = false;
+            //Create a SqlCommand object and specify the SQL statement 
+            //to get a staff record with the email address to be validated
+            SqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = @"SELECT * FROM Criteria
+                              WHERE CriteriaName=@selectedCriteriaName AND CompetitionID=@selectedCompetitionID";
+            cmd.Parameters.AddWithValue("@selectedCriteriaName", criteriaName);
+            cmd.Parameters.AddWithValue("@selectedCompetitionID", competitionID);
+
+            //Open a database connection and execute the SQL statement
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.HasRows)
+            { //Records found
+                while (reader.Read())
+                {
+                    if (reader.GetInt32(3) > 100)
+                        //Total weightage for selected competition ID is over 100
+                        WeightageOver100 = true;
+                }
+            }
+            else
+            { //No record
+                WeightageOver100 = false; // The email address given does not exist
+            }
+            reader.Close();
+            conn.Close();
+
+            return WeightageOver100;
+        }
+        */
+
         public Criteria GetDetails(int criteriaId)
         {
             Criteria criteria = new Criteria();

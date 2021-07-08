@@ -22,6 +22,7 @@ namespace WEB2021Apr_P04_T4.Models
         public string CriteriaName { get; set; }
 
         [Required(ErrorMessage = "Please enter a weightage.")]
+        //[ValidateCriteriaWeightage100]
         public int Weightage { get; set; }
     }
 }
