@@ -1,41 +1,95 @@
-﻿@model IEnumerable<WEB2021Apr_P04_T4.Models.Judge>
+﻿@model WEB2021Apr_P04_T4.Models.JudgeViewModel
 
-@if (Model.ToList().Count > 0)
-{
-    <div class="table-responsive">
-        <table id="viewJudgeProfile" class="table table-striped table-bordered">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Judge ID</th>
-                    <th>Name</th>
-                    <th>Salutation</th>
-                    <th>Email</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                <tr>
-                    <td>@item.JudgeID.ToString()</td>
-                    <td>@item.JudgeName</td>
-                    <td>@item.Salutation</td>
-                    <td>@item.EmailAddr</td>
-                    <td>
-                        <a asp-action="Edit" asp-controller="JudgeProfile"
-                           asp-route-id="@item.JudgeID">Edit</a> |
-                        <a asp-action="Details" asp-controller="JudgeProfile"
-                           asp-route-id="@item.JudgeID">Details</a>
-                        <!-- <a asp-action="Delete" asp-controller="JudgeProfile"
-                                asp-route-id="@item.JudgeID">Delete</a> -->
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
+
+
+@{ ViewData["Title"] = "Details"; }
+
+
+
+<h4 class="PageTitle">View Judge Details</h4>
+<hr />
+<fieldset class="FormContent">
+    <div class="form-group row">
+        <label asp-for="JudgeID"
+               class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("JudgeID")
+        </div>
     </div>
-}
-else
-{
-    <span style="color:red">No record found!</span>
-}
+    <div class="form-group row">
+        <label asp-for="JudgeName" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("JudgeName")
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="Salutation" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("Salutation")
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="Salutation" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9">
+            <div class="form-group form-check-inline">
+                <label class="col-form-label">
+                    <input asp-for="Salutation" type="radio" value="Dr"
+                           class="form-check-input" disabled />
+                    <span style="font-weight:normal;
+ padding-right:20px">Dr</span>
+                </label>
+                <label class="col-form-label">
+                    <input asp-for="Salutation" type="radio" value="Mr"
+                           class="form-check-input" disabled />
+                    <span style="font-weight:normal;
+ padding-right:20px">Mr</span>
+                </label>
+                <label class="col-form-label">
+                    <input asp-for="Salutation" type="radio" value="Ms"
+                           class="form-check-input" disabled />
+                    <span style="font-weight:normal;
+ padding-right:20px">Ms</span>
+                </label>
+                <label class="col-form-label">
+                    <input asp-for="Salutation" type="radio" value="Mrs"
+                           class="form-check-input" disabled />
+                    <span style="font-weight:normal;
+ padding-right:20px">Mrs</span>
+                </label>
+                <label class="col-form-label">
+                    <input asp-for="Salutation" type="radio" value="Mdm"
+                           class="form-check-input" disabled />
+                    <span style="font-weight:normal;
+ padding-right:20px">Mdm</span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="AreaInterestID" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("AreaInterestID")
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="EmailAddr"
+               class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("EmailAddr")
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="Password" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("Password")
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-9 offset-sm-3">
+            <a asp-action="Edit" asp-controller="JudgeProfile"
+               asp-route-id="@Context.Session.GetString("LoginID")">Edit</a> |
+            <a asp-action="Index"
+               asp-controller="JudgeProfile">Back to Judge List</a>
+        </div>
+    </div>
+</fieldset>

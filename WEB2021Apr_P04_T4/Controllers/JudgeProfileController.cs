@@ -14,35 +14,18 @@ namespace WEB2021Apr_P04_T4.Controllers
     {
         private JudgeProfileDAL judgeContext = new JudgeProfileDAL();
         private AreaInterestDAL areaInterestContext = new AreaInterestDAL();
-
         public ActionResult Index()
         {
-            var loginID = HttpContext.Session.GetString("LoginID");
+            string loginID = HttpContext.Session.GetString("LoginID");
             if ((HttpContext.Session.GetString("Role") == null) ||
             (HttpContext.Session.GetString("Role") != "Judge"))
             {
                 return RedirectToAction("Index", "Home");
             }
-            //List<Judge> judgeList = judgeContext.GetAllJudge();
-            return View();
-        }
-
-        // GET: JudgeProfileController/Details/5
-        public ActionResult Details(int id)
-        {
-            var loginID = HttpContext.Session.GetString("LoginID");
-            // Stop accessing the action if not logged in
-            // or account not in the "Judge" role
-            if ((HttpContext.Session.GetString("LoginID") != id.ToString()) ||
-            (HttpContext.Session.GetString("Role") != "Judge"))
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            Judge judge = judgeContext.GetDetails(id);
+            Judge judge = judgeContext.GetDetails(Convert.ToInt32(loginID));
             JudgeViewModel judgeVM = MapToJudgeVM(judge);
             return View(judgeVM);
-        }       
+        }     
 
         public JudgeViewModel MapToJudgeVM(Judge judge)
         {
@@ -122,13 +105,14 @@ namespace WEB2021Apr_P04_T4.Controllers
             }
         }
 
-        
+
         // GET: JudgeProfileController/Edit/5
         public ActionResult Edit(int? id)
         {
             // Stop accessing the action if not logged in
             // or account not in the "Staff" role
-            if ((HttpContext.Session.GetString("Role") == null) ||
+
+            if ((HttpContext.Session.GetString("LoginID") != id.ToString()) ||
             (HttpContext.Session.GetString("Role") != "Judge"))
             {
                 return RedirectToAction("Index", "Home");
@@ -136,15 +120,15 @@ namespace WEB2021Apr_P04_T4.Controllers
             if (id == null)
             { //Query string parameter not provided
               //Return to listing page, not allowed to edit
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
             ViewData["InterestList"] = GetAllAreaInterests();
             Judge judge = judgeContext.GetDetails(id.Value);
             if (judge == null)
             {
                 //Return to listing page, not allowed to edit
-                return RedirectToAction("Index");
-            }            
+                return RedirectToAction("Index", "Home");
+            }
             return View(judge);
         }
 
@@ -158,7 +142,7 @@ namespace WEB2021Apr_P04_T4.Controllers
             if (ModelState.IsValid) {
                 //Update judge record to database
                 judgeContext.Update(judge);
-                return RedirectToAction("Details");
+                return RedirectToAction("Index");
             }
             else
             {
