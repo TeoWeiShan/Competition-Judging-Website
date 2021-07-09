@@ -94,8 +94,8 @@ namespace WEB2021Apr_P04_T4.DAL
         public bool IsCriteriaNameExist(string criteriaName, int criteriaID, int competitionID)
         {
             bool criteriaFound = false;
-            //Create a SqlCommand object and specify the SQL statement 
-            //to get a staff record with the email address to be validated
+            //Create a SqlCommand object and specify the SQL statement to get a criteria record from selected competition
+            //with its name to be validated
             SqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = @"SELECT CriteriaID FROM Criteria 
                               WHERE CriteriaName=@selectedCriteriaName AND CompetitionID=@selectedCompetitionID";
@@ -111,13 +111,13 @@ namespace WEB2021Apr_P04_T4.DAL
                 while (reader.Read())
                 {
                     if (reader.GetInt32(0) != criteriaID)
-                        //Criteria is already present in database
+                        //Criteria is already present in database of the selected competition
                         criteriaFound = true;
                 }
             }
             else
             { //No record
-                criteriaFound = false; // The email address given does not exist
+                criteriaFound = false; // Criteria not present for selected competition yet.
             }
             reader.Close();
             conn.Close();
@@ -125,41 +125,53 @@ namespace WEB2021Apr_P04_T4.DAL
             return criteriaFound;
         }
 
-        /*
-        public bool IsCriteriaWeightage100(string criteriaName, int criteriaID, int competitionID)
+        public bool IsCriteriaWeightage100(int weightage, int competitionID)
         {
             bool WeightageOver100 = false;
             //Create a SqlCommand object and specify the SQL statement 
             //to get a staff record with the email address to be validated
             SqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = @"SELECT * FROM Criteria
-                              WHERE CriteriaName=@selectedCriteriaName AND CompetitionID=@selectedCompetitionID";
-            cmd.Parameters.AddWithValue("@selectedCriteriaName", criteriaName);
+            cmd.CommandText = @"SELECT SUM(Weightage) AS 'Total Weightage' FROM Criteria
+                              WHERE CompetitionID=@selectedCompetitionID";
             cmd.Parameters.AddWithValue("@selectedCompetitionID", competitionID);
+            cmd.Parameters.AddWithValue("Weightage", weightage);
 
             //Open a database connection and execute the SQL statement
             conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();
 
-            if (reader.HasRows)
+            int? newweightage = !reader.IsDBNull(0) ? reader.GetInt32(0) : null;
+
+            if (reader.HasRows)  //for competition w existing criterias
             { //Records found
                 while (reader.Read())
                 {
-                    if (reader.GetInt32(3) > 100)
-                        //Total weightage for selected competition ID is over 100
-                        WeightageOver100 = true;
+                    if (reader.GetInt32(0) != null)
+                    {
+                        int newweightage = reader.GetInt32(0);
+                        if ((weightage + newweightage) > 100)
+                            //Total weightage for selected competition ID is over 100
+                            WeightageOver100 = true;
+
+                        else
+                            WeightageOver100 = false; // Weightage not over 100 
+                    }
+                    else //competition w/o criterias
+                    {
+                        if (weightage > 100)
+                            WeightageOver100 = true;
+
+                        else
+                            WeightageOver100 = false;
+                    }
                 }
             }
-            else
-            { //No record
-                WeightageOver100 = false; // The email address given does not exist
-            }
+            
             reader.Close();
             conn.Close();
 
             return WeightageOver100;
         }
-        */
 
         public Criteria GetDetails(int criteriaId)
         {
