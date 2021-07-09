@@ -140,13 +140,22 @@ namespace WEB2021Apr_P04_T4.DAL
             conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();
 
-            int? newweightage = !reader.IsDBNull(0) ? reader.GetInt32(0) : null;
+            // int? newweightage = !reader.IsDBNull(0) ? reader.GetInt32(0) : null;
 
             if (reader.HasRows)  //for competition w existing criterias
             { //Records found
                 while (reader.Read())
                 {
-                    if (reader.GetInt32(0) != null)
+                    if (reader.IsDBNull(0))
+                    {
+                        if (weightage > 100)
+                            WeightageOver100 = true;
+
+                        else
+                            WeightageOver100 = false;
+                        
+                    }
+                    else //competition w/o criterias
                     {
                         int newweightage = reader.GetInt32(0);
                         if ((weightage + newweightage) > 100)
@@ -155,14 +164,6 @@ namespace WEB2021Apr_P04_T4.DAL
 
                         else
                             WeightageOver100 = false; // Weightage not over 100 
-                    }
-                    else //competition w/o criterias
-                    {
-                        if (weightage > 100)
-                            WeightageOver100 = true;
-
-                        else
-                            WeightageOver100 = false;
                     }
                 }
             }

@@ -17,14 +17,14 @@ namespace WEB2021Apr_P04_T4.Models.Validation
             int weightage = Convert.ToInt32(value);
             Criteria criteria = (Criteria)validationContext.ObjectInstance;
 
-            string criteriaName = criteria.CriteriaName;
             int competitionID = criteria.CompetitionID;
 
             if (criteriaContext.IsCriteriaWeightage100(weightage, competitionID))
-                return ValidationResult.Success;
-            
-            else
                 return new ValidationResult("Total weightage cannot be more than 100!");
+
+            else
+                return ValidationResult.Success;
+
         }
     }
 }
