@@ -17,12 +17,14 @@ namespace WEB2021Apr_P04_T4.Controllers
         // GET: CompetitorController
         public ActionResult Index()
         {
-            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Competitor"))
+            string loginID = HttpContext.Session.GetString("LoginID");
+            if ((HttpContext.Session.GetString("Role") == null) ||
+            (HttpContext.Session.GetString("Role") != "Competitor"))
             {
                 return RedirectToAction("Index", "Home");
             }
-            List<Competitor> competitorList = competitorContext.GetAllCompetitor();
-            return View(competitorList);
+            Competitor competitor = competitorContext.GetDetails(Convert.ToInt32(loginID));
+            return View(competitor);
         }
 
         // GET: CompetitorController/Details/5
@@ -65,23 +67,45 @@ namespace WEB2021Apr_P04_T4.Controllers
         }
 
         // GET: CompetitorController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            return View();
+            // Stop accessing the action if not logged in
+            // or account not in the "Staff" role
+            if ((HttpContext.Session.GetString("LoginID") != id.ToString()) ||
+            (HttpContext.Session.GetString("Role") != "Competitor"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if (id == null)
+            { //Query string parameter not provided
+              //Return to listing page, not allowed to edit
+                return RedirectToAction("Index", "Home");
+            }
+            Competitor competitor = competitorContext.GetDetails(id.Value);
+            if (competitor == null)
+            {
+                //Return to listing page, not allowed to edit
+                return RedirectToAction("Index", "Home");
+            }
+            return View(competitor);
         }
 
         // POST: CompetitorController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(Competitor competitor)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                //Update judge record to database
+                competitorContext.Update(competitor);
+                return RedirectToAction("Index");
             }
-            catch
+            else
             {
-                return View();
+                //Input validation fails, return to the view
+                //to display error message
+                return View(competitor);
             }
         }
 

@@ -109,7 +109,7 @@ namespace WEB2021Apr_P04_T4.DAL
                 while (reader.Read())
                 {
                     if (reader.GetInt32(0) != competitorID)
-                        //The email address is used by another judge
+                        //The email address is used by another competitor
                         emailFound = true;
                 }
             }
@@ -150,7 +150,6 @@ namespace WEB2021Apr_P04_T4.DAL
                     competitor.Salutation = !reader.IsDBNull(2) ? reader.GetString(2) : null;
                     competitor.EmailAddr = !reader.IsDBNull(3) ? reader.GetString(3) : null;
                     competitor.Password = !reader.IsDBNull(4) ? reader.GetString(4) : null;
-
                 }
             }
             //Close DataReader
@@ -158,6 +157,35 @@ namespace WEB2021Apr_P04_T4.DAL
             //Close the database connection
             conn.Close();
             return competitor;
+        }
+
+        public int Update(Competitor competitor)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+
+            //Specify an UPDATE SQL statement
+            cmd.CommandText = @"UPDATE Competitor SET CompetitorName=@name, Salutation=@salutation, EmailAddr=@emailaddr, Password=@password
+            WHERE CompetitorID = @selectedCompetitorID";
+
+            //Define the parameters used in SQL statement, value for each parameter
+            //is retrieved from respective class's property.
+            cmd.Parameters.AddWithValue("@selectedCompetitorID", competitor.CompetitorID);
+            cmd.Parameters.AddWithValue("@name", competitor.CompetitorName);
+            cmd.Parameters.AddWithValue("@emailaddr", competitor.EmailAddr);
+            cmd.Parameters.AddWithValue("@password", competitor.Password);
+
+            if (competitor.Salutation != null)
+                cmd.Parameters.AddWithValue("@salutation", competitor.Salutation);
+            else
+                cmd.Parameters.AddWithValue("@salutation", DBNull.Value);
+            //Open a database connection
+            conn.Open();
+            //ExecuteNonQuery is used for UPDATE and DELETE
+            int count = cmd.ExecuteNonQuery();
+            //Close the database connection
+            conn.Close();
+            return count;
         }
 
         public int Delete(int competitorId)
