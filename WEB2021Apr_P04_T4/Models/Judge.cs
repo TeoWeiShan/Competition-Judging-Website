@@ -24,7 +24,7 @@ namespace WEB2021Apr_P04_T4.Models
         public int AreaInterestID { get; set; }
 
         [Required(ErrorMessage = "Please enter an email.")]
-        [RegularExpression(@"^[\w-\.]+@([lcu]{3} \.[edu]{3} \.[sg]{2})$",
+        [RegularExpression(@"^[\w-\.]+@([lcu]{3}\.[edu]{3}\.[sg]{2})$",
             ErrorMessage = ("Invalid email format."))]
         [Display(Name = "Email")]
         //Validation attribute to check whether email exists
