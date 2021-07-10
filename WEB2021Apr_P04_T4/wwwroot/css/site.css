@@ -1,6 +1,7 @@
 ﻿body {
     font-family: Arial;
     font-size: 14px;
+    overflow-x: hidden;
 }
 
 .PageTitle {
@@ -21,7 +22,6 @@
 }
 
 #mainContainer {
-    border: 1px solid #000000;
     margin: auto;
     width: 80%;
     padding: 4px;
@@ -51,8 +51,7 @@ fieldset {
 
 .loginFieldset {
     min-height: 130px;
-    margin-left: 4px;
-    margin-right: 0px;
+    min-width: 280px;
 }
 
     .loginFieldset label {
