@@ -12,7 +12,7 @@ namespace WEB2021Apr_P04_T4.Models
         public int JudgeID { get; set; }
 
         [Required(ErrorMessage = "Please enter a name.")]
-        [StringLength(50, ErrorMessage = "Name cannot exceed 50 characters")]
+        [StringLength(50, ErrorMessage = "Name cannot exceed 50 characters.")]
         [Display(Name = "Name")]
         public string JudgeName { get; set; }
 
@@ -20,10 +20,12 @@ namespace WEB2021Apr_P04_T4.Models
 
         [Required(ErrorMessage = "Please select an area of interest.")]
         [Display(Name = "Area Of Interest")]
+        [ValidateJudgeInterestDefault]
         public int AreaInterestID { get; set; }
 
         [Required(ErrorMessage = "Please enter an email.")]
-        [RegularExpression(@"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")]
+        [RegularExpression(@"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$",
+            ErrorMessage = ("Invalid email."))]
         [Display(Name = "Email")]
         //Validation attribute to check whether email exists
         [ValidateJudgeEmailExists]
