@@ -36,13 +36,6 @@ namespace WEB2021Apr_P04_T4.Controllers
         // GET: CompetitorController/Create
         public ActionResult Create()
         {
-            // Stop accessing the action if not logged in
-            // or account not in the "Staff" role
-            if ((HttpContext.Session.GetString("Role") == null) ||
-            (HttpContext.Session.GetString("Role") != "Competitor"))
-            {
-                return RedirectToAction("Index", "Home");
-            }
             return View();
         }
 
