@@ -32,6 +32,11 @@ namespace WEB2021Apr_P04_T4.Controllers
             return View();
         }
 
+        public IActionResult Works()
+        {
+            return View();
+        }
+
         public IActionResult Login()
         {
             return View();
