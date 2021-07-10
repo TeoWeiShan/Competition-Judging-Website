@@ -97,7 +97,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         {
             if (ModelState.IsValid)
             {
-                //Update judge record to database
+                //Update competitor record to database
                 competitorContext.Update(competitor);
                 return RedirectToAction("Index");
             }
