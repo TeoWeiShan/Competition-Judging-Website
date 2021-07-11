@@ -22,6 +22,9 @@ namespace WEB2021Apr_P04_T4.Models.Validation
                 if (startDate == null)
                     return new ValidationResult
                     ("Start Date is needed to enter values for End Date");
+                else if (endDate > DateTime.Today.AddYears(6))
+                    return new ValidationResult
+                           ("End Date cannot be 6 years later than Today's Date!");
                 else if (endDate == startDate)
                     // validation failed
                     return new ValidationResult
@@ -30,8 +33,19 @@ namespace WEB2021Apr_P04_T4.Models.Validation
                     return new ValidationResult
                     ("End Date cannot be earlier than Start Date!");
                 else
-                    // validation passed
-                    return ValidationResult.Success;
+                {
+                    if (competition.ResultReleasedDate == null)
+                    {
+                        return new ValidationResult
+                        ("Result Release Date cannot be null!");
+                    }
+                    else
+                    {
+                        // validation passed
+                        return ValidationResult.Success;
+                    }
+                }
+                    
             }
             else { return ValidationResult.Success; }
         }

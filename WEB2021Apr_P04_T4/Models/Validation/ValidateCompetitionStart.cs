@@ -13,22 +13,54 @@ namespace WEB2021Apr_P04_T4.Models.Validation
         protected override ValidationResult IsValid(
         object value, ValidationContext validationContext)
         {
-            // Get the email value to validate
             if (value != null)
             {
+                DateTime startDate = Convert.ToDateTime(value);
                 Competition competition = (Competition)validationContext.ObjectInstance;
-                // Get the Staff Id from the staff instance
                 int competitionID = competition.CompetitionID;
                 if (!competitionContext.IsModifiable(competitionID))
                 {
-                    DateTime startDate = Convert.ToDateTime(value);
-                    if (startDate < DateTime.Today)
-                        // validation failed
+                    if (competition.StartDate > DateTime.Today.AddYears(5) )
+                    {
                         return new ValidationResult
-                        ("Start Date cannot earlier than Today's Date!");
+                           ("Start Date cannot be 5 years later than Today's Date!");
+                    }
                     else
-                        // validation passed
-                        return ValidationResult.Success;
+                    {
+                        if (startDate < DateTime.Today)
+                        {
+                            // validation failed
+                            return new ValidationResult
+                            ("Start Date cannot be earlier than Today's Date!");
+
+                        }
+                        else
+                        {
+                            if (competition.EndDate == null && competition.ResultReleasedDate == null)
+                            {
+                                return new ValidationResult
+                                ("Rest of the dates cannot be null!");
+                            }
+                            else if (competition.ResultReleasedDate == null)
+                            {
+                                return new ValidationResult
+                               ("Result Release Date cannot be null!");
+                            }
+                            else if (competition.EndDate == null)
+                            {
+                                return new ValidationResult
+                               ("End Date cannot be null!");
+                            }
+                            else
+                            {
+                                // validation passed
+                                return ValidationResult.Success;
+                            }
+                        }
+                    }
+                        
+                    
+                   
                 }
                 else { return ValidationResult.Success; }
             }

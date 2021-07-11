@@ -25,39 +25,15 @@
         {
             @await Html.PartialAsync("_MainMenu.cshtml")
         }
-
-
     </header>
-
-    <!-- 1st row -->
-    <div class="row">
-        <div class="col-sm-12">
-            <p style="padding:2px 15px;">
-                @{
-                    string userId = "Anonymous";
-                    string userRole = "Unknown";
-                    if (Context.Session.GetString("LoginID") != null)
-                    {
-                        userId = Context.Session.GetString("LoginID");
-                    }
-                    if (Context.Session.GetString("Role") != null)
-                    {
-                        userRole = Context.Session.GetString("Role");
-                    }
-                }
-                
-
-            </p>
-        </div>
-    </div>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
+    <footer class=" text-center border-top footer text-muted bg-light fixed-bottom">
+        <div class="container ">
             &copy; 2021 - WEB2021Apr_P04_T4 - <a asp-area="" asp-controller="Home" asp-action="About">About</a>
         </div>
     </footer>
@@ -66,4 +42,4 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
-            </html>
+</html>

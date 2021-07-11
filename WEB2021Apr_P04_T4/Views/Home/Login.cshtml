@@ -12,7 +12,7 @@
     <!-- Reference to customized styling for this website -->
     <link rel="stylesheet" type="text/css" href="~/css/Site.css">
 </head>
-<body>
+<body class="text-center">
     <div class="container" id="mainContainer">
         <!-- 1st row -->
         <div class="flex-container">
@@ -21,15 +21,17 @@
             <div>
                 <form method="post" action="~/Home/Login">
                     <fieldset class="loginFieldset">
-                        <legend>Login</legend>
-                        <label for="txtLoginID">Login ID:</label>
+                        <legend class="h3 mb-3 font-weight-normal">Login</legend>
+                        <label for="txtLoginID" class="sr-only">Login ID:</label>
                         <input type="email" name="txtLoginID"
-                               id="txtLoginID" required /><br />
-                        <label for="txtPassword">Password:</label>
+                               id="txtLoginID" style="margin :10px" required placeholder="Login ID" />
+                        <br />
+                        <label for="txtPassword" class="sr-only">Password:</label>
                         <input type="password" name="txtPassword"
-                               id="txtPassword" style="width:100px"
-                               required />
-                        <input type="submit" id="btnStaffLogin"
+                               id="txtPassword" style="margin :10px"
+                               required placeholder="Password" />
+                        <br />
+                        <input type="submit" id="btnStaffLogin" style="margin :10px"
                                class="myButton" value="Login" />
                         <br />
                         <span style="color:red;">@TempData["Message"]</span>

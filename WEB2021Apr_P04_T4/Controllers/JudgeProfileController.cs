@@ -73,13 +73,6 @@ namespace WEB2021Apr_P04_T4.Controllers
         // GET: JudgeProfileController/Create
         public ActionResult Create()
         {
-            // Stop accessing the action if not logged in
-            // or account not in the "Judge" role
-            if ((HttpContext.Session.GetString("Role") == null) ||
-            (HttpContext.Session.GetString("Role") != "Judge"))
-            {
-                return RedirectToAction("Index", "Home");
-            }
             ViewData["InterestList"] = GetAllAreaInterests();
             return View();
         }
