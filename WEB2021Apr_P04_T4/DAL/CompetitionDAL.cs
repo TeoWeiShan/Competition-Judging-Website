@@ -289,5 +289,41 @@ INNER JOIN Judge ON Judge.JudgeID = CompetitionJudge.JudgeID) Where CompetitionJ
             conn.Close();
             return judgeList;
         }
+
+        public List<Competition> GetAllJoinCompetition()
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify the SELECT SQL statement
+            cmd.CommandText = @"SELECT * FROM Competition 
+                                WHERE ((DATEDIFF(day, StartDate, GETDATE())) > 3) AND
+                                (CompetitionID NOT IN (SELECT CompetitionID FROM CompetitionSubmission WHERE @selectedCompetitorID)) 
+                                ORDER BY CompetitionID";
+            //Open a database connection
+            conn.Open();
+            //Execute the SELECT SQL through a DataReader
+            SqlDataReader reader = cmd.ExecuteReader();
+            //Read all records until the end, save data into a staff list
+            List<Competition> competitionList = new List<Competition>();
+            while (reader.Read())
+            {
+                competitionList.Add(
+                new Competition
+                {
+                    CompetitionID = reader.GetInt32(0), //0: 1st column
+                    AreaInterestID = reader.GetInt32(1),//1: 2nd column
+                    CompetitionName = reader.GetString(2),
+                    StartDate = !reader.IsDBNull(3) ? reader.GetDateTime(3) : (DateTime?)null,
+                    EndDate = !reader.IsDBNull(4) ? reader.GetDateTime(4) : (DateTime?)null,
+                    ResultReleasedDate = !reader.IsDBNull(5) ? reader.GetDateTime(5) : (DateTime?)null
+                }
+                );
+            }
+            //Close DataReader
+            reader.Close();
+            //Close the database connection
+            conn.Close();
+            return competitionList;
+        }
     }
 }

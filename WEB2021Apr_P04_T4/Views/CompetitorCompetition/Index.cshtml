@@ -1,0 +1,11 @@
+﻿@model IEnumerable<WEB2021Apr_P04_T4.Models.CompetitorCompetition>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h4 class="PageTitle">View Competition</h4>
+<p><a asp-action="Create">Join New Competition</a></p>
+<!-- Add a partial view to display a list of staff records
+ in a tabular format. -->
+<partial name="~/Views/CompetitorCompetition/_ViewCompetitorCompetition.cshtml" model="@Model" />

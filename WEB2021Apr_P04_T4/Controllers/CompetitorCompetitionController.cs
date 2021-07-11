@@ -11,30 +11,38 @@ namespace WEB2021Apr_P04_T4.Controllers
 {
     public class CompetitorCompetitionController : Controller
     {
-        private CompetitorDAL competitorContext = new CompetitorDAL();
-
+        private CompetitorCompetitionDAL competitorcompetitionContext = new CompetitorCompetitionDAL();
+        private CompetitionDAL competitionContext = new CompetitionDAL();
+        private AreaInterestDAL areaInterestContext = new AreaInterestDAL();
         // GET: CompetitorCompetitionController
         public ActionResult Index()
         {
-            return View();
-        }
-
-        // GET: CompetitorCompetitionController/Details/5
-        public ActionResult Details(int id)
-        {
+            string loginID = HttpContext.Session.GetString("LoginID");
             if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Competitor"))
             {
                 return RedirectToAction("Index", "Home");
             }
-            Competitor competitor = competitorContext.GetDetails(id);
-            //CompetitionJudgeViewModel competitionVM = MapToCompetitionJudgeVM(competition);
-            return View(competitor);
+            List<CompetitorCompetition> competitorcompetitionList = competitorcompetitionContext.GetAllCompetitorCompetition(Convert.ToInt32(loginID));
+            return View(competitorcompetitionList);
+        }
+
+        // GET: CompetitorCompetitionController/Details/5
+        public ActionResult Details(int id)
+        {/*
+            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Competitor"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            CompetitorCompetition competitorcompetition = competitorcompetitionContext.GetDetails(id);
+            //CompetitionJudgeViewModel competitionVM = MapToCompetitionJudgeVM(competition);*/
+            return View();
         }
 
         // GET: CompetitorCompetitionController/Create
         public ActionResult Create()
         {
-            return View();
+            List<Competition> competitionList = competitionContext.GetAllCompetition();
+            return View(competitionList);
         }
 
         // POST: CompetitorCompetitionController/Create
@@ -49,6 +57,81 @@ namespace WEB2021Apr_P04_T4.Controllers
             catch
             {
                 return View();
+            }
+        }
+
+        public ActionResult Join(int id)
+        {
+            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Competitor"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            Competition competition = competitionContext.GetDetails(id);
+            CompetitionViewModel competitionVM = MapToCompetitionVM(competition);
+            return View(competitionVM);
+        }
+        public CompetitionViewModel MapToCompetitionVM(Competition competition)
+        {
+            string interestName = "";
+            if (competition.CompetitionID != null)
+            {
+                List<AreaInterest> interestList = areaInterestContext.GetAllAreaInterest();
+                foreach (AreaInterest interest in interestList)
+                {
+                    if (interest.AreaInterestID == competition.AreaInterestID)
+                    {
+                        interestName = interest.Name;
+                        //Exit the foreach loop once the name is found
+                        break;
+                    }
+                }
+            }
+            CompetitionViewModel competitionVM = new CompetitionViewModel
+            {
+                CompetitionID = competition.CompetitionID,
+                Name = interestName,
+                CompetitionName = competition.CompetitionName,
+                StartDate = competition.StartDate,
+                EndDate = competition.EndDate,
+                ResultReleasedDate = competition.ResultReleasedDate
+            };
+            return competitionVM;
+        }
+
+        private List<AreaInterest> GetAllAreaInterests()
+        {
+            // Get a list of branches from database
+            List<AreaInterest> areaInterestList = areaInterestContext.GetAllAreaInterest();
+            Console.WriteLine(areaInterestList);
+            // Adding a select prompt at the first row of the branch list
+            areaInterestList.Insert(0, new AreaInterest
+            {
+                AreaInterestID = 0,
+                Name = "--Select--"
+            });
+            Console.WriteLine(areaInterestList);
+            return areaInterestList;
+        }
+
+
+        // POST: CompetitorCompetitionController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Join(Competition competition)
+        {
+            ViewData["InterestList"] = GetAllAreaInterests();
+            string loginID = HttpContext.Session.GetString("LoginID");
+            if (ModelState.IsValid)
+            {
+                //Update staff record to database
+                competitorcompetitionContext.Join(competition.CompetitionID,Convert.ToInt32(loginID));
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                //Input validation fails, return to the view
+                //to display error message
+                return View(competition);
             }
         }
 

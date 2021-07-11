@@ -14,29 +14,23 @@ namespace WEB2021Apr_P04_T4.Models
 
         [Required]
         [StringLength(50)]
-        [ValidateInterestExists]
         public string CompetitorName { get; set; }
 
         [Display(Name = "Salutation")]
         public string Salutation { get; set; }
 
-        [Display(Name = "Date of Birth")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
-        public DateTime? DOB { get; set; }
-
-        [Display(Name = "Phone Number")]
-        public int PhoneNumber { get; set; }
-
-        [Display(Name = "Email Address")]
-        [Required]
-        [StringLength(50)]
-        [EmailAddress]
+        [Required(ErrorMessage = "Please enter an email.")]
+        [RegularExpression(@"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")]
+        [Display(Name = "Email")]
+        //Validation attribute to check whether email exists
         [ValidateCompetitorEmail]
         public string EmailAddr { get; set; }
 
+        [Required(ErrorMessage = "Please enter a password.")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$",
+                ErrorMessage = ("Your password must contain at least 8 characters with a mix of lower and upper case letters, numerics and special characters."))]
+        [DataType(DataType.Password)]
         [Display(Name = "Password")]
-        [Required]
-        [StringLength(255)]
         public string Password { get; set; }
     }
 }
