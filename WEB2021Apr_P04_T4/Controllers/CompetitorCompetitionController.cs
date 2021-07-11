@@ -59,6 +59,16 @@ namespace WEB2021Apr_P04_T4.Controllers
                 return View();
             }
         }
+        /*public ActionResult Create(CompetitorCompetition competitorcompetition)
+        {
+            if (ModelState.IsValid)
+            {
+                competitorcompetition.CompetitionID = competitorcompetitionContext.Add(competitorcompetition);
+                return RedirectToAction("Index");
+            }
+            else
+                return View(competitorcompetition);
+        }*/
 
         public ActionResult Join(int id)
         {
