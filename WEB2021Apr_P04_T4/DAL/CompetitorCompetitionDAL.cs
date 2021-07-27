@@ -28,33 +28,34 @@ namespace WEB2021Apr_P04_T4.DAL
             conn = new SqlConnection(strConn);
         }
 
-        public List<CompetitorCompetition> GetAllCompetitorCompetition(int competitorID)
+        public List<Competition> GetAllCompetitorCompetition(int competitorID)
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify the SELECT SQL statement
-            cmd.CommandText = @"select Competition.CompetitionName, CompetitionSubmission.* from (CompetitionSubmission
-INNER JOIN Competition ON Competition.CompetitionID = CompetitionSubmission.CompetitionID) Where CompetitionSubmission.CompetitorID = @selectedCompetitorID";
+            cmd.CommandText = @"select * from Competition
+                                where (DATEDIFF(day, StartDate, GETDATE())) < 3 and
+                                (CompetitionID not in (select CompetitionID from CompetitionSubmission where CompetitorID = 1)) and 
+                                (CompetitionID in(SELECT CompetitionID FROM CompetitionJudge 
+                                GROUP BY CompetitionID HAVING COUNT(CompetitionID) >= 2) )";
             cmd.Parameters.AddWithValue("selectedCompetitorID", competitorID);
             //Open a database connection
             conn.Open();
             //Execute the SELECT SQL through a DataReader
             SqlDataReader reader = cmd.ExecuteReader();
             //Read all records until the end, save data into a staff list
-            List<CompetitorCompetition> competitorcompetitionList = new List<CompetitorCompetition>();
+            List<Competition> competitionList = new List<Competition>();
             while (reader.Read())
             {
-                competitorcompetitionList.Add(
-                new CompetitorCompetition
+                competitionList.Add(
+                new Competition
                 {
-                    CompetitionID = reader.GetInt32(1), //0: 1st column
-                    CompetitionName = reader.GetString(0),//1: 2nd column
-                    CompetitorID = reader.GetInt32(2),
-                    FileSubmitted = !reader.IsDBNull(3) ? reader.GetString(3) : (string?)null,
-                    DateTimeFileUpload = !reader.IsDBNull(4) ? reader.GetDateTime(4) : (DateTime?)null,
-                    Appeal = !reader.IsDBNull(5) ? reader.GetString(5) : (string?)null,
-                    VoteCount = reader.GetInt32(6),
-                    Ranking = !reader.IsDBNull(7) ? reader.GetInt32(7) : (int?)null,
+                    CompetitionID = reader.GetInt32(0), //0: 1st column
+                    AreaInterestID = reader.GetInt32(1),//1: 2nd column
+                    CompetitionName = reader.GetString(2),
+                    StartDate = !reader.IsDBNull(3) ? reader.GetDateTime(3) : (DateTime?)null,
+                    EndDate = !reader.IsDBNull(4) ? reader.GetDateTime(4) : (DateTime?)null,
+                    ResultReleasedDate = !reader.IsDBNull(5) ? reader.GetDateTime(5) : (DateTime?)null
                 }
                 );
             }
@@ -62,7 +63,42 @@ INNER JOIN Competition ON Competition.CompetitionID = CompetitionSubmission.Comp
             reader.Close();
             //Close the database connection
             conn.Close();
-            return competitorcompetitionList;
+            return competitionList;
+        }
+
+        public List<Competition> GetCompetitorCompetition(int competitorID)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify the SELECT SQL statement
+            cmd.CommandText = @"select * from Competition
+                                where (CompetitionID in (select CompetitionID from CompetitionSubmission where CompetitorID = @selectedCompetitorID))";
+            cmd.Parameters.AddWithValue("selectedCompetitorID", competitorID);
+            //Open a database connection
+            conn.Open();
+            //Execute the SELECT SQL through a DataReader
+            SqlDataReader reader = cmd.ExecuteReader();
+            //Read all records until the end, save data into a staff list
+            List<Competition> competitionList = new List<Competition>();
+            while (reader.Read())
+            {
+                competitionList.Add(
+                new Competition
+                {
+                    CompetitionID = reader.GetInt32(0), //0: 1st column
+                    AreaInterestID = reader.GetInt32(1),//1: 2nd column
+                    CompetitionName = reader.GetString(2),
+                    StartDate = !reader.IsDBNull(3) ? reader.GetDateTime(3) : (DateTime?)null,
+                    EndDate = !reader.IsDBNull(4) ? reader.GetDateTime(4) : (DateTime?)null,
+                    ResultReleasedDate = !reader.IsDBNull(5) ? reader.GetDateTime(5) : (DateTime?)null
+                }
+                );
+            }
+            //Close DataReader
+            reader.Close();
+            //Close the database connection
+            conn.Close();
+            return competitionList;
         }
 
         public int Join(int competitionID, int competitorID)
@@ -87,5 +123,30 @@ INNER JOIN Competition ON Competition.CompetitionID = CompetitionSubmission.Comp
             //Return id when no error occurs.
             return (competitionID);
         }
+
+        //public int Add(CompetitorCompetition competitorcompetition)
+        //{
+        //    //Create a SqlCommand object from connection object
+        //    SqlCommand cmd = conn.CreateCommand();
+        //    //Specify an INSERT SQL statement which will
+        //    //return the auto-generated StaffID after insertion
+        //    cmd.CommandText = @"INSERT INTO CompetitionSubmission (CompetitionID, CriteriaName, Weightage)
+        //    OUTPUT INSERTED.CompetitionID
+        //    VALUES(@competitionid, @criterianame, @weightage)";
+        //    //Define the parameters used in SQL statement, value for each parameter
+        //    //is retrieved from respective class's property.
+        //    cmd.Parameters.AddWithValue("@competitionid", criteria.CompetitionID);
+        //    cmd.Parameters.AddWithValue("@criterianame", criteria.CriteriaName);
+        //    cmd.Parameters.AddWithValue("@weightage", criteria.Weightage);
+        //    //A connection to database must be opened before any operations made.
+        //    conn.Open();
+        //    //ExecuteScalar is used to retrieve the auto-generated
+        //    //StaffID after executing the INSERT SQL statement
+        //    competitorcompetition.CompetitionID = (int)cmd.ExecuteScalar();
+        //    //A connection should be closed after operations.
+        //    conn.Close();
+        //    //Return id when no error occurs.
+        //    return competitorcompetition.CompetitionID;
+        //}
     }
 }

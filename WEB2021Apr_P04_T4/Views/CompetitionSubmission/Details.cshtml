@@ -1,0 +1,61 @@
+﻿@model WEB2021Apr_P04_T4.Models.CompetitionSubmissionViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h4 class="PageTitle">Competitor @Html.Display("CompetitorID")'s submission details</h4>
+<hr />
+<fieldset class="FormContent">
+    
+    <div class="form-group row">
+        <label asp-for="FileSubmitted" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("FileSubmitted")
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="DateTimeFileUpload" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("DateTimeFileUpload")
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="Appeal" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("Appeal")
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="VoteCount" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("VoteCount")
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="Ranking" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("Ranking")
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="CriteriaID" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("CriteriaID")
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="Score" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9 form-control-plaintext">
+            @Html.Display("Score")
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-9 offset-sm-3">
+            <a asp-action="Edit" asp-controller="CompetitionSubmission"
+               asp-route-id="@Model.CompetitorID">Edit</a> |
+            <a asp-action="Index"
+               asp-controller="CompetitionSubmission">Back to Submissions List</a>
+        </div>
+    </div>
+</fieldset>
