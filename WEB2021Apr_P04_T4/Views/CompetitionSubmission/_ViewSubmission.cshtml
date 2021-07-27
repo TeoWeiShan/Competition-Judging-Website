@@ -6,7 +6,6 @@
         <table id="viewCriteria" class="table table-striped table-bordered">
             <thead class="thead-dark">
                 <tr>
-                    <th>Competition ID</th>
                     <th>Competitor ID</th>
                     <th>File Submitted</th>
                     <th>Date/Time of submission</th>
@@ -20,7 +19,6 @@
                 @foreach (var item in Model)
                 {
                 <tr>
-                    <td>@item.CompetitionID.ToString()</td>
                     <td>@item.CompetitorID.ToString()</td>
                     <td>@item.FileSubmitted</td>
                     <td>@item.DateTimeFileUpload.ToString()</td>
@@ -29,7 +27,9 @@
                     <td>@item.Ranking.ToString()</td>
                     <td>
                         <a asp-action="Details" asp-controller="CompetitionSubmission"
-                           asp-route-id="@item.CompetitionID">Details</a>
+                           asp-route-id="@item.CompetitorID">Details</a> |
+                        <a asp-action="Details" asp-controller="CompetitionSubmission"
+                           asp-route-id="@item.CompetitorID">Edit</a>
                     </td>
                 </tr>
                 }
