@@ -22,8 +22,8 @@ namespace WEB2021Apr_P04_T4.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            List<CompetitorCompetition> competitorcompetitionList = competitorcompetitionContext.GetAllCompetitorCompetition(Convert.ToInt32(loginID));
-            return View(competitorcompetitionList);
+            List<Competition> competitionList = competitorcompetitionContext.GetCompetitorCompetition(Convert.ToInt32(loginID));
+            return View(competitionList);
         }
 
         // GET: CompetitorCompetitionController/Details/5
@@ -41,14 +41,15 @@ namespace WEB2021Apr_P04_T4.Controllers
         // GET: CompetitorCompetitionController/Create
         public ActionResult Create()
         {
-            List<Competition> competitionList = competitionContext.GetAllCompetition();
+            string loginID = HttpContext.Session.GetString("LoginID");
+            List<Competition> competitionList = competitorcompetitionContext.GetAllCompetitorCompetition(Convert.ToInt32(loginID));
             return View(competitionList);
         }
 
         // POST: CompetitorCompetitionController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        /*public ActionResult Create(IFormCollection collection)
         {
             try
             {
@@ -58,17 +59,17 @@ namespace WEB2021Apr_P04_T4.Controllers
             {
                 return View();
             }
-        }
-        /*public ActionResult Create(CompetitorCompetition competitorcompetition)
-        {
-            if (ModelState.IsValid)
-            {
-                competitorcompetition.CompetitionID = competitorcompetitionContext.Add(competitorcompetition);
-                return RedirectToAction("Index");
-            }
-            else
-                return View(competitorcompetition);
         }*/
+        //public ActionResult Create(CompetitorCompetition competitorcompetition)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        competitorcompetition.CompetitionID = competitorcompetitionContext.Add(competitorcompetition);
+        //        return RedirectToAction("Index");
+        //    }
+        //    else
+        //        return View(competitorcompetition);
+        //}
 
         public ActionResult Join(int id)
         {
