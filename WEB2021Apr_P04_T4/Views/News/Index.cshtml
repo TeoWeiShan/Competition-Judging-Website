@@ -1,0 +1,28 @@
+﻿@model IEnumerable<WEB2021Apr_P04_T4.Models.News>
+
+@{
+    ViewData["Title"] = "News";
+}
+
+<h4 class="PageTitle">News</h4>
+@if (Model.ToList().Count > 0)
+{
+
+    @foreach (var item in Model)
+    {
+        <div class="card">
+            <h5 class="card-header">@item.Header</h5>
+            <div class="card-body">
+                <h5 class="card-title">@item.Intro</h5>
+                <p class="card-text">@item.Date</p>
+            </div>
+        </div>
+        <br />
+        <br />
+    }
+
+    }
+else
+{
+    <span style="color:red">No News Available!</span>
+}
