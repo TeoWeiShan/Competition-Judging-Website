@@ -140,31 +140,51 @@ namespace WEB2021Apr_P04_T4.Controllers
             }
         }
 
-        // GET: CompetitionJudgeController/Delete/5
-        public ActionResult Delete(int? id)
+        private List<Judge> GetCompetitionJudge(int competitionId)
         {
-            try
+            // Get a list of branches from database
+            List<Judge> judgeList = judgeContext.GetCompetitionJudgeDetails(competitionId);
+            Console.WriteLine(judgeList);
+            // Adding a select prompt at the first row of the branch list
+            judgeList.Insert(0, new Judge
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
+                JudgeID = 0,
+                JudgeName = "--Select--",
+            });
+            Console.WriteLine(judgeList);
+            return judgeList;
+        }
+
+        // GET: CompetitionJudgeController/Delete/5
+        public ActionResult Delete(int id)
+        {
+            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Admin"))
             {
-                return View();
+                return RedirectToAction("Index", "Home");
             }
+            Competition competition = competitionContext.GetDetails(id);
+            CompetitionJudgeViewModel competitionJudgeVM = MapToCompetitionJudgeVM(competition);
+            ViewData["JudgeList"] = GetCompetitionJudge(id);
+            return View(competitionJudgeVM);
         }
 
         // POST: CompetitionJudgeController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(CompetitionJudgeViewModel competitionJudge)
         {
-            try
+            ViewData["JudgeList"] = GetCompetitionJudge(competitionJudge.CompetitionID);
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                //Update staff record to database
+                competitionJudgeContext.RemoveCompJudge(competitionJudge);
+                return RedirectToAction("Index", "Competition");
             }
-            catch
+            else
             {
-                return View();
+                //Input validation fails, return to the view
+                //to display error message
+                return View(competitionJudge);
             }
         }
     }

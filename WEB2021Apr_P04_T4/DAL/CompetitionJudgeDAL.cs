@@ -84,75 +84,27 @@ VALUES(@competitionId, @judgeId)";
             //Return id when no error occurs.
             return competitionJudge.CompetitionID;
         }
+        public int RemoveCompJudge(CompetitionJudgeViewModel competitionJudge)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify an INSERT SQL statement which will
+            //return the auto-generated StaffID after insertion
+            cmd.CommandText = @"DELETE FROM CompetitionJudge WHERE CompetitionID = @selectCompetitionID and JudgeID = @selectJudgeID";
+            //Define the parameters used in SQL statement, value for each parameter
+            //is retrieved from respective class's property.
+            cmd.Parameters.AddWithValue("@selectCompetitionID", competitionJudge.CompetitionID);
+            cmd.Parameters.AddWithValue("@selectJudgeID", competitionJudge.JudgeID);
+            //A connection to database must be opened before any operations made.
+            conn.Open();
+            //ExecuteScalar is used to retrieve the auto-generated
+            //StaffID after executing the INSERT SQL statement
+            cmd.ExecuteNonQuery();
+            //A connection should be closed after operations.
+            conn.Close();
+            //Return id when no error occurs.
+            return competitionJudge.CompetitionID;
 
-//        public CompetitionJudge GetCompJudgeDetails(int competitionId)
-//        {
-//            CompetitionJudge competitionJudge = new CompetitionJudge();
-//            //Create a SqlCommand object from connection object
-//            SqlCommand cmd = conn.CreateCommand();
-//            //Specify the SELECT SQL statement that
-//            //retrieves all attributes of a staff record.
-//            cmd.CommandText = @"select CompetitionJudge.*, Judge.JudgeName, Competition.CompetitionName from CompetitionJudge
-//INNER JOIN Judge ON CompetitionJudge.JudgeID = Judge.JudgeID INNER JOIN Competition ON CompetitionJudge.CompetitionID
-// = Competition.CompetitionID where CompetitionJudge.CompetitionID = @selectedCompetitionID";
-//            //Define the parameter used in SQL statement, value for the
-//            //parameter is retrieved from the method parameter “staffId”.
-//            cmd.Parameters.AddWithValue("@selectedCompetitionID", competitionId);
-//            //Open a database connection
-//            conn.Open();
-//            //Execute SELCT SQL through a DataReader
-//            SqlDataReader reader = cmd.ExecuteReader();
-//            if (reader.HasRows)
-//            {
-//                //Read the record from database
-//                while (reader.Read())
-//                {
-//                    // Fill staff object with values from the data reader
-//                    competitionJudge.CompetitionID = competitionId;
-//                    competitionJudge.JudgeID = reader.GetInt32(1);
-
-//                }
-//            }
-//            //Close DataReader
-//            reader.Close();
-//            //Close the database connection
-//            conn.Close();
-//            return competitionJudge;
-//        }
-
-//        public CompetitionJudge GetCompJudge(int competitionId)
-//        {
-//            CompetitionJudge competitionJudge = new CompetitionJudge();
-//            //Create a SqlCommand object from connection object
-//            SqlCommand cmd = conn.CreateCommand();
-//            //Specify the SELECT SQL statement that
-//            //retrieves all attributes of a staff record.
-//            cmd.CommandText = @"select CompetitionJudge.*, Judge.JudgeName, Competition.CompetitionName from CompetitionJudge
-//INNER JOIN Judge ON CompetitionJudge.JudgeID = Judge.JudgeID INNER JOIN Competition ON CompetitionJudge.CompetitionID
-// = Competition.CompetitionID where CompetitionJudge.CompetitionID = @selectedCompetitionID";
-//            //Define the parameter used in SQL statement, value for the
-//            //parameter is retrieved from the method parameter “staffId”.
-//            cmd.Parameters.AddWithValue("@selectedCompetitionID", competitionId);
-//            //Open a database connection
-//            conn.Open();
-//            //Execute SELCT SQL through a DataReader
-//            SqlDataReader reader = cmd.ExecuteReader();
-//            if (reader.HasRows)
-//            {
-//                //Read the record from database
-//                while (reader.Read())
-//                {
-//                    // Fill staff object with values from the data reader
-//                    competitionJudge.CompetitionID = competitionId;
-//                    competitionJudge.JudgeID = reader.GetInt32(1);
-
-//                }
-//            }
-//            //Close DataReader
-//            reader.Close();
-//            //Close the database connection
-//            conn.Close();
-//            return competitionJudge;
-//        }
+        }
     }
 }
