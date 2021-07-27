@@ -1,0 +1,43 @@
+﻿@model IEnumerable<WEB2021Apr_P04_T4.Models.CompetitionSubmission>
+
+@if (Model.ToList().Count > 0)
+{
+    <div class="table-responsive">
+        <table id="viewCriteria" class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Competition ID</th>
+                    <th>Competitor ID</th>
+                    <th>File Submitted</th>
+                    <th>Date/Time of submission</th>
+                    <th>Appeal</th>
+                    <th>Vote Count</th>
+                    <th>Ranking</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>@item.CompetitionID.ToString()</td>
+                    <td>@item.CompetitorID.ToString()</td>
+                    <td>@item.FileSubmitted</td>
+                    <td>@item.DateTimeFileUpload.ToString()</td>
+                    <td>@item.Appeal</td>
+                    <td>@item.VoteCount.ToString()</td>
+                    <td>@item.Ranking.ToString()</td>
+                    <td>
+                        <a asp-action="Details" asp-controller="CompetitionSubmission"
+                           asp-route-id="@item.CompetitionID">Details</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <span style="color:red">No submissions found!</span>
+}
