@@ -264,7 +264,8 @@ INNER JOIN Judge ON Judge.JudgeID = CompetitionJudge.JudgeID) Where CompetitionJ
             //Specify the SQL statement that select all branches
             cmd.CommandText = @"SELECT Judge.* FROM (Competition
 INNER JOIN Judge ON Competition.AreaInterestID = Judge.AreaInterestID) Where 
-((Competition.CompetitionID = @selectedCompetitionID) AND JudgeID NOT IN  (Select JudgeID FROM CompetitionJudge))";
+((Competition.CompetitionID = 1) AND JudgeID NOT IN  (Select JudgeID FROM CompetitionJudge WHERE CompetitionID IN 
+(select competitionid from Competition where GETDATE() < ResultReleasedDate)))";
             //Define the parameter used in SQL statement, value for the
             //parameter is retrieved from the method parameter “branchNo”.
             cmd.Parameters.AddWithValue("@selectedCompetitionID", competitionId);
