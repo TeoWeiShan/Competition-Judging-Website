@@ -4,22 +4,10 @@
     ViewData["Title"] = "Details";
 }
 
-<h4 class="PageTitle">View Competitor Details</h4>
+<h4 class="PageTitle">Competitor @Html.Display("CompetitorID")'s submission details</h4>
 <hr />
 <fieldset class="FormContent">
-    <div class="form-group row">
-        <label asp-for="CompetitionID" class="col-sm-3 col-form-label"></label>
-        <div class="col-sm-9 form-control-plaintext">
-            @Html.Display("CompetitionID")
-        </div>
-    </div>
-    <div class="form-group row">
-        <label asp-for="CompetitorID"
-               class="col-sm-3 col-form-label"></label>
-        <div class="col-sm-9 form-control-plaintext">
-            @Html.Display("CompetitorID")
-        </div>
-    </div>
+    
     <div class="form-group row">
         <label asp-for="FileSubmitted" class="col-sm-3 col-form-label"></label>
         <div class="col-sm-9 form-control-plaintext">
