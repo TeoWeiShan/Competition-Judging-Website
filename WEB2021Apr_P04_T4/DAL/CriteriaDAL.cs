@@ -29,12 +29,14 @@ namespace WEB2021Apr_P04_T4.DAL
             conn = new SqlConnection(strConn);
         }
 
-        public List<Criteria> GetAllCriteria()
+        public List<Criteria> GetAllCriteria(int JudgeID)
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify the SELECT SQL statement
-            cmd.CommandText = @"SELECT * FROM Criteria ORDER BY CriteriaID";
+            cmd.CommandText = @"SELECT * FROM Criteria WHERE CompetitionID =
+            (SELECT CompetitionID from CompetitionJudge WHERE JudgeID = @selectedJudgeID)";
+            cmd.Parameters.AddWithValue("selectedJudgeID", JudgeID);
             //Open a database connection
             conn.Open();
             //Execute the SELECT SQL through a DataReader

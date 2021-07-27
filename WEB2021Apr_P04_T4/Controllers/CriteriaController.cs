@@ -14,19 +14,21 @@ namespace WEB2021Apr_P04_T4.Controllers
     {
         private CriteriaDAL criteriaContext = new CriteriaDAL();
         private CompetitionDAL competitionContext = new CompetitionDAL();
+        private CompetitionJudgeDAL competitionjudgecontext = new CompetitionJudgeDAL();
 
         //GET: CriteriaController
         public ActionResult Index()
         {
             // Stop accessing the action if not logged in
-            // or account not in the "Criteria" role
+            // or account not in the "Judge" role
+            string loginID = HttpContext.Session.GetString("LoginID");
             if ((HttpContext.Session.GetString("Role") == null) ||
             (HttpContext.Session.GetString("Role") != "Judge"))
             {
                 return RedirectToAction("Index", "Home");
             }
 
-            List<Criteria> criteriaList = criteriaContext.GetAllCriteria();
+            List<Criteria> criteriaList = criteriaContext.GetAllCriteria(Convert.ToInt32(loginID));
             return View(criteriaList);
         }
 

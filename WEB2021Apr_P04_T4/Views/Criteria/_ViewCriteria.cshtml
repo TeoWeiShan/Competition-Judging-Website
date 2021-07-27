@@ -7,7 +7,6 @@
             <thead class="thead-dark">
                 <tr>
                     <th>Criteria ID</th>
-                    <th>Competition ID</th>
                     <th>Criteria Name</th>
                     <th>Weightage</th>
                     <th></th>
@@ -18,7 +17,6 @@
                 {
                     <tr>
                         <td>@item.CriteriaID.ToString()</td>
-                        <td>@item.CompetitionID.ToString()</td>
                         <td>@item.CriteriaName</td>
                         <td>@item.Weightage.ToString()</td>
                         <td>
@@ -35,5 +33,5 @@
 }
 else
 {
-    <span style="color:red">No record found!</span>
+    <span style="color:red">No criteria has been created.</span>
 }

@@ -16,16 +16,16 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                <tr>
-                    <td>@item.CompetitorID.ToString()</td>
-                    <td>@item.FileSubmitted</td>
-                    <td>@item.DateTimeFileUpload.ToString()</td>                    
-                    <td>@item.Ranking.ToString()</td>
-                    <td>
-                        <a asp-action="Details" asp-controller="CompetitionSubmission"
-                           asp-route-id="@item.CompetitorID">Details</a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>@item.CompetitorID.ToString()</td>
+                        <td>@item.FileSubmitted</td>
+                        <td>@item.DateTimeFileUpload.ToString()</td>
+                        <td>@item.Ranking.ToString()</td>
+                        <td>
+                            <a asp-action="Details" asp-controller="CompetitionSubmission"
+                               asp-route-id="@item.CompetitorID">Details</a>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
