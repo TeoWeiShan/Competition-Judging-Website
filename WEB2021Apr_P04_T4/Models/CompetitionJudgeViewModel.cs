@@ -16,6 +16,7 @@ namespace WEB2021Apr_P04_T4.Models
         [Display(Name = "Competition Name")]
         public string CompetitionName { get; set; }
 
+        [ValidateJudgeDefault]
         [Display(Name = "Judge ID")]
         [Required]
         public int JudgeID { get; set; }
