@@ -1,19 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using WEB2021Apr_P04_T4.Models.Validation;
 
 namespace WEB2021Apr_P04_T4.Models
 {
     public class CompetitionJudgeViewModel
     {
-        public List<Competition> competitionList { get; set; }
-        public List<Judge> judgeList { get; set; }
+        [ValidateCompetitionJudgeModification]
+        [Display(Name = "Competition ID")]
+        public int CompetitionID { get; set; }
 
-        public CompetitionJudgeViewModel()
-        {
-            competitionList = new List<Competition>();
-            judgeList = new List<Judge>();
-        }
+        [Display(Name = "Competition Name")]
+        public string CompetitionName { get; set; }
+
+        [Display(Name = "Judge ID")]
+        [Required]
+        public int JudgeID { get; set; }
+
+        [Display(Name = "Judge Name")]
+        [Required]
+        public string JudgeName { get; set; }
+
+
     }
 }
