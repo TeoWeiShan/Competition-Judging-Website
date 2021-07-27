@@ -200,7 +200,7 @@ namespace WEB2021Apr_P04_T4.DAL
 
         }
 
-            public int Delete(int judgeId)
+        public int Delete(int judgeId)
         {
             //Instantiate a SqlCommand object, supply it with a DELETE SQL statement
             //to delete a area interest record specified by a Judge ID
@@ -217,5 +217,84 @@ namespace WEB2021Apr_P04_T4.DAL
             //Return number of row of staff record updated or deleted
             return rowAffected;
         }
+
+        public List<Judge> GetCompetitionJudgeDetails(int competitionId)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify the SQL statement that select all branches
+            cmd.CommandText = @"SELECT Judge.JudgeID,JudgeName, Salutation, Judge.AreaInterestID, EmailAddr, Judge.Password FROM ((CompetitionJudge
+INNER JOIN Competition ON Competition.CompetitionID = CompetitionJudge.CompetitionID)
+INNER JOIN Judge ON Judge.JudgeID = CompetitionJudge.JudgeID) Where CompetitionJudge.CompetitionID = @selectedCompetitionID";
+            //Define the parameter used in SQL statement, value for the
+            //parameter is retrieved from the method parameter “branchNo”.
+            cmd.Parameters.AddWithValue("@selectedCompetitionID", competitionId);
+
+            //Open a database connection
+            conn.Open();
+            //Execute SELCT SQL through a DataReader
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<Judge> judgeList = new List<Judge>();
+            while (reader.Read())
+            {
+                judgeList.Add(
+                new Judge
+                {
+                    JudgeID = reader.GetInt32(0), //0: 1st column
+                    JudgeName = reader.GetString(1), //1: 2nd column
+                    Salutation = reader.GetString(2),
+                    AreaInterestID = reader.GetInt32(3),
+                    EmailAddr = reader.GetString(4),
+                    Password = reader.GetString(5)
+                    //Get the first character of a string
+                }
+                );
+            }
+            //Close DataReader
+            reader.Close();
+            //Close database connection
+            conn.Close();
+            return judgeList;
+        }
+
+        public List<Judge> GetAvailableJudge(int competitionId)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify the SQL statement that select all branches
+            cmd.CommandText = @"SELECT Judge.* FROM (Competition
+INNER JOIN Judge ON Competition.AreaInterestID = Judge.AreaInterestID) Where 
+((Competition.CompetitionID = @selectedCompetitionID) AND JudgeID NOT IN  (Select JudgeID FROM CompetitionJudge))";
+            //Define the parameter used in SQL statement, value for the
+            //parameter is retrieved from the method parameter “branchNo”.
+            cmd.Parameters.AddWithValue("@selectedCompetitionID", competitionId);
+
+            //Open a database connection
+            conn.Open();
+            //Execute SELCT SQL through a DataReader
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<Judge> judgeList = new List<Judge>();
+            while (reader.Read())
+            {
+                judgeList.Add(
+                new Judge
+                {
+                    JudgeID = reader.GetInt32(0), //0: 1st column
+                    JudgeName = reader.GetString(1), //1: 2nd column
+                    Salutation = reader.GetString(2),
+                    AreaInterestID = reader.GetInt32(3),
+                    EmailAddr = reader.GetString(4),
+                    Password = reader.GetString(5)
+                    //Get the first character of a string
+                }
+                );
+            }
+            //Close DataReader
+            reader.Close();
+            //Close database connection
+            conn.Close();
+            return judgeList;
+        }
+
     }
 }

@@ -1,58 +1,11 @@
-﻿@model WEB2021Apr_P04_T4.Models.CompetitionJudgeViewModel
+﻿@model IEnumerable<WEB2021Apr_P04_T4.Models.Competition>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h4 class="PageTitle">View Competition Judges</h4>
-<!-- Display a list of branches -->
-<div class="table-responsive">
-    <table id="viewBranch" class="table table-striped table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th>ID</th>
-                <th>Competition Name</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.competitionList)
-            {
-                string selectedRow = "";
-                if (ViewData["selectedCompetitionNo"].ToString()
-                 == item.CompetitionID.ToString())
-                {
-                    // Highlight the selected row
-                    selectedRow = "class='table-primary'";
-                }
-                <tr @Html.Raw(selectedRow)>
-                    <td>@item.CompetitionID.ToString()</td>
-                    <td>@item.CompetitionName</td>
-                    <td>
-                        <a asp-action="Index" asp-controller="CompetitionJudge"
-                           asp-route-id="@item.CompetitionID">View Judges</a> |
-                        <a asp-action="Index" asp-controller="CompetitionJudge"
-                           asp-route-id="@item.CompetitionID">Assign Judges</a> 
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-
-<!-- Display a list of staff members for each branch -->
-@if (ViewData["selectedCompetitionNo"].ToString() != "")
-{
-    if (Model.judgeList.Count != 0)
-    {
-        <h5>
-            Judges in Competition
-            @ViewData["selectedCompetitionNo"].ToString() :
-        </h5>
-        <partial name="~/Views/CompetitionJudge/_ViewCompetitionJudge.cshtml"
-                 model="@Model.judgeList" />
-    }
-    else
-    {
-        <h5>No judges for selected competition!</h5>
-    }
-} 
+<h4 class="PageTitle">View Competition</h4>
+<p><a asp-action="Create">Create New Competition</a></p>
+<!-- Add a partial view to display a list of staff records
+ in a tabular format. -->
+<partial name="~/Views/CompetitionJudge/_ViewCompetitionJudge.cshtml" model="@Model" />
