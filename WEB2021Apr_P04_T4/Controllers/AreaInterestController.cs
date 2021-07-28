@@ -16,27 +16,21 @@ namespace WEB2021Apr_P04_T4.Controllers
         // GET: AreaInterestController
         public ActionResult Index()
         {
+            // Stop accessing the action if not logged in or account not in the "Admin" role
             if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Admin"))
             {
                 return RedirectToAction("Index", "Home");
-            }
+            }//Retrieve all available areaInterest from DB
             List<AreaInterest> areaInterestList = areaInterestContext.GetAllAreaInterest();
+            //Pass all available areaInterest to Views
             return View(areaInterestList);
-        }
-
-        // GET: AreaInterestController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
         }
 
         // GET: AreaInterestController/Create
         public ActionResult Create()
         {
-            // Stop accessing the action if not logged in
-            // or account not in the "Staff" role
-            if ((HttpContext.Session.GetString("Role") == null) ||
-            (HttpContext.Session.GetString("Role") != "Admin"))
+            // Stop accessing the action if not logged in or account not in the "Admin" role
+            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Admin"))
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -50,37 +44,15 @@ namespace WEB2021Apr_P04_T4.Controllers
         {
             if (ModelState.IsValid)
             {
-                //Add staff record to database
+                //Add areaInterest record to database
                 areaInterest.AreaInterestID = areaInterestContext.Add(areaInterest);
-                //Redirect user to Staff/Index view
+                //Redirect user to AreaInterest/Index view
                 return RedirectToAction("Index");
             }
             else
             {
-                //Input validation fails, return to the Create view
-                //to display error message
+                //Input validation fails, return to the Create view to display error message
                 return View(areaInterest);
-            }
-        }
-
-        // GET: AreaInterestController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: AreaInterestController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
             }
         }
 
@@ -92,15 +64,15 @@ namespace WEB2021Apr_P04_T4.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
+            // Stop accessing the action if requesting id is not valid
             if (id == null)
             {
-                //Return to listing page, not allowed to edit
                 return RedirectToAction("Index");
             }
             AreaInterest areaInterest = areaInterestContext.GetDetails(id.Value);
-            if (areaInterest == null)
+            // Stop accessing the action if requesting id is not in database
+            if (areaInterest.Name == null)
             {
-                //Return to listing page, not allowed to edit
                 return RedirectToAction("Index");
             }
             return View(areaInterest);
@@ -115,13 +87,12 @@ namespace WEB2021Apr_P04_T4.Controllers
             {
                 // Delete the interest record from database
                 areaInterestContext.Delete(areaInterest.AreaInterestID);
-                //Redirect user to Staff/Index view
+                //Redirect user to AreaInterest/Index view
                 return RedirectToAction("Index");
             }
             else
             {
-                //Input validation fails, return to the Create view
-                //to display error message
+                //Input validation fails, return to the Delete view to display error message
                 return View(areaInterest);
             }
             
