@@ -1,5 +1,5 @@
 ﻿body {
-    font-family: Arial;
+    font-family: Helvetica, sans-serif;
     font-size: 14px;
     overflow-x: hidden;
 }
@@ -7,7 +7,7 @@
 .PageTitle {
     text-align: center;
     font-weight: bold;
-    color: brown;
+    color: #3399FF;
 }
 
 .FormContent {
@@ -26,19 +26,23 @@
     width: 80%;
     padding: 4px;
 }
+h4{
+    padding: 15px;
+    margin: 0px;
+}
 
 fieldset {
-    border: 2px solid darkblue;
+    border: 2px solid #343a40;
     border-radius: 10px;
     padding: 5px;
-    background-color: antiquewhite;
+    background-color: #f8f9fa;
 }
 
     fieldset legend {
         padding: 4px;
         font-size: 16px;
         font-weight: bold;
-        color: brown;
+        color: #3399FF;
         width: auto;
     }
 
@@ -61,10 +65,10 @@ fieldset {
     }
 
 .myButton {
-    border: 2px solid dodgerblue;
+    border: 2px solid #3399FF;
     border-radius: 5px;
     padding: 5px;
-    background-color: dodgerblue;
+    background-color: #3399FF;
     color: white;
     font-weight: bold;
     text-align: center;
