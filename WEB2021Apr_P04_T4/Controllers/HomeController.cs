@@ -39,6 +39,10 @@ namespace WEB2021Apr_P04_T4.Controllers
 
         public IActionResult Login()
         {
+            if ((HttpContext.Session.GetString("Role") == "Admin") || (HttpContext.Session.GetString("Role") == "Admin") || (HttpContext.Session.GetString("Role") == "Competitor"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
 
         }
@@ -84,7 +88,7 @@ namespace WEB2021Apr_P04_T4.Controllers
                 HttpContext.Session.SetString("LoginID", loginID);
                 // Store user role “Staff” as a string in session with the key “Role” 
                 HttpContext.Session.SetString("Role", "Admin");
-                return RedirectToAction("AdminMain");
+                return RedirectToAction("Index");
             }/*
             else if (loginID == "abc1@lcu.edu.sg" && password == "p@55Judge")
             {
