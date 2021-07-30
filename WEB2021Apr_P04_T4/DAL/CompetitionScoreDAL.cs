@@ -28,12 +28,18 @@ namespace WEB2021Apr_P04_T4.DAL
             conn = new SqlConnection(strConn);
         }
 
-        public List<CompetitionScore> GetAllScore()
+        public List<CompetitionScore> GetAllScore(int JudgeID)
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
-            //Specify the SELECT SQL statement
-            cmd.CommandText = @"SELECT * FROM CompetitionScore ORDER BY CompetitionID";
+
+            //Specify the SELECT SQL statement to select CompetitionScore only
+            //for the competition the Judge is currently in
+            cmd.CommandText = @"SELECT * FROM CompetitionScore WHERE
+            CompetitionID IN (SELECT CompetitionID FROM CompetitionJudge WHERE JudgeID = @selectedJudgeID)
+            AND CompetitionID IN (SELECT CompetitionID from Competition WHERE ResultReleasedDate > GETDATE())";
+            cmd.Parameters.AddWithValue("@selectedJudgeID", JudgeID);
+
             //Open a database connection
             conn.Open();
             //Execute the SELECT SQL through a DataReader
@@ -46,9 +52,10 @@ namespace WEB2021Apr_P04_T4.DAL
                 scoreList.Add(
                 new CompetitionScore
                 {
-                    CompetitionID = reader.GetInt32(0), //0: 1st column
-                    CompetitorID = reader.GetInt32(1), //1: 2nd column
-                    Score = reader.GetInt32(2),
+                    CriteriaID = reader.GetInt32(0),
+                    CompetitorID = reader.GetInt32(1), //0: 1st column
+                    CompetitionID = reader.GetInt32(2), //1: 2nd column
+                    Score = reader.GetInt32(3),
                    // DateTimeLastEdit = reader.GetDateTime(3)                    
                 }
                 );

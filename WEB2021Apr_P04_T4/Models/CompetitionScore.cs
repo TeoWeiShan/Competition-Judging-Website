@@ -21,10 +21,10 @@ namespace WEB2021Apr_P04_T4.Models
         [Display(Name = "Score")]
         public int Score { get; set; }
 
-        [Display(Name = "Last Edited")]
-        [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{yyyy-MM-DD HH:mm}", ApplyFormatInEditMode = true)]
-        [ValidateCompetitionResult]
-        public DateTime? DateTimeLastEdit { get; set; }
+        //[Display(Name = "Last Edited")]
+        //[DataType(DataType.DateTime)]
+        //[DisplayFormat(DataFormatString = "{yyyy-MM-DD HH:mm}", ApplyFormatInEditMode = true)]
+        //[ValidateCompetitionResult]
+        //public DateTime? DateTimeLastEdit { get; set; }
     }
 }
