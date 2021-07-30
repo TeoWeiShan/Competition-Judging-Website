@@ -126,27 +126,7 @@ namespace WEB2021Apr_P04_T4.DAL
 
         //public int Add(CompetitorCompetition competitorcompetition)
         //{
-        //    //Create a SqlCommand object from connection object
-        //    SqlCommand cmd = conn.CreateCommand();
-        //    //Specify an INSERT SQL statement which will
-        //    //return the auto-generated StaffID after insertion
-        //    cmd.CommandText = @"INSERT INTO CompetitionSubmission (CompetitionID, CriteriaName, Weightage)
-        //    OUTPUT INSERTED.CompetitionID
-        //    VALUES(@competitionid, @criterianame, @weightage)";
-        //    //Define the parameters used in SQL statement, value for each parameter
-        //    //is retrieved from respective class's property.
-        //    cmd.Parameters.AddWithValue("@competitionid", criteria.CompetitionID);
-        //    cmd.Parameters.AddWithValue("@criterianame", criteria.CriteriaName);
-        //    cmd.Parameters.AddWithValue("@weightage", criteria.Weightage);
-        //    //A connection to database must be opened before any operations made.
-        //    conn.Open();
-        //    //ExecuteScalar is used to retrieve the auto-generated
-        //    //StaffID after executing the INSERT SQL statement
-        //    competitorcompetition.CompetitionID = (int)cmd.ExecuteScalar();
-        //    //A connection should be closed after operations.
-        //    conn.Close();
-        //    //Return id when no error occurs.
-        //    return competitorcompetition.CompetitionID;
+            
         //}
     }
 }
