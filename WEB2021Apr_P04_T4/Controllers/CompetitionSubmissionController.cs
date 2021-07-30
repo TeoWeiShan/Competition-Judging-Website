@@ -104,10 +104,29 @@ namespace WEB2021Apr_P04_T4.Controllers
     }
 
     // GET: CompetitionSubmissionController/Edit/5
-    public ActionResult Edit(int id)
+    public ActionResult Edit(int? id)
     {
-        return View();
-    }
+            // Stop accessing the action if not logged in
+            // or account not in the "Judge" role
+            if ((HttpContext.Session.GetString("Role") == null) ||
+            (HttpContext.Session.GetString("Role") != "Judge"))
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if (id == null)
+            { //Query string parameter not provided
+              //Return to listing page, not allowed to edit
+                return RedirectToAction("Index");
+            }
+            
+            CompetitionSubmission submission = competitionSubmissionContext.GetDetails(id.Value);
+            if (submission == null)
+            {
+                //Return to listing page, not allowed to edit
+                return RedirectToAction("Index");
+            }
+            return View(submission);
+        }
 
     // POST: CompetitionSubmissionController/Edit/5
     [HttpPost]

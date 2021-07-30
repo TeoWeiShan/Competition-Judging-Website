@@ -259,19 +259,48 @@ INNER JOIN Judge ON Judge.JudgeID = CompetitionJudge.JudgeID) Where CompetitionJ
 
         public List<Judge> GetAvailableJudge(int competitionId)
         {
-            //Create a SqlCommand object from connection object
-            SqlCommand cmd = conn.CreateCommand();
-            //Specify the SQL statement that select all branches
-            cmd.CommandText = @"SELECT Judge.* FROM (Competition
-INNER JOIN Judge ON Competition.AreaInterestID = Judge.AreaInterestID) Where 
-((Competition.CompetitionID = 1) AND JudgeID NOT IN  (Select JudgeID FROM CompetitionJudge WHERE CompetitionID IN 
-(select competitionid from Competition where GETDATE() < ResultReleasedDate)))";
-            //Define the parameter used in SQL statement, value for the
-            //parameter is retrieved from the method parameter “branchNo”.
-            cmd.Parameters.AddWithValue("@selectedCompetitionID", competitionId);
+            SqlCommand cmd1 = conn.CreateCommand();
+            cmd1.CommandText = @"SELECT * FROM Competition WHERE CompetitionID = @selectedCompetitionID";
+            cmd1.Parameters.AddWithValue("@selectedCompetitionID", competitionId);
+
+            int interest = 0 ;
+            DateTime start = new DateTime();
+            DateTime end = new DateTime();
+            DateTime result = new DateTime(); 
+
 
             //Open a database connection
             conn.Open();
+
+            SqlDataReader reader1 = cmd1.ExecuteReader();
+            while (reader1.Read())
+            {
+                    interest = reader1.GetInt32(1);
+                    start = reader1.GetDateTime(3);
+                    result = reader1.GetDateTime(5);
+            
+            }
+            reader1.Close();
+
+            conn.Close();
+
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify the SQL statement that select all branches
+            cmd.CommandText = @" select * from judge where judgeid not in(
+ select JudgeID from CompetitionJudge WHERE CompetitionID IN(
+ Select CompetitionID from Competition Where 
+((ResultReleasedDate > @start) and (StartDate < @result))))
+and AreaInterestID = @interest";
+            //Define the parameter used in SQL statement, value for the
+            //parameter is retrieved from the method parameter “branchNo”.
+            cmd.Parameters.AddWithValue("@interest", interest);
+            cmd.Parameters.AddWithValue("@start", start);
+            cmd.Parameters.AddWithValue("@result", result);
+
+            conn.Open();
+
+
             //Execute SELCT SQL through a DataReader
             SqlDataReader reader = cmd.ExecuteReader();
             List<Judge> judgeList = new List<Judge>();

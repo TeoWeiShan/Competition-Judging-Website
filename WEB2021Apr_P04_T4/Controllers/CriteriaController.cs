@@ -47,6 +47,21 @@ namespace WEB2021Apr_P04_T4.Controllers
             return competitionList;
         }
 
+        private List<Competition> GetAvailableCompetition(int JudgeID)
+        {
+            // Get a list of branches from database
+            List<Competition> competitionList = criteriaContext.GetAvailableCompetition(JudgeID);
+            Console.WriteLine(competitionList);
+            // Adding a select prompt at the first row of the branch list
+            competitionList.Insert(0, new Competition
+            {
+                CompetitionID = 0,
+                CompetitionName = "--Select--"
+            });
+            Console.WriteLine(competitionList);
+            return competitionList;
+        }
+
         // GET: CriteriaController/Create
         public ActionResult Create()
         {
@@ -57,7 +72,8 @@ namespace WEB2021Apr_P04_T4.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            ViewData["CompetitionList"] = GetAllCompetition();
+            string loginID = HttpContext.Session.GetString("LoginID");
+            ViewData["competitionList"] = GetAvailableCompetition(Convert.ToInt32(loginID));
             return View();
         }
 
@@ -66,7 +82,8 @@ namespace WEB2021Apr_P04_T4.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Criteria criteria)
         {
-            ViewData["CompetitionList"] = GetAllCompetition();
+            //string loginID = HttpContext.Session.GetString("LoginID");
+            //ViewData["CompetitionList"] = GetAvailableCompetition(Convert.ToInt32(loginID));
             if (ModelState.IsValid)
             {
                 //Add criteria record to database
