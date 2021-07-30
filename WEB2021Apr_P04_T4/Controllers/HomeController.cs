@@ -151,6 +151,15 @@ namespace WEB2021Apr_P04_T4.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult DisplayError()
+        {
+            if (TempData["ErrorMsg"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

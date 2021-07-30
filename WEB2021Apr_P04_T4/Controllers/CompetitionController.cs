@@ -128,6 +128,19 @@ namespace WEB2021Apr_P04_T4.Controllers
             }
             ViewData["InterestList"] = GetAllAreaInterests();
             Competition competition = competitionContext.GetDetails(id.Value);
+            if (competitionContext.IsModifiable(id.Value))
+            {
+                TempData["ErrorMsg"] = "Sorry! A competitor has joined and cannot be modified";
+                if (competition.EndDate < DateTime.Today)
+                {
+                   
+                    TempData["ErrorMsg"] = "Sorry! The competition has ended and cannot be modified";
+                    return RedirectToAction("DisplayError", "Home" );
+                }
+               
+                return RedirectToAction("DisplayError", "Home");
+            }
+           
             if (competition == null)
             {
                 //Return to listing page, not allowed to edit
@@ -171,6 +184,18 @@ namespace WEB2021Apr_P04_T4.Controllers
                 return RedirectToAction("Index");
             }
             Competition competition= competitionContext.GetDetails(id.Value);
+            if (competitionContext.IsModifiable(id.Value))
+            {
+                TempData["ErrorMsg"] = "Sorry! A competitor has joined and cannot be modified";
+                if (competition.EndDate < DateTime.Today)
+                {
+
+                    TempData["ErrorMsg"] = "Sorry! The competition has ended and cannot be modified";
+                    return RedirectToAction("DisplayError", "Home");
+                }
+
+                return RedirectToAction("DisplayError", "Home");
+            }
             if (competition == null)
             {
                 //Return to listing page, not allowed to edit

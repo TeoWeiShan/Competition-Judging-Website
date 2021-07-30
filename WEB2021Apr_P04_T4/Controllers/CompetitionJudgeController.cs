@@ -36,7 +36,13 @@ namespace WEB2021Apr_P04_T4.Controllers
             ViewData["CompetitionID"] = id;
             
             Competition competition = competitionContext.GetDetails(id);
+            if(id == 0 || competition.CompetitionName  ==null)
+            {
+                //Return to listing page, not allowed to edit
+                return RedirectToAction("Index", "Competition");
+            }
             ViewData["CompetitionName"] = competition.CompetitionName;
+            ViewData["EndDate"] = competition.EndDate;
             List<Judge> judgeList = judgeContext.GetCompetitionJudgeDetails(id);
             //CompetitionJudgeViewModel competitionVM = MapToCompetitionJudgeVM(competition);
             return View(judgeList);
@@ -94,6 +100,16 @@ namespace WEB2021Apr_P04_T4.Controllers
                 return RedirectToAction("Index", "Home");
             }
             Competition competition = competitionContext.GetDetails(id);
+            if (competition.EndDate < DateTime.Today)
+            {
+                TempData["ErrorMsg"] = "Sorry! The competition has already ended and no judges can be assigned!";
+                return RedirectToAction("DisplayError", "Home");
+            }
+            if (competition.EndDate == null)
+            {
+                TempData["ErrorMsg"] = "Sorry! The competition has no confirmed dates and no judges can be assigned";
+                return RedirectToAction("DisplayError", "Home");
+            }
             CompetitionJudgeViewModel competitionJudgeVM = MapToCompetitionJudgeVM(competition);
             ViewData["JudgeList"] = GetAvailableJudge(id);
             return View(competitionJudgeVM);
@@ -116,27 +132,6 @@ namespace WEB2021Apr_P04_T4.Controllers
                 //Input validation fails, return to the view
                 //to display error message
                 return View(competitionJudge);
-            }
-        }
-
-        // GET: CompetitionJudgeController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: CompetitionJudgeController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
             }
         }
 
@@ -163,6 +158,16 @@ namespace WEB2021Apr_P04_T4.Controllers
                 return RedirectToAction("Index", "Home");
             }
             Competition competition = competitionContext.GetDetails(id);
+            if (competition.EndDate < DateTime.Today)
+            {
+                TempData["ErrorMsg"] = "Sorry! The competition has already ended and no judges can be assigned!";
+                return RedirectToAction("DisplayError", "Home");
+            }
+            if (competition.EndDate == null)
+            {
+                TempData["ErrorMsg"] = "Sorry! The competition has no confirmed dates and no judges can be assigned";
+                return RedirectToAction("Index", "Competition");
+            }
             CompetitionJudgeViewModel competitionJudgeVM = MapToCompetitionJudgeVM(competition);
             ViewData["JudgeList"] = GetCompetitionJudge(id);
             return View(competitionJudgeVM);

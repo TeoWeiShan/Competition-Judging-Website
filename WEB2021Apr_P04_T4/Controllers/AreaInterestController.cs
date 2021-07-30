@@ -70,6 +70,11 @@ namespace WEB2021Apr_P04_T4.Controllers
                 return RedirectToAction("Index");
             }
             AreaInterest areaInterest = areaInterestContext.GetDetails(id.Value);
+            if (areaInterestContext.IsDeletable(id.Value))
+            {
+                TempData["ErrorMsg"] = "Sorry! A competition record has been made!";
+                return RedirectToAction("DisplayError", "Home");
+            }
             // Stop accessing the action if requesting id is not in database
             if (areaInterest.Name == null)
             {
