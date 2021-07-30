@@ -34,8 +34,10 @@ namespace WEB2021Apr_P04_T4.DAL
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify the SELECT SQL statement
-            cmd.CommandText = @"SELECT * FROM Criteria WHERE CompetitionID =
-            (SELECT CompetitionID from CompetitionJudge WHERE JudgeID = @selectedJudgeID)";
+            cmd.CommandText = @"select * from Criteria where CompetitionID in (select CompetitionID from
+            CompetitionJudge where CompetitionID in
+            (select CompetitionID from Competition where ResultReleasedDate > GETDATE())
+            and JudgeID = @selectedJudgeID)";
             cmd.Parameters.AddWithValue("selectedJudgeID", JudgeID);
             //Open a database connection
             conn.Open();
@@ -62,6 +64,43 @@ namespace WEB2021Apr_P04_T4.DAL
             conn.Close();
 
             return criteriaList;
+        }
+
+        public List<Competition> GetAvailableCompetition(int JudgeID)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify the SELECT SQL statement
+            cmd.CommandText = @"select * FROM Criteria WHERE CompetitionID IN
+            (select CompetitionID FROM CompetitionJudge WHERE JudgeID = @selectedJudgeID AND CompetitionID IN
+            (select CompetitionID from Competition where ResultReleasedDate > GETDATE())) ";
+            cmd.Parameters.AddWithValue("@selectedJudgeID", JudgeID);
+            //Open a database connection
+            conn.Open();
+            //Execute the SELECT SQL through a DataReader
+            SqlDataReader reader = cmd.ExecuteReader();
+            //Read all records until the end, save data into a competition list
+            List<Competition> competitionList = new List<Competition>();
+            while (reader.Read())
+            {
+                competitionList.Add(
+                new Competition
+                {
+                    CompetitionID = reader.GetInt32(0), //0: 1st column
+                    AreaInterestID = reader.GetInt32(1), //1: 2nd column
+                    CompetitionName = reader.GetString(2),
+                    StartDate = reader.GetDateTime(3),
+                    EndDate = reader.GetDateTime(4),
+                    ResultReleasedDate = reader.GetDateTime(5)
+                }
+                );
+            }
+            //Close DataReader
+            reader.Close();
+            //Close the database connection
+            conn.Close();
+
+            return competitionList;
         }
 
         public int Add(Criteria criteria)
@@ -243,14 +282,24 @@ namespace WEB2021Apr_P04_T4.DAL
         {
             //Instantiate a SqlCommand object, supply it with a DELETE SQL statement
             //to delete a area interest record specified by a CriteriaID
-            SqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = @"DELETE FROM Criteria WHERE CriteriaID = @selectCriteriaID";
-            cmd.Parameters.AddWithValue("@selectCriteriaID", criteriaId);
+
+            //Ensure data integrity
+            //SqlCommand cmd1 = conn.CreateCommand();
+            //cmd1.CommandText = @"UPDATE CompetitionScore SET CriteriaID = null
+            //WHERE CriteriaID = @selectCriteriaID";
+            //cmd1.Parameters.AddWithValue("selectCriteriaID", criteriaId);
+
+            SqlCommand cmd2 = conn.CreateCommand();
+            cmd2.CommandText = @"DELETE FROM Criteria WHERE CriteriaID = @selectCriteriaID";
+            cmd2.Parameters.AddWithValue("@selectCriteriaID", criteriaId);
             //Open a database connection
             conn.Open();
             int rowAffected = 0;
+
             //Execute the DELETE SQL to remove the Criteria record
-            rowAffected += cmd.ExecuteNonQuery();
+            //rowAffected += cmd1.ExecuteNonQuery();
+            rowAffected += cmd2.ExecuteNonQuery();
+
             //Close database connection
             conn.Close();
             //Return number of row of Criteria record updated or deleted
