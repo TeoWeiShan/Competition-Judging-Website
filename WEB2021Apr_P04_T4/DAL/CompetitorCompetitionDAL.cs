@@ -35,7 +35,7 @@ namespace WEB2021Apr_P04_T4.DAL
             //Specify the SELECT SQL statement
             cmd.CommandText = @"select * from Competition
                                 where (DATEDIFF(day, StartDate, GETDATE())) < 3 and
-                                (CompetitionID not in (select CompetitionID from CompetitionSubmission where CompetitorID = 1)) and 
+                                (CompetitionID not in (select CompetitionID from CompetitionSubmission where CompetitorID = @selectedCompetitorID)) and 
                                 (CompetitionID in(SELECT CompetitionID FROM CompetitionJudge 
                                 GROUP BY CompetitionID HAVING COUNT(CompetitionID) >= 2) )";
             cmd.Parameters.AddWithValue("selectedCompetitorID", competitorID);
@@ -101,7 +101,7 @@ namespace WEB2021Apr_P04_T4.DAL
             return competitionList;
         }
 
-        public int Join(int competitionID, int competitorID)
+        public int Add(int competitionID, int competitorID)
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
@@ -118,15 +118,34 @@ namespace WEB2021Apr_P04_T4.DAL
             //A connection to database must be opened before any operations made.
             conn.Open();
             //ExecuteScalar is used to retrieve the auto-generated
+            cmd.ExecuteNonQuery();
             //A connection should be closed after operations.
             conn.Close();
             //Return id when no error occurs.
             return (competitionID);
         }
 
-        //public int Add(CompetitorCompetition competitorcompetition)
-        //{
-            
-        //}
+        public int Join(int competitionID, int competitorID)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify an INSERT SQL statement which will
+            //return the auto-generated StaffID after insertion
+            cmd.CommandText = @"insert into CompetitionSubmission (CompetitionID, CompetitorID, VoteCount) 
+                                values (@competitionId, @competitorId, 0)";
+            //Define the parameters used in SQL statement, value for each parameter
+            //is retrieved from respective class's property.
+            cmd.Parameters.AddWithValue("@competitionId", competitionID);
+            cmd.Parameters.AddWithValue("@competitorId", competitorID);
+            //A connection to database must be opened before any operations made.
+            conn.Open();
+            //ExecuteScalar is used to retrieve the auto-generated
+            //StaffID after executing the INSERT SQL statement
+            cmd.ExecuteNonQuery();
+            //A connection should be closed after operations.
+            conn.Close();
+            //Return id when no error occurs.
+            return competitionID;
+        }
     }
 }

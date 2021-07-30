@@ -49,27 +49,16 @@ namespace WEB2021Apr_P04_T4.Controllers
         // POST: CompetitorCompetitionController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(CompetitorCompetition competitorcompetition)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                //competitorcompetition.CompetitionID = competitorcompetitionContext.Add(competitorcompetition);
+                return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+            else
+                return View(competitorcompetition);
         }
-        //public ActionResult Create(CompetitorCompetition competitorcompetition)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        competitorcompetition.CompetitionID = competitorcompetitionContext.Add(competitorcompetition);
-        //        return RedirectToAction("Index");
-        //    }
-        //    else
-        //        return View(competitorcompetition);
-        //}
 
         public ActionResult Join(int id)
         {
@@ -78,35 +67,7 @@ namespace WEB2021Apr_P04_T4.Controllers
                 return RedirectToAction("Index", "Home");
             }
             Competition competition = competitionContext.GetDetails(id);
-            CompetitionViewModel competitionVM = MapToCompetitionVM(competition);
-            return View(competitionVM);
-        }
-        public CompetitionViewModel MapToCompetitionVM(Competition competition)
-        {
-            string interestName = "";
-            if (competition.CompetitionID != null)
-            {
-                List<AreaInterest> interestList = areaInterestContext.GetAllAreaInterest();
-                foreach (AreaInterest interest in interestList)
-                {
-                    if (interest.AreaInterestID == competition.AreaInterestID)
-                    {
-                        interestName = interest.Name;
-                        //Exit the foreach loop once the name is found
-                        break;
-                    }
-                }
-            }
-            CompetitionViewModel competitionVM = new CompetitionViewModel
-            {
-                CompetitionID = competition.CompetitionID,
-                Name = interestName,
-                CompetitionName = competition.CompetitionName,
-                StartDate = competition.StartDate,
-                EndDate = competition.EndDate,
-                ResultReleasedDate = competition.ResultReleasedDate
-            };
-            return competitionVM;
+            return View(competition);
         }
 
         private List<AreaInterest> GetAllAreaInterests()
@@ -132,6 +93,8 @@ namespace WEB2021Apr_P04_T4.Controllers
         {
             ViewData["InterestList"] = GetAllAreaInterests();
             string loginID = HttpContext.Session.GetString("LoginID");
+            ModelState.Remove("AreaInterestID");
+            ModelState.Remove("CompetitionID");
             if (ModelState.IsValid)
             {
                 //Update staff record to database
