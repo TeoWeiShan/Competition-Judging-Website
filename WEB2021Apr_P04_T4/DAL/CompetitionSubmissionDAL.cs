@@ -35,7 +35,8 @@ namespace WEB2021Apr_P04_T4.DAL
 
             //Specify the SELECT SQL statement
             cmd.CommandText = @"SELECT * FROM CompetitionSubmission WHERE
-            CompetitionID = (SELECT CompetitionID FROM CompetitionJudge WHERE JudgeID = @selectedJudgeID)";
+            CompetitionID IN (SELECT CompetitionID FROM CompetitionJudge WHERE JudgeID = @selectedJudgeID
+            AND COMPETITIONID IN (SELECT CompetitionID from Competition WHERE ResultReleasedDate > GETDATE()))";
             cmd.Parameters.AddWithValue("@selectedJudgeID", JudgeID);
 
             //Open a database connection
@@ -74,7 +75,7 @@ namespace WEB2021Apr_P04_T4.DAL
             return submissionList;
         }
 
-        public CompetitionSubmission GetDetails(int competitionId)
+        public CompetitionSubmission GetDetails(int competitorId)
         {
             CompetitionSubmission submission = new CompetitionSubmission();
 
@@ -83,11 +84,11 @@ namespace WEB2021Apr_P04_T4.DAL
 
             //Specify the SELECT SQL statement that retrieves all attributes of
             //a submission record for the competition that the Judge is in
-            cmd.CommandText = @"SELECT * FROM CompetitionSubmission WHERE CompetitionID = @selectedCompetitionID";
+            cmd.CommandText = @"SELECT * FROM CompetitionSubmission WHERE CompetitorID = @selectedCompetitorID";
 
             //Define the parameter used in SQL statement, value for the
             //parameter is retrieved from the method parameter “competitionId”.
-            cmd.Parameters.AddWithValue("@selectedCompetitionID", competitionId);
+            cmd.Parameters.AddWithValue("@selectedCompetitorID", competitorId);
 
             //Open a database connection
             conn.Open();
@@ -100,8 +101,8 @@ namespace WEB2021Apr_P04_T4.DAL
                 while (reader.Read())
                 {
                     // Fill competitionsubmission object with values from the data reader 
-                    submission.CompetitionID = competitionId;
-                    submission.CompetitorID = reader.GetInt32(1);
+                    submission.CompetitorID = competitorId;
+                    submission.CompetitionID = reader.GetInt32(1);
                     submission.FileSubmitted = reader.IsDBNull(2) ? null : reader.GetString(2);
                     submission.DateTimeFileUpload = !reader.IsDBNull(3) ? reader.GetDateTime(3) : (DateTime?)null;
                     submission.Appeal = reader.IsDBNull(4) ? null : reader.GetString(4);
