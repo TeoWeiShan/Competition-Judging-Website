@@ -32,7 +32,7 @@ namespace WEB2021Apr_P04_T4.DAL
         {
             bool recordFound = false;
             //Create a SqlCommand object and specify the SQL statement
-            //to get a staff record with the email address to be validated
+            //to get a record with the compjudge to be validated
             SqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = @"SELECT EndDate FROM Competition
  WHERE CompetitionID=@selectedCompetitionID";
@@ -59,14 +59,13 @@ namespace WEB2021Apr_P04_T4.DAL
             return recordFound;
         }
 
-        
 
         public int AddCompJudge(CompetitionJudgeViewModel competitionJudge)
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify an INSERT SQL statement which will
-            //return the auto-generated StaffID after insertion
+            //return the auto-generated id after insertion
             cmd.CommandText = @"INSERT INTO CompetitionJudge (CompetitionID, JudgeID)
 OUTPUT INSERTED.CompetitionID
 VALUES(@competitionId, @judgeId)";
@@ -77,7 +76,7 @@ VALUES(@competitionId, @judgeId)";
             //A connection to database must be opened before any operations made.
             conn.Open();
             //ExecuteScalar is used to retrieve the auto-generated
-            //StaffID after executing the INSERT SQL statement
+            //id after executing the INSERT SQL statement
             cmd.ExecuteNonQuery();
             //A connection should be closed after operations.
             conn.Close();
@@ -89,7 +88,7 @@ VALUES(@competitionId, @judgeId)";
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify an INSERT SQL statement which will
-            //return the auto-generated StaffID after insertion
+            //return the auto-generated id after insertion
             cmd.CommandText = @"DELETE FROM CompetitionJudge WHERE CompetitionID = @selectCompetitionID and JudgeID = @selectJudgeID";
             //Define the parameters used in SQL statement, value for each parameter
             //is retrieved from respective class's property.
@@ -98,7 +97,7 @@ VALUES(@competitionId, @judgeId)";
             //A connection to database must be opened before any operations made.
             conn.Open();
             //ExecuteScalar is used to retrieve the auto-generated
-            //StaffID after executing the INSERT SQL statement
+            //id after executing the INSERT SQL statement
             cmd.ExecuteNonQuery();
             //A connection should be closed after operations.
             conn.Close();
