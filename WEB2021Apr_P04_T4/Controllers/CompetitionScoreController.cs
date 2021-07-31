@@ -14,7 +14,8 @@ namespace WEB2021Apr_P04_T4.Controllers
     {
         private CompetitionScoreDAL scoreContext = new CompetitionScoreDAL();
         private CompetitionDAL competitionContext = new CompetitionDAL();
-       
+        private CriteriaDAL criteriaContext = new CriteriaDAL();
+
         // GET: CompetitionScore
         public ActionResult Index()
         {
@@ -30,6 +31,51 @@ namespace WEB2021Apr_P04_T4.Controllers
             return View(scoreList);
         }
 
+        private List<Competition> GetAvailableCompetition(int JudgeID)
+        {
+            // Get a list of branches from database
+            List<Competition> competitionList = criteriaContext.GetAvailableCompetition(JudgeID);
+            Console.WriteLine(competitionList);
+            // Adding a select prompt at the first row of the branch list
+            competitionList.Insert(0, new Competition
+            {
+                CompetitionID = 0,
+                CompetitionName = "--Select--"
+            });
+            Console.WriteLine(competitionList);
+            return competitionList;
+        }
+
+        private List<Criteria> GetAvailableCriteria(int CompetitionID)
+        {
+            // Get a list of branches from database
+            List<Criteria> criteriaList = criteriaContext.GetAvailableCriteria(CompetitionID);
+            Console.WriteLine(criteriaList);
+            // Adding a select prompt at the first row of the criteria list
+            criteriaList.Insert(0, new Criteria
+            {
+                CriteriaID = 0,
+                CriteriaName = "--Select--"
+            });
+            Console.WriteLine(criteriaList);
+            return criteriaList;
+        }
+
+        //private List<CompetitionSubmission> GetAvailableSubmissions(int CompetitorID)
+        //{
+        //    // Get a list of branches from database
+        //    List<CompetitionSubmission> submissionList = submissionContext.GetAvailableSubmissions(CompetitorID);
+        //    Console.WriteLine(submissionList);
+        //    // Adding a select prompt at the first row of the branch list
+        //    submissionList.Insert(0, new CompetitionSubmission
+        //    {
+        //        CompetitorID = 0,
+        //        CompetitorID = "--Select--"
+        //    });
+        //    Console.WriteLine(competitionList);
+        //    return competitionList;
+        //}
+
         // GET: CompetitionScore/Details/5
         public ActionResult Details(int id)
         {
@@ -38,7 +84,7 @@ namespace WEB2021Apr_P04_T4.Controllers
 
         // GET: CompetitionScore/Create
         public ActionResult Create()
-        {
+        {            
             // Stop accessing the action if not logged in
             // or account not in the "Criteria" role
             if ((HttpContext.Session.GetString("Role") == null) ||
@@ -48,6 +94,8 @@ namespace WEB2021Apr_P04_T4.Controllers
             }
             string loginID = HttpContext.Session.GetString("LoginID");
             ViewData["scoreList"] = GetAllScore(Convert.ToInt32(loginID));
+            ViewData["competitionList"] = GetAvailableCompetition(Convert.ToInt32(loginID));
+            ViewData["CriteriaList"] = GetAvailableCriteria(Convert.ToInt32(loginID));
             return View();
         }
 
@@ -62,15 +110,20 @@ namespace WEB2021Apr_P04_T4.Controllers
         // POST: CompetitionScore/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(CompetitionScore Cscore)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                //Add criteria record to database
+                Cscore.CompetitorID = scoreContext.Add(Cscore);
+                //Redirect user to Criteria/Index view
+                return RedirectToAction("Index");
             }
-            catch
+            else
             {
-                return View();
+                //Input validation fails, return to the Create view
+                //to display error message
+                return View(Cscore);
             }
         }
 
@@ -84,27 +137,6 @@ namespace WEB2021Apr_P04_T4.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: CompetitionScore/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: CompetitionScore/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {

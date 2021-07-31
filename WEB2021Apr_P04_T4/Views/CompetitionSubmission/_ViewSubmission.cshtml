@@ -22,6 +22,8 @@
                         <td>@item.DateTimeFileUpload.ToString()</td>
                         <td>@item.Ranking.ToString()</td>
                         <td>
+                            <a asp-action="Edit" asp-controller="CompetitionSubmission"
+                               asp-route-id="@item.CompetitorID">Edit Ranking</a> |
                             <a asp-action="Details" asp-controller="CompetitionSubmission"
                                asp-route-id="@item.CompetitorID">Details</a>
                         </td>

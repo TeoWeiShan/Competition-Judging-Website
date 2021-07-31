@@ -9,14 +9,21 @@
 <form asp-action="Create">
     <fieldset class="FormContent">
         <div class="form-group row">
-            <label asp-for="CriteriaID"
+            <label asp-for="CompetitionID"
                    class="col-sm-3 col-form-label"></label>
             <div class="col-sm-9 col-md-5">
-                <input asp-for="CriteriaID" class="form-control" />
-                <span asp-validation-for="CriteriaID"
+                 <!-- Drop-down list displaying CompetitionName,
+                with CompetitionID as returned value -->
+                <select asp-for="CompetitionID"
+                        asp-items="@(new SelectList(
+ @ViewData["CompetitionList"] as List <Competition>,
+ "CompetitionID", "CompetitionName"))"
+                        class="form-control"></select>
+                <span asp-validation-for="CompetitionID"
                       class="text-danger"></span>
             </div>
         </div>
+
         <div class="form-group row">
             <label asp-for="CompetitorID"
                    class="col-sm-3 col-form-label"></label>
@@ -27,11 +34,17 @@
             </div>
         </div>
         <div class="form-group row">
-            <label asp-for="CompetitionID"
+            <label asp-for="CriteriaID"
                    class="col-sm-3 col-form-label"></label>
             <div class="col-sm-9 col-md-5">
-                <input asp-for="CompetitionID" class="form-control" />
-                <span asp-validation-for="CompetitionID"
+                <!-- Drop-down list displaying CompetitionName,
+    with CompetitionID as returned value -->
+                <select asp-for="CriteriaID"
+                        asp-items="@(new SelectList(
+ @ViewData["CriteriaList"] as List <Criteria>,
+ "CriteriaID", "CriteriaName"))"
+                        class="form-control"></select>
+                <span asp-validation-for="CriteriaID"
                       class="text-danger"></span>
             </div>
         </div>

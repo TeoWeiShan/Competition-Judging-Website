@@ -114,8 +114,11 @@ namespace WEB2021Apr_P04_T4.Controllers
               //Return to listing page, not allowed to edit
                 return RedirectToAction("Index");
             }
-            ViewData["CompetitionList"] = GetAllCompetition();
+            
             Criteria criteria = criteriaContext.GetDetails(id.Value);
+            Competition competition = competitionContext.GetDetails(criteria.CompetitionID);
+            ViewData["CompetitionName"] = competition.CompetitionName;
+
             if (criteria == null)
             {
                 //Return to listing page, not allowed to edit

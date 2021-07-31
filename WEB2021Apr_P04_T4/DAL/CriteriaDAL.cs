@@ -70,10 +70,10 @@ namespace WEB2021Apr_P04_T4.DAL
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
-            //Specify the SELECT SQL statement
-            cmd.CommandText = @"select * FROM Criteria WHERE CompetitionID IN
-            (select CompetitionID FROM CompetitionJudge WHERE JudgeID = @selectedJudgeID AND CompetitionID IN
-            (select CompetitionID from Competition where ResultReleasedDate > GETDATE())) ";
+            //Specify the SELECT SQL statement to select the ongoing competition where the judge is judging
+            cmd.CommandText = @"select * from Competition where CompetitionID IN (select CompetitionID
+            FROM CompetitionJudge WHERE JudgeID = @selectedJudgeID AND CompetitionID IN
+            (select CompetitionID from Competition where ResultReleasedDate > GETDATE()))";
             cmd.Parameters.AddWithValue("@selectedJudgeID", JudgeID);
             //Open a database connection
             conn.Open();
@@ -101,6 +101,42 @@ namespace WEB2021Apr_P04_T4.DAL
             conn.Close();
 
             return competitionList;
+        }
+
+        public List<Criteria> GetAvailableCriteria(int CompetitionID)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify the SELECT SQL statement
+            cmd.CommandText = @"select * from Criteria where CompetitionID = @selectedCompetitionID";
+            // and JudgeID = @selectedJudgeID
+            cmd.Parameters.AddWithValue("selectedCompetitionID", CompetitionID);
+            //cmd.Parameters.AddWithValue("selectedJudgeID", CompetitionID);
+            //Open a database connection
+            conn.Open();
+            //Execute the SELECT SQL through a DataReader
+            SqlDataReader reader = cmd.ExecuteReader();
+            //Read all records until the end, save data into a staff list
+            List<Criteria> criteriaList = new List<Criteria>();
+            while (reader.Read())
+            {
+                criteriaList.Add(
+                new Criteria
+                {
+                    CriteriaID = reader.GetInt32(0), //0: 1st column
+                    CompetitionID = reader.GetInt32(1), //1: 2nd column
+                    CriteriaName = reader.GetString(2),
+                    Weightage = reader.GetInt32(3),
+                    //Get the first character of a string
+                }
+                );
+            }
+            //Close DataReader
+            reader.Close();
+            //Close the database connection
+            conn.Close();
+
+            return criteriaList;
         }
 
         public int Add(Criteria criteria)

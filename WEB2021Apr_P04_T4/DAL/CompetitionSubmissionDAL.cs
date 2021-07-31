@@ -33,7 +33,8 @@ namespace WEB2021Apr_P04_T4.DAL
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
 
-            //Specify the SELECT SQL statement
+            //Specify the SELECT SQL statement to select all submissions
+            //for the ongoing competition the judge is in
             cmd.CommandText = @"SELECT * FROM CompetitionSubmission WHERE
             CompetitionID IN (SELECT CompetitionID FROM CompetitionJudge WHERE JudgeID = @selectedJudgeID
             AND COMPETITIONID IN (SELECT CompetitionID from Competition WHERE ResultReleasedDate > GETDATE()))";

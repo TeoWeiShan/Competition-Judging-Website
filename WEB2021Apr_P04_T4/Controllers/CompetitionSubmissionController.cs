@@ -50,11 +50,12 @@ namespace WEB2021Apr_P04_T4.Controllers
 
         public CompetitionSubmissionViewModel MapToSubmissionVM(CompetitionSubmission submission)
         {
+            string loginID = HttpContext.Session.GetString("LoginID");
             int criteriaID = 0;
             int criteriaScore = 0;
             if (submission.CompetitionID != null)
             {
-                List<CompetitionScore> scoreList = scoreContext.GetAllScore();
+                List<CompetitionScore> scoreList = scoreContext.GetAllScore(Convert.ToInt32(loginID));
                 foreach (CompetitionScore score in scoreList)
                 {
                     if (score.CompetitionID == submission.CompetitionID)
