@@ -14,40 +14,35 @@ namespace WEB2021Apr_P04_T4.Controllers
         private CompetitionDAL competitionContext = new CompetitionDAL();
         private JudgeProfileDAL judgeContext = new JudgeProfileDAL();
         private CompetitionJudgeDAL competitionJudgeContext = new CompetitionJudgeDAL();
-        // GET: CompetitionJudgeController
-        public ActionResult Index()
-        {
-            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Admin"))
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            List<Competition> competitionList = competitionContext.GetAllCompetition();
-            return View(competitionList);
-        }
-
+        
         // GET: CompetitionJudgeController/Details/5
         public ActionResult Details(int id)
         {
+            //If not admin cannot access
             if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Admin"))
             {
                 return RedirectToAction("Index", "Home");
             }
-            
             ViewData["CompetitionID"] = id;
-            
             Competition competition = competitionContext.GetDetails(id);
+            //Redirect if query string invalid or null
+            if(id == 0 || competition.CompetitionName  ==null)
+            {
+                //Return to listing page, not allowed to edit
+                return RedirectToAction("Index", "Competition");
+            }
             ViewData["CompetitionName"] = competition.CompetitionName;
+            ViewData["EndDate"] = competition.EndDate;
             List<Judge> judgeList = judgeContext.GetCompetitionJudgeDetails(id);
-            //CompetitionJudgeViewModel competitionVM = MapToCompetitionJudgeVM(competition);
             return View(judgeList);
         }
 
         private List<Judge> GetAvailableJudge(int competitionId)
         {
-            // Get a list of branches from database
+            // Get a list from database
             List<Judge> judgeList = judgeContext.GetAvailableJudge(competitionId);
             Console.WriteLine(judgeList);
-            // Adding a select prompt at the first row of the branch list
+            // Adding a select prompt at the first row 
             judgeList.Insert(0, new Judge
             {
                 JudgeID = 0,
@@ -60,19 +55,18 @@ namespace WEB2021Apr_P04_T4.Controllers
         public CompetitionJudgeViewModel MapToCompetitionJudgeVM(Competition comp)
         {
             string competitionName = "";
-            if (comp.CompetitionID != null)
+            
+            List<Competition> competitionList = competitionContext.GetAllCompetition();
+            foreach (Competition competition in competitionList)
             {
-                List<Competition> competitionList = competitionContext.GetAllCompetition();
-                foreach (Competition competition in competitionList)
+                if (competition.CompetitionID == comp.CompetitionID)
                 {
-                    if (competition.CompetitionID == comp.CompetitionID)
-                    {
-                        competitionName = competition.CompetitionName;
-                        //Exit the foreach loop once the name is found
-                        break;
-                    }
+                    competitionName = competition.CompetitionName;
+                    //Exit the foreach loop once the name is found
+                    break;
                 }
             }
+            
 
             CompetitionJudgeViewModel competitionJudgeVM = new CompetitionJudgeViewModel
             {
@@ -93,7 +87,31 @@ namespace WEB2021Apr_P04_T4.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
+            if (id == null)
+            {
+                //Query string parameter not provided
+                //Redirect user
+                return RedirectToAction("Index", "Competition");
+            }
             Competition competition = competitionContext.GetDetails(id);
+            if (competition.CompetitionName == null)
+            {
+                //Query string parameter invalid
+                //Redirect user
+                return RedirectToAction("Index", "Competition");
+            }
+            //Check against functional requirements and redirect to error if needed
+            if (competition.EndDate < DateTime.Today)
+            {
+                TempData["ErrorMsg"] = "Sorry! The competition has already ended and no judges can be assigned!";
+                return RedirectToAction("DisplayError", "Home");
+            }
+            if (competition.EndDate == null)
+            {
+                TempData["ErrorMsg"] = "Sorry! The competition has no confirmed dates and no judges can be assigned";
+                return RedirectToAction("DisplayError", "Home");
+            }
+            ViewData["CompetitionID"] = id;
             CompetitionJudgeViewModel competitionJudgeVM = MapToCompetitionJudgeVM(competition);
             ViewData["JudgeList"] = GetAvailableJudge(id);
             return View(competitionJudgeVM);
@@ -104,10 +122,11 @@ namespace WEB2021Apr_P04_T4.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(CompetitionJudgeViewModel competitionJudge)
         {
+            //Populate list if need to go back to view
             ViewData["JudgeList"] = GetAvailableJudge(competitionJudge.CompetitionID);
             if (ModelState.IsValid)
             {
-                //Update staff record to database
+                //Update record to database
                 competitionJudgeContext.AddCompJudge(competitionJudge);
                 return RedirectToAction("Index", "Competition");
             }
@@ -119,33 +138,12 @@ namespace WEB2021Apr_P04_T4.Controllers
             }
         }
 
-        // GET: CompetitionJudgeController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: CompetitionJudgeController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
         private List<Judge> GetCompetitionJudge(int competitionId)
         {
-            // Get a list of branches from database
+            // Get a list from database
             List<Judge> judgeList = judgeContext.GetCompetitionJudgeDetails(competitionId);
             Console.WriteLine(judgeList);
-            // Adding a select prompt at the first row of the branch list
+            // Adding a select prompt at the first row 
             judgeList.Insert(0, new Judge
             {
                 JudgeID = 0,
@@ -158,11 +156,36 @@ namespace WEB2021Apr_P04_T4.Controllers
         // GET: CompetitionJudgeController/Delete/5
         public ActionResult Delete(int id)
         {
+            //if not admin cannot access
             if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Admin"))
             {
                 return RedirectToAction("Index", "Home");
             }
+            if (id == null)
+            {
+                //Query string parameter not provided
+                //Redirect user
+                return RedirectToAction("Index", "Competition");
+            }
             Competition competition = competitionContext.GetDetails(id);
+            if (competition.CompetitionName == null)
+            {
+                //Query string parameter invalid
+                //Redirect user
+                return RedirectToAction("Index", "Competition");
+            }
+            //Check against functional requirements and redirect to error msg if needed.
+            if (competition.EndDate < DateTime.Today)
+            {
+                TempData["ErrorMsg"] = "Sorry! The competition has already ended and no judges can be assigned!";
+                return RedirectToAction("DisplayError", "Home");
+            }
+            if (competition.EndDate == null)
+            {
+                TempData["ErrorMsg"] = "Sorry! The competition has no confirmed dates and no judges can be assigned";
+                return RedirectToAction("DisplayError", "Home");
+            }
+            ViewData["CompetitionID"] = id;
             CompetitionJudgeViewModel competitionJudgeVM = MapToCompetitionJudgeVM(competition);
             ViewData["JudgeList"] = GetCompetitionJudge(id);
             return View(competitionJudgeVM);
@@ -173,10 +196,11 @@ namespace WEB2021Apr_P04_T4.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(CompetitionJudgeViewModel competitionJudge)
         {
+            //Populate list if need to go back to view
             ViewData["JudgeList"] = GetCompetitionJudge(competitionJudge.CompetitionID);
             if (ModelState.IsValid)
             {
-                //Update staff record to database
+                //Delete record from db
                 competitionJudgeContext.RemoveCompJudge(competitionJudge);
                 return RedirectToAction("Index", "Competition");
             }

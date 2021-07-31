@@ -37,16 +37,15 @@ namespace WEB2021Apr_P04_T4.DAL
             conn.Open();
             //Execute the SELECT SQL through a DataReader
             SqlDataReader reader = cmd.ExecuteReader();
-            //Read all records until the end, save data into a staff list
+            //Read all records until the end, save data into a list
             List<AreaInterest> areaInterestList = new List<AreaInterest>();
             while (reader.Read())
             {
                 areaInterestList.Add(
                 new AreaInterest
                 {
-                    AreaInterestID = reader.GetInt32(0), //0: 1st column
-                    Name = reader.GetString(1), //1: 2nd column
-                                                //Get the first character of a string
+                    AreaInterestID = reader.GetInt32(0),
+                    Name = reader.GetString(1),
                 }
                 );
             }
@@ -62,7 +61,7 @@ namespace WEB2021Apr_P04_T4.DAL
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify an INSERT SQL statement which will
-            //return the auto-generated StaffID after insertion
+            //return the auto-generated ID after insertion
             cmd.CommandText = @"INSERT INTO AreaInterest (Name)
 OUTPUT INSERTED.AreaInterestID VALUES(@name)";
             //Define the parameters used in SQL statement, value for each parameter
@@ -71,7 +70,7 @@ OUTPUT INSERTED.AreaInterestID VALUES(@name)";
             //A connection to database must be opened before any operations made.
             conn.Open();
             //ExecuteScalar is used to retrieve the auto-generated
-            //StaffID after executing the INSERT SQL statement
+            //ID after executing the INSERT SQL statement
             areaInterest.AreaInterestID = (int)cmd.ExecuteScalar();
             //A connection should be closed after operations.
             conn.Close();
@@ -83,7 +82,7 @@ OUTPUT INSERTED.AreaInterestID VALUES(@name)";
         {
             bool interestFound = false;
             //Create a SqlCommand object and specify the SQL statement
-            //to get a staff record with the email address to be validated
+            //to get a record with the interest to be validated
             SqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = @"SELECT AreaInterestID FROM AreaInterest
  WHERE Name=@selectedName";
@@ -96,13 +95,13 @@ OUTPUT INSERTED.AreaInterestID VALUES(@name)";
                 while (reader.Read())
                 {
                     if (reader.GetInt32(0) != areaInterestID)
-                        //The email address is used by another staff
+                        //The interest name is in use
                         interestFound = true;
                 }
             }
             else
             { //No record
-                interestFound = false; // The email address given does not exist
+                interestFound = false; // The interest name is NOT in use
             }
             reader.Close();
             conn.Close();
@@ -116,11 +115,11 @@ OUTPUT INSERTED.AreaInterestID VALUES(@name)";
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify the SELECT SQL statement that
-            //retrieves all attributes of a staff record.
+            //retrieves all attributes of a record.
             cmd.CommandText = @"SELECT * FROM AreaInterest
  WHERE AreaInterestID = @selectedAreaInterestID";
             //Define the parameter used in SQL statement, value for the
-            //parameter is retrieved from the method parameter “staffId”.
+            //parameter is retrieved from the method parameter
             cmd.Parameters.AddWithValue("@selectedAreaInterestID", areaInterestId);
             //Open a database connection
             conn.Open();
@@ -131,7 +130,7 @@ OUTPUT INSERTED.AreaInterestID VALUES(@name)";
                 //Read the record from database
                 while (reader.Read())
                 {
-                    // Fill staff object with values from the data reader
+                    // Fill object with values from the data reader
                     areaInterest.AreaInterestID = areaInterestId;
                     areaInterest.Name = !reader.IsDBNull(1) ? reader.GetString(1) : null;
                     
@@ -148,7 +147,7 @@ OUTPUT INSERTED.AreaInterestID VALUES(@name)";
         {
             bool recordFound = false;
             //Create a SqlCommand object and specify the SQL statement
-            //to get a staff record with the email address to be validated
+            //to get a record with the interest to be validated
             SqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = @"SELECT AreaInterestID FROM Competition
  WHERE AreaInterestID=@selectedInterestID";
@@ -180,11 +179,11 @@ OUTPUT INSERTED.AreaInterestID VALUES(@name)";
             //Open a database connection
             conn.Open();
             int rowAffected = 0;
-            //Execute the DELETE SQL to remove the staff record
+            //Execute the DELETE SQL to remove the record
             rowAffected += cmd.ExecuteNonQuery();
             //Close database connection
             conn.Close();
-            //Return number of row of staff record updated or deleted
+            //Return number of row of record updated or deleted
             return rowAffected;
         }
     }

@@ -37,8 +37,8 @@
             </div>
         </div>
         <div class="form-group d-none">
-                <input asp-for="JudgeName" readonly
-                       class="form-control-plaintext" />
+            <input asp-for="JudgeName" readonly
+                   class="form-control-plaintext" />
         </div>
         <div class="form-group row">
             <label class="col-sm-3 col-form-label"></label>
@@ -54,6 +54,9 @@
                 <input type="submit" value="Add Judge"
                        class="btn btn-primary" />
             </div>
+        </div>
+        <div>
+            <a asp-action="Details" asp-route-id="@ViewData["CompetitionID"]">Return</a>
         </div>
     </fieldset>
 </form>
