@@ -76,6 +76,48 @@ namespace WEB2021Apr_P04_T4.DAL
             return submissionList;
         }
 
+        //public List<CompetitionSubmission> GetAvailableSubmissions(int JudgeID)
+        //{
+        //    //Create a SqlCommand object from connection object
+        //    SqlCommand cmd = conn.CreateCommand();
+        //    //Specify the SELECT SQL statement to select the submission(s) from the competition where the judge is judging
+        //    cmd.CommandText = @"select * from CompetitionSubmission where CompetitionID IN (select CompetitionID
+        //    FROM CompetitionJudge WHERE JudgeID = @selectedJudgeID AND CompetitionID IN
+        //    (select CompetitionID from Competition where ResultReleasedDate > GETDATE()))";
+        //    cmd.Parameters.AddWithValue("@selectedJudgeID", JudgeID);
+        //    //Open a database connection
+        //    conn.Open();
+        //    //Execute the SELECT SQL through a DataReader
+        //    SqlDataReader reader = cmd.ExecuteReader();
+        //    //Read all records until the end, save data into a competitionsubmission list
+        //    List<CompetitionSubmission> submissionList = new List<CompetitionSubmission>();
+        //    if (reader.HasRows)
+        //    {
+        //        while (reader.Read())
+        //        {
+        //            submissionList.Add(
+        //            new CompetitionSubmission
+        //            {
+        //                CompetitionID = reader.GetInt32(0), //0: 1st column
+        //            CompetitorID = reader.GetInt32(1), //1: 2nd column
+        //            FileSubmitted = reader.GetString(2),
+        //                DateTimeFileUpload = reader.GetDateTime(3),
+        //                Appeal = reader.GetString(4),
+        //                VoteCount = reader.GetInt32(5),
+        //                Ranking = reader.GetInt32(6)
+        //            }
+        //            );
+        //        }
+        //    }
+            
+        //    //Close DataReader
+        //    reader.Close();
+        //    //Close the database connection
+        //    conn.Close();
+
+        //    return submissionList;
+        //}
+
         public CompetitionSubmission GetDetails(int competitorId)
         {
             CompetitionSubmission submission = new CompetitionSubmission();
@@ -118,6 +160,33 @@ namespace WEB2021Apr_P04_T4.DAL
             conn.Close();
 
             return submission;
+        }
+
+        public int Update(CompetitionSubmission submission)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+
+            //Specify an UPDATE SQL statement
+            cmd.CommandText = @"UPDATE CompetitionSubmission SET 
+            Ranking=@ranking WHERE CompetitorID = @selectedCompetitorID";
+
+            //Define the parameters used in SQL statement, value for each parameter
+            //is retrieved from respective class's property.
+            cmd.Parameters.AddWithValue("@selectedCompetitorID", submission.CompetitorID);         
+            if (submission.Ranking != null)
+                cmd.Parameters.AddWithValue("@ranking", submission.Ranking.Value);
+            else
+                cmd.Parameters.AddWithValue("@ranking", DBNull.Value);
+
+            //Open a database connection
+            conn.Open();
+            //ExecuteNonQuery is used for UPDATE and DELETE
+            int count = cmd.ExecuteNonQuery();
+
+            //Close the database connection
+            conn.Close();
+            return count;
         }
     }
 }
