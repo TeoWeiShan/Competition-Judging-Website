@@ -103,15 +103,16 @@ namespace WEB2021Apr_P04_T4.DAL
             return competitionList;
         }
 
-        public List<Criteria> GetAvailableCriteria(int CompetitionID)
+        //For CompetitionScore Create section to display all criteria of the ongoing Competition the Judge is in
+        public List<Criteria> GetAvailableCriteria(int JudgeID)
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify the SELECT SQL statement
-            cmd.CommandText = @"select * from Criteria where CompetitionID = @selectedCompetitionID";
-            // and JudgeID = @selectedJudgeID
-            cmd.Parameters.AddWithValue("selectedCompetitionID", CompetitionID);
-            //cmd.Parameters.AddWithValue("selectedJudgeID", CompetitionID);
+            cmd.CommandText = @"select * from Criteria where CompetitionID IN (select CompetitionID
+            FROM CompetitionJudge WHERE JudgeID = @selectedJudgeID AND CompetitionID IN
+            (select CompetitionID from Competition where ResultReleasedDate > GETDATE()))";
+            cmd.Parameters.AddWithValue("@selectedJudgeID", JudgeID);
             //Open a database connection
             conn.Open();
             //Execute the SELECT SQL through a DataReader

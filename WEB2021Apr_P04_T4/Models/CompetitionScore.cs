@@ -16,12 +16,11 @@ namespace WEB2021Apr_P04_T4.Models
         [Display(Name = "Competitor ID")]
         public int CompetitorID { get; set; }
 
-        [Required(ErrorMessage = "Please enter a name.")]
         [Display(Name = "Competition ID")]
         public int CompetitionID { get; set; }
 
         [Display(Name = "Score")]
-        [Range(0, 10)]
+        [Range(0, 10, ErrorMessage = "Please enter a score from 0 to 10.")]
         public int Score { get; set; }
 
     }

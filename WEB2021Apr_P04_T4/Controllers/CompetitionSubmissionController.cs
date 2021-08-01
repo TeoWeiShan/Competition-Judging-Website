@@ -32,6 +32,12 @@ namespace WEB2021Apr_P04_T4.Controllers
             return View(submissionList);         
         }
 
+        //Calculate Total Score
+        //public ActionResult Calculate(CompetitionSubmission totalscore)
+        //{
+        //    return View();
+        //}
+
         //private List<CompetitionSubmission> GetAvailableSubmissions(int CompetitorID)
         //{
         //    // Get a list of branches from database

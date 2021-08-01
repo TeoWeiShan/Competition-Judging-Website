@@ -62,19 +62,34 @@ namespace WEB2021Apr_P04_T4.Controllers
             return criteriaList;
         }
 
-        private List<CompetitionSubmission> GetAvailableSubmissions(int CompetitorID)
-        {
-            // Get a list of branches from database
-            List<CompetitionSubmission> submissionList = submissionContext.GetAvailableSubmissions(CompetitorID);
-            Console.WriteLine(submissionList);
-            // Adding a select prompt at the first row of the branch list
-            submissionList.Insert(0, new CompetitionSubmission
-            {
-                CompetitorID = 0
-            });
-            Console.WriteLine(submissionList);
-            return submissionList;
-        }
+        //private List<Competition> GetAllCompetition()
+        //{
+        //    // Get a list of branches from database
+        //    List<Competition> competitionList = competitionContext.GetAllCompetition();
+        //    Console.WriteLine(competitionList);
+        //    // Adding a select prompt at the first row of the branch list
+        //    competitionList.Insert(0, new Competition
+        //    {
+        //        CompetitionID = 0,
+        //        CompetitionName = "--Select--"
+        //    });
+        //    Console.WriteLine(competitionList);
+        //    return competitionList;
+        //}
+
+        //private List<CompetitionSubmission> GetAvailableSubmissions(int CompetitorID)
+        //{
+        //    // Get a list of branches from database
+        //    List<CompetitionSubmission> submissionList = submissionContext.GetAvailableSubmissions(CompetitorID);
+        //    Console.WriteLine(submissionList);
+        //    // Adding a select prompt at the first row of the branch list
+        //    submissionList.Insert(0, new CompetitionSubmission
+        //    {
+        //        CompetitorID = 0
+        //    });
+        //    Console.WriteLine(submissionList);
+        //    return submissionList;
+        //}
 
         // GET: CompetitionScore/Details/5
         public ActionResult Details(int id)
@@ -96,7 +111,7 @@ namespace WEB2021Apr_P04_T4.Controllers
             ViewData["scoreList"] = GetAllScore(Convert.ToInt32(loginID));
             ViewData["competitionList"] = GetAvailableCompetition(Convert.ToInt32(loginID));
             ViewData["CriteriaList"] = GetAvailableCriteria(Convert.ToInt32(loginID));
-            ViewData["submissionList"] = GetAvailableSubmissions(Convert.ToInt32(loginID));
+            //ViewData["submissionList"] = GetAvailableSubmissions(Convert.ToInt32(loginID));
             return View();
         }
 
@@ -133,6 +148,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         {
             // Stop accessing the action if not logged in
             // or account not in the "Criteria" role
+           
             string loginID = HttpContext.Session.GetString("LoginID");
             if ((HttpContext.Session.GetString("Role") == null) ||
             (HttpContext.Session.GetString("Role") != "Judge"))
@@ -145,6 +161,9 @@ namespace WEB2021Apr_P04_T4.Controllers
             }
 
             CompetitionScore cscore = scoreContext.GetDetails(id.Value);
+
+           // ViewData["CompetitionName"] = GetAllCompetition();
+
             if (cscore == null)
             {
                 //Return to listing page, not allowed to edit
@@ -158,6 +177,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(CompetitionScore cscore)
         {
+           // ViewData["CompetitionList"] = GetAllCompetition();
             if (ModelState.IsValid)
             {
                 //Update submission score record to database

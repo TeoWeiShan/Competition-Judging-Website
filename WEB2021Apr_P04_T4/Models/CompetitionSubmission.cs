@@ -26,5 +26,7 @@ namespace WEB2021Apr_P04_T4.Models
         public int VoteCount { get; set; }
 
         public int? Ranking { get; set; }
+
+        public int TotalScore { get; set; }
     }
 }

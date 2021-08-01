@@ -28,13 +28,7 @@
             <label asp-for="CompetitorID"
                    class="col-sm-3 col-form-label"></label>
             <div class="col-sm-9 col-md-5">
-                <!-- Drop-down list displaying CompetitionName,
-    with CompetitionID as returned value -->
-                <select asp-for="CompetitorID"
-                        asp-items="@(new SelectList(
- @ViewData["submissionList"] as List <CompetitionSubmission>,
- "CompetitorID"))"
-                        class="form-control"></select>
+                <input asp-for="CompetitorID" class="form-control" />
                 <span asp-validation-for="CompetitorID"
                       class="text-danger"></span>
             </div>

@@ -142,34 +142,34 @@ namespace WEB2021Apr_P04_T4.DAL
             return criteriaList;
         }
 
-        public int Add(CompetitionScore score)
+        public int Add(CompetitionScore Cscore)
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify an INSERT SQL statement which will
             //return the auto-generated StaffID after insertion
             cmd.CommandText = @"INSERT INTO CompetitionScore (CriteriaID, CompetitorID, CompetitionID, Score)
-            OUTPUT INSERTED.CompetitorID
+            OUTPUT INSERTED.CriteriaID
             VALUES(@criteriaid, @competitorid, @competitionid, @score)";
 
             //Define the parameters used in SQL statement, value for each parameter
             //is retrieved from respective class's property.
-            cmd.Parameters.AddWithValue("@criteriaid", score.CriteriaID);
-            cmd.Parameters.AddWithValue("@competitorid", score.CompetitorID);
-            cmd.Parameters.AddWithValue("@competitionid", score.CompetitionID);
-            cmd.Parameters.AddWithValue("@score", score.Score);
+            cmd.Parameters.AddWithValue("@criteriaid", Cscore.CriteriaID);
+            cmd.Parameters.AddWithValue("@competitorid", Cscore.CompetitorID);
+            cmd.Parameters.AddWithValue("@competitionid", Cscore.CompetitionID);
+            cmd.Parameters.AddWithValue("@score", Cscore.Score);
 
             //A connection to database must be opened before any operations made.
             conn.Open();
 
             //ExecuteScalar is used to retrieve the auto-generated
             //StaffID after executing the INSERT SQL statement
-            score.CompetitorID = (int)cmd.ExecuteScalar();
+           cmd.ExecuteNonQuery();
 
             //A connection should be closed after operations.
             conn.Close();
             //Return id when no error occurs.
-            return score.CompetitorID;
+            return Cscore.CriteriaID;
         }
 
         public CompetitionScore GetDetails(int competitionID)
