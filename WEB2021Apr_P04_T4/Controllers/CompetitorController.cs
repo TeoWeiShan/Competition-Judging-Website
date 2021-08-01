@@ -13,7 +13,6 @@ namespace WEB2021Apr_P04_T4.Controllers
     public class CompetitorController : Controller
     {
         private CompetitorDAL competitorContext = new CompetitorDAL();
-
         // GET: CompetitorController
         public ActionResult Index()
         {
