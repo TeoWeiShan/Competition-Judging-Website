@@ -30,12 +30,6 @@ namespace WEB2021Apr_P04_T4.Models
 
         public int? Ranking { get; set; }
 
-        // [Display(Name = "Criteria Name")]
-        // public string CriteriaName { get; set; }
-
-        [Display(Name = "Criteria ID")]
-        public int CriteriaID { get; set; }
-               
-        public int Score { get; set; }
+        public int TotalScore { get; set; }
     }
 }

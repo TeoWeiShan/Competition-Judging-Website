@@ -25,8 +25,11 @@ namespace WEB2021Apr_P04_T4.Models
         [Display(Name = "Vote Count")]
         public int VoteCount { get; set; }
 
+        [RegularExpression("^\\d+$",
+            ErrorMessage = "Ranking must be a positive non-decimal number.")]
         public int? Ranking { get; set; }
 
+        [Display (Name = "Total Score")]
         public int TotalScore { get; set; }
     }
 }
