@@ -37,7 +37,7 @@ namespace WEB2021Apr_P04_T4.Controllers
             // Get a list of competitions from database
             List<Competition> competitionList = criteriaContext.GetAvailableCompetition(JudgeID);
             Console.WriteLine(competitionList);
-            // Adding a select prompt at the first row of the branch list
+            // Adding a select prompt at the first row of the competition list
             competitionList.Insert(0, new Competition
             {
                 CompetitionID = 0,
@@ -62,21 +62,6 @@ namespace WEB2021Apr_P04_T4.Controllers
             return criteriaList;
         }
 
-        //private List<Competition> GetAllCompetition()
-        //{
-        //    // Get a list of branches from database
-        //    List<Competition> competitionList = competitionContext.GetAllCompetition();
-        //    Console.WriteLine(competitionList);
-        //    // Adding a select prompt at the first row of the branch list
-        //    competitionList.Insert(0, new Competition
-        //    {
-        //        CompetitionID = 0,
-        //        CompetitionName = "--Select--"
-        //    });
-        //    Console.WriteLine(competitionList);
-        //    return competitionList;
-        //}
-
         //private List<CompetitionSubmission> GetAvailableSubmissions(int CompetitorID)
         //{
         //    // Get a list of branches from database
@@ -91,17 +76,12 @@ namespace WEB2021Apr_P04_T4.Controllers
         //    return submissionList;
         //}
 
-        // GET: CompetitionScore/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
         // GET: CompetitionScore/Create
         public ActionResult Create()
         {
             // Stop accessing the action if not logged in
-            // or account not in the "Criteria" role
+            // or account not in the "Judge" role
             if ((HttpContext.Session.GetString("Role") == null) ||
             (HttpContext.Session.GetString("Role") != "Judge"))
             {
@@ -117,7 +97,7 @@ namespace WEB2021Apr_P04_T4.Controllers
 
         private List<CompetitionScore> GetAllScore(int JudgeID)
         {
-            // Get a list of branches from database
+            // Get a list of scores from database
             List<CompetitionScore> scoreList = scoreContext.GetAllScore(JudgeID);
             Console.WriteLine(scoreList);
             return scoreList;
@@ -130,9 +110,9 @@ namespace WEB2021Apr_P04_T4.Controllers
         {
             if (ModelState.IsValid)
             {
-                //Add criteria record to database
+                //Add score record to database
                 Cscore.CompetitorID = scoreContext.Add(Cscore);
-                //Redirect user to Criteria/Index view
+                //Redirect user to CompetitionScore/Index view
                 return RedirectToAction("Index");
             }
             else
@@ -147,9 +127,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         public ActionResult Edit(int? id)
         {
             // Stop accessing the action if not logged in
-            // or account not in the "Criteria" role
-           
-            string loginID = HttpContext.Session.GetString("LoginID");
+            // or account not in the "Judge" role           
             if ((HttpContext.Session.GetString("Role") == null) ||
             (HttpContext.Session.GetString("Role") != "Judge"))
             {
@@ -157,12 +135,12 @@ namespace WEB2021Apr_P04_T4.Controllers
             }
             if (id == null)
             {
+                //Query string parameter not provided
+                //Return to listing page, not allowed to edit
                 return RedirectToAction("Index");
             }
 
             CompetitionScore cscore = scoreContext.GetDetails(id.Value);
-
-           // ViewData["CompetitionName"] = GetAllCompetition();
 
             if (cscore == null)
             {

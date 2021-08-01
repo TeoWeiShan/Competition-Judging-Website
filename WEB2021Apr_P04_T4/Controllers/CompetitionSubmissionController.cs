@@ -29,7 +29,7 @@ namespace WEB2021Apr_P04_T4.Controllers
                 return RedirectToAction("Index", "Home");
             }
             List<CompetitionSubmission> submissionList = competitionSubmissionContext.GetAllSubmission(Convert.ToInt32(loginID));
-            return View(submissionList);         
+            return View(submissionList);
         }
 
         //Calculate Total Score
@@ -56,7 +56,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         public ActionResult Details(int id)
         {
             // Stop accessing the action if not logged in
-            // or account not in the "Criteria" role
+            // or account not in the "Judge" role
             if ((HttpContext.Session.GetString("Role") == null) ||
             (HttpContext.Session.GetString("Role") != "Judge"))
             {
@@ -95,38 +95,15 @@ namespace WEB2021Apr_P04_T4.Controllers
                 DateTimeFileUpload = submission.DateTimeFileUpload,
                 Appeal = submission.Appeal,
                 Ranking = submission.Ranking,
-                //CriteriaName = criteriaName,
-                CriteriaID = criteriaID,
-                Score = criteriaScore,
+                TotalScore = criteriaScore,
             };
 
             return submissionVM;
-    }
-
-    // GET: CompetitionSubmissionController/Create
-    public ActionResult Create()
-    {
-        return View();
-    }
-
-    // POST: CompetitionSubmissionController/Create
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public ActionResult Create(IFormCollection collection)
-    {
-        try
-        {
-            return RedirectToAction(nameof(Index));
         }
-        catch
-        {
-            return View();
-        }
-    }
 
-    // GET: CompetitionSubmissionController/Edit/5
-    public ActionResult Edit(int? id)
-    {
+        // GET: CompetitionSubmissionController/Edit/5
+        public ActionResult Edit(int? id)
+        {
             // Stop accessing the action if not logged in
             // or account not in the "Judge" role
             if ((HttpContext.Session.GetString("Role") == null) ||
@@ -135,11 +112,12 @@ namespace WEB2021Apr_P04_T4.Controllers
                 return RedirectToAction("Index", "Home");
             }
             if (id == null)
-            { //Query string parameter not provided
-              //Return to listing page, not allowed to edit
+            {
+                //Query string parameter not provided
+                //Return to listing page, not allowed to edit
                 return RedirectToAction("Index");
             }
-            
+
             CompetitionSubmission submission = competitionSubmissionContext.GetDetails(id.Value);
             if (submission == null)
             {
@@ -149,14 +127,14 @@ namespace WEB2021Apr_P04_T4.Controllers
             return View(submission);
         }
 
-    // POST: CompetitionSubmissionController/Edit/5
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public ActionResult Edit(CompetitionSubmission submission)
-    {
+        // POST: CompetitionSubmissionController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(CompetitionSubmission submission)
+        {
             if (ModelState.IsValid)
             {
-                //Update submission score record to database
+                //Update submission ranking record to database
                 competitionSubmissionContext.Update(submission);
                 return RedirectToAction("Index");
             }
@@ -167,26 +145,5 @@ namespace WEB2021Apr_P04_T4.Controllers
                 return View(submission);
             }
         }
-
-    // GET: CompetitionSubmissionController/Delete/5
-    public ActionResult Delete(int id)
-    {
-        return View();
     }
-
-    // POST: CompetitionSubmissionController/Delete/5
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public ActionResult Delete(int id, IFormCollection collection)
-    {
-        try
-        {
-            return RedirectToAction(nameof(Index));
-        }
-        catch
-        {
-            return View();
-        }
-    }
-}
 }

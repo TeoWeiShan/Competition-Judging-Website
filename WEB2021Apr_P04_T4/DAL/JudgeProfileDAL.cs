@@ -40,7 +40,7 @@ namespace WEB2021Apr_P04_T4.DAL
             //Execute the SELECT SQL through a DataReader
             SqlDataReader reader = cmd.ExecuteReader();
 
-            //Read all records until the end, save data into a staff list
+            //Read all records until the end, save data into a judge list
             List<Judge> judgeList = new List<Judge>();
             while (reader.Read())
             {
@@ -69,6 +69,7 @@ namespace WEB2021Apr_P04_T4.DAL
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
+
             //Specify an INSERT SQL statement which will
             //return the auto-generated StaffID after insertion
             cmd.CommandText = @"INSERT INTO Judge (JudgeName, Salutation, AreaInterestID,
@@ -88,12 +89,13 @@ namespace WEB2021Apr_P04_T4.DAL
             conn.Open();
 
             //ExecuteScalar is used to retrieve the auto-generated
-            //StaffID after executing the INSERT SQL statement
+            //JudgeID after executing the INSERT SQL statement
             judge.JudgeID = (int)cmd.ExecuteScalar();
 
-            //A connection should be closed after operations.
+            //A connection should be closed after operation
             conn.Close();
-            //Return id when no error occurs.
+
+            //Return id when no error occurs
             return judge.JudgeID;
         }
 
@@ -101,7 +103,7 @@ namespace WEB2021Apr_P04_T4.DAL
         {
             bool emailFound = false;
             //Create a SqlCommand object and specify the SQL statement 
-            //to get a staff record with the email address to be validated
+            //to get a judge record with the email address to be validated
             SqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = @"SELECT JudgeID FROM Judge 
                               WHERE EmailAddr=@selectedEmailAddr";
@@ -112,17 +114,16 @@ namespace WEB2021Apr_P04_T4.DAL
             SqlDataReader reader = cmd.ExecuteReader();
 
             if (reader.HasRows)
-            { //Records found
+            { //Records found - The email address is used by another judge
                 while (reader.Read())
                 {
                     if (reader.GetInt32(0) != judgeID)
-                        //The email address is used by another judge
                         emailFound = true;
                 }
             }
             else
-            { //No record
-                emailFound = false; // The email address given does not exist
+            { //No record - The email address given does not exist
+                emailFound = false;
             }
             reader.Close();
             conn.Close();
@@ -133,17 +134,21 @@ namespace WEB2021Apr_P04_T4.DAL
         public Judge GetDetails(int judgeId)
         {
             Judge judge = new Judge();
+
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
+
             //Specify the SELECT SQL statement that
             //retrieves all attributes of a judge record.
-            cmd.CommandText = @"SELECT * FROM Judge
-            WHERE JudgeID = @selectedJudgeID";
+            cmd.CommandText = @"SELECT * FROM Judge WHERE JudgeID = @selectedJudgeID";
+
             //Define the parameter used in SQL statement, value for the
             //parameter is retrieved from the method parameter “judgeId”.
             cmd.Parameters.AddWithValue("@selectedJudgeID", judgeId);
+
             //Open a database connection
             conn.Open();
+
             //Execute SELCT SQL through a DataReader
             SqlDataReader reader = cmd.ExecuteReader();
             if (reader.HasRows)
@@ -151,7 +156,7 @@ namespace WEB2021Apr_P04_T4.DAL
                 //Read the record from database
                 while (reader.Read())
                 {
-                    // Fill staff object with values from the data reader
+                    // Fill judge object with values from the data reader
                     judge.JudgeID = judgeId;
                     judge.JudgeName = reader.GetString(1);
                     judge.Salutation = !reader.IsDBNull(2) ? reader.GetString(2) : null;
@@ -160,8 +165,10 @@ namespace WEB2021Apr_P04_T4.DAL
                     judge.Password = reader.GetString(5);
                 }
             }
+
             //Close DataReader
             reader.Close();
+
             //Close the database connection
             conn.Close();
 
@@ -190,10 +197,13 @@ namespace WEB2021Apr_P04_T4.DAL
                 cmd.Parameters.AddWithValue("@salutation", judge.Salutation);
             else
                 cmd.Parameters.AddWithValue("@salutation", DBNull.Value);
+
             //Open a database connection
             conn.Open();
+
             //ExecuteNonQuery is used for UPDATE and DELETE
             int count = cmd.ExecuteNonQuery();
+
             //Close the database connection
             conn.Close();
             return count;
@@ -207,13 +217,17 @@ namespace WEB2021Apr_P04_T4.DAL
             SqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = @"DELETE FROM judge WHERE JudgeID = @selectJudgeID";
             cmd.Parameters.AddWithValue("@selectJudgeID", judgeId);
+
             //Open a database connection
             conn.Open();
             int rowAffected = 0;
+
             //Execute the DELETE SQL to remove the staff record
             rowAffected += cmd.ExecuteNonQuery();
+
             //Close database connection
             conn.Close();
+
             //Return number of row of staff record updated or deleted
             return rowAffected;
         }
@@ -222,16 +236,19 @@ namespace WEB2021Apr_P04_T4.DAL
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
-            //Specify the SQL statement that select all branches
-            cmd.CommandText = @"SELECT Judge.JudgeID,JudgeName, Salutation, Judge.AreaInterestID, EmailAddr, Judge.Password FROM ((CompetitionJudge
-INNER JOIN Competition ON Competition.CompetitionID = CompetitionJudge.CompetitionID)
-INNER JOIN Judge ON Judge.JudgeID = CompetitionJudge.JudgeID) Where CompetitionJudge.CompetitionID = @selectedCompetitionID";
+            //Specify the SQL statement that select CompetitionJudge details
+            cmd.CommandText = @"SELECT Judge.JudgeID,JudgeName, Salutation, Judge.AreaInterestID,
+            EmailAddr, Judge.Password FROM ((CompetitionJudge INNER JOIN Competition ON
+            Competition.CompetitionID = CompetitionJudge.CompetitionID) INNER JOIN Judge ON
+            Judge.JudgeID = CompetitionJudge.JudgeID) WHERE CompetitionJudge.CompetitionID = @selectedCompetitionID";
+
             //Define the parameter used in SQL statement, value for the
             //parameter is retrieved from the method parameter “branchNo”.
             cmd.Parameters.AddWithValue("@selectedCompetitionID", competitionId);
 
             //Open a database connection
             conn.Open();
+
             //Execute SELCT SQL through a DataReader
             SqlDataReader reader = cmd.ExecuteReader();
             List<Judge> judgeList = new List<Judge>();
@@ -250,6 +267,7 @@ INNER JOIN Judge ON Judge.JudgeID = CompetitionJudge.JudgeID) Where CompetitionJ
                 }
                 );
             }
+
             //Close DataReader
             reader.Close();
             //Close database connection
@@ -267,7 +285,6 @@ INNER JOIN Judge ON Judge.JudgeID = CompetitionJudge.JudgeID) Where CompetitionJ
             DateTime start = new DateTime();
             DateTime end = new DateTime();
             DateTime result = new DateTime(); 
-
 
             //Open a database connection
             conn.Open();
@@ -288,10 +305,11 @@ INNER JOIN Judge ON Judge.JudgeID = CompetitionJudge.JudgeID) Where CompetitionJ
             SqlCommand cmd = conn.CreateCommand();
             //Specify the SQL statement that select all branches
             cmd.CommandText = @" select * from judge where judgeid not in(
- select JudgeID from CompetitionJudge WHERE CompetitionID IN(
- Select CompetitionID from Competition Where 
-((ResultReleasedDate > @start) and (StartDate < @result))))
-and AreaInterestID = @interest";
+            select JudgeID from CompetitionJudge WHERE CompetitionID IN(
+            Select CompetitionID from Competition Where 
+            ((ResultReleasedDate > @start) and (StartDate < @result))))
+            and AreaInterestID = @interest";
+
             //Define the parameter used in SQL statement, value for the
             //parameter is retrieved from the method parameter “branchNo”.
             cmd.Parameters.AddWithValue("@interest", interest);
@@ -299,7 +317,6 @@ and AreaInterestID = @interest";
             cmd.Parameters.AddWithValue("@result", result);
 
             conn.Open();
-
 
             //Execute SELCT SQL through a DataReader
             SqlDataReader reader = cmd.ExecuteReader();
@@ -325,6 +342,5 @@ and AreaInterestID = @interest";
             conn.Close();
             return judgeList;
         }
-
     }
 }

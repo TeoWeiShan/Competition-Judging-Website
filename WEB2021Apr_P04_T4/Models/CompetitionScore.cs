@@ -9,13 +9,15 @@ namespace WEB2021Apr_P04_T4.Models
 {
     public class CompetitionScore
     {
-        [Required(ErrorMessage = "Please select a criteria.")]
+        [Required(ErrorMessage = "Please select a criteria to grade.")]
         [Display(Name = "Criteria ID")]
         public int CriteriaID { get; set; }
 
+        [Required(ErrorMessage = "Please enter a CompetitorID to grade.")]
         [Display(Name = "Competitor ID")]
         public int CompetitorID { get; set; }
 
+        [Required(ErrorMessage = "Please select a Competition to grade.")]
         [Display(Name = "Competition ID")]
         public int CompetitionID { get; set; }
 

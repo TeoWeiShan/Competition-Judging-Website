@@ -34,7 +34,7 @@ namespace WEB2021Apr_P04_T4.Controllers
 
         private List<Competition> GetAllCompetition()
         {
-            // Get a list of branches from database
+            // Get a list of competitions from database
             List<Competition> competitionList = competitionContext.GetAllCompetition();
             Console.WriteLine(competitionList);
             // Adding a select prompt at the first row of the branch list
@@ -49,7 +49,7 @@ namespace WEB2021Apr_P04_T4.Controllers
 
         private List<Competition> GetAvailableCompetition(int JudgeID)
         {
-            // Get a list of branches from database
+            // Get a list of available competitions based on the competition(s) the Judge are participating in from database
             List<Competition> competitionList = criteriaContext.GetAvailableCompetition(JudgeID);
             Console.WriteLine(competitionList);
             // Adding a select prompt at the first row of the branch list
@@ -66,7 +66,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         public ActionResult Create()
         {
             // Stop accessing the action if not logged in
-            // or account not in the "Criteria" role
+            // or account not in the "Judge" role
             if ((HttpContext.Session.GetString("Role") == null) ||
             (HttpContext.Session.GetString("Role") != "Judge"))
             {

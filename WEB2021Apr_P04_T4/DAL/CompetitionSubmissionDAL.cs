@@ -80,13 +80,16 @@ namespace WEB2021Apr_P04_T4.DAL
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
+
             //Specify the SELECT SQL statement to select the submission(s) from the competition where the judge is judging
             cmd.CommandText = @"select * from CompetitionSubmission where CompetitionID IN (select CompetitionID
             FROM CompetitionJudge WHERE JudgeID = @selectedJudgeID AND CompetitionID IN
             (select CompetitionID from Competition where ResultReleasedDate > GETDATE()))";
             cmd.Parameters.AddWithValue("@selectedJudgeID", JudgeID);
+
             //Open a database connection
             conn.Open();
+
             //Execute the SELECT SQL through a DataReader
             SqlDataReader reader = cmd.ExecuteReader();
             //Read all records until the end, save data into a competitionsubmission list
@@ -188,6 +191,51 @@ namespace WEB2021Apr_P04_T4.DAL
             conn.Close();
             return count;
         }
+
+        //list for score and weightage to be calculated together to get total score
+        //public List<CompetitionScore> GetScoreAndWeightage(int CompetitorID, int CompetitionID)
+        //{
+        //    //Create a SqlCommand object from connection object
+        //    SqlCommand cmd = conn.CreateCommand();
+        //    //Specify the SELECT SQL statement to select the submission(s) from the competition where the judge is judging
+        //    cmd.CommandText = @"SELECT cs.Score, c.Weightage FROM CompetitionScore cs
+        //    INNER JOIN Criteria c ON cs.CriteriaID = c.CriteriaID 
+        //    WHERE (cs.CompetitorID = 8) AND (cs.CompetitionID = @selectedCompetitionID)";
+
+        //    cmd.Parameters.AddWithValue("@selectedCompetitorID", CompetitorID);
+        //    cmd.Parameters.AddWithValue("@selectedCompetitionID", CompetitionID);
+
+        //    //Open a database connection
+        //    conn.Open();
+
+        //    //Execute the SELECT SQL through a DataReader
+        //    SqlDataReader reader = cmd.ExecuteReader();
+
+        //    //Read all records until the end, save data into a competitionsubmission list
+        //    List<CompetitionScore> scoreList = new List<CompetitionScore>();
+        //    if (reader.HasRows)
+        //    {
+        //        while (reader.Read())
+        //        {
+        //            scoreList.Add(
+        //            new CompetitionScore
+        //            {
+        //                CriteriaID = reader.GetInt32(0), //0: 1st column
+        //                CompetitorID = reader.GetInt32(1), //1: 2nd column
+        //                CompetitionID = reader.GetInt32(2),
+        //                Score = reader.GetInt32(3)
+        //            }
+        //            );
+        //        }
+        //    }
+
+        //    //Close DataReader
+        //    reader.Close();
+        //    //Close the database connection
+        //    conn.Close();
+
+        //    return scoreList;
+        //}
     }
 }
 

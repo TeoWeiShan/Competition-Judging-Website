@@ -103,7 +103,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         public ActionResult Edit(int? id)
         {
             // Stop accessing the action if not logged in
-            // or account not in the "Staff" role
+            // or account not in the "Judge" role
 
             if ((HttpContext.Session.GetString("LoginID") != id.ToString()) ||
             (HttpContext.Session.GetString("Role") != "Judge"))
