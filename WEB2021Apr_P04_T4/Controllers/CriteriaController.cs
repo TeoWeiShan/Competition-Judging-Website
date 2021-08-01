@@ -99,53 +99,53 @@ namespace WEB2021Apr_P04_T4.Controllers
             }
         }
 
-        // GET: CriteriaController/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            // Stop accessing the action if not logged in
-            // or account not in the "Judge" role
-            if ((HttpContext.Session.GetString("Role") == null) ||
-            (HttpContext.Session.GetString("Role") != "Judge"))
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            if (id == null)
-            { //Query string parameter not provided
-              //Return to listing page, not allowed to edit
-                return RedirectToAction("Index");
-            }
+        //// GET: CriteriaController/Edit/5
+        //public ActionResult Edit(int? id)
+        //{
+        //    // Stop accessing the action if not logged in
+        //    // or account not in the "Judge" role
+        //    if ((HttpContext.Session.GetString("Role") == null) ||
+        //    (HttpContext.Session.GetString("Role") != "Judge"))
+        //    {
+        //        return RedirectToAction("Index", "Home");
+        //    }
+        //    if (id == null)
+        //    { //Query string parameter not provided
+        //      //Return to listing page, not allowed to edit
+        //        return RedirectToAction("Index");
+        //    }
             
-            Criteria criteria = criteriaContext.GetDetails(id.Value);
-            Competition competition = competitionContext.GetDetails(criteria.CompetitionID);
-            ViewData["CompetitionName"] = competition.CompetitionName;
+        //    Criteria criteria = criteriaContext.GetDetails(id.Value);
+        //    Competition competition = competitionContext.GetDetails(criteria.CompetitionID);
+        //    ViewData["CompetitionName"] = competition.CompetitionName;
 
-            if (criteria == null)
-            {
-                //Return to listing page, not allowed to edit
-                return RedirectToAction("Index");
-            }
-            return View(criteria);
-        }
+        //    if (criteria == null)
+        //    {
+        //        //Return to listing page, not allowed to edit
+        //        return RedirectToAction("Index");
+        //    }
+        //    return View(criteria);
+        //}
 
-        // POST: CriteriaController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(Criteria criteria)
-        {
-            ViewData["CompetitionList"] = GetAllCompetition();
-            if (ModelState.IsValid)
-            {
-                //Update criteria record to database
-                criteriaContext.Update(criteria);
-                return RedirectToAction("Index");
-            }
-            else
-            {
-                //Input validation fails, return to the view
-                //to display error message
-                return View(criteria);
-            }
-        }
+        //// POST: CriteriaController/Edit/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit(Criteria criteria)
+        //{
+        //    ViewData["CompetitionList"] = GetAllCompetition();
+        //    if (ModelState.IsValid)
+        //    {
+        //        //Update criteria record to database
+        //        criteriaContext.Update(criteria);
+        //        return RedirectToAction("Index");
+        //    }
+        //    else
+        //    {
+        //        //Input validation fails, return to the view
+        //        //to display error message
+        //        return View(criteria);
+        //    }
+        //}
 
         // GET: CriteriaController/Delete/5
         public ActionResult Delete(int? id)
