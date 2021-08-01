@@ -326,16 +326,25 @@ namespace WEB2021Apr_P04_T4.DAL
             //WHERE CriteriaID = @selectCriteriaID";
             //cmd1.Parameters.AddWithValue("selectCriteriaID", criteriaId);
 
+            SqlCommand cmd1 = conn.CreateCommand();
+            cmd1.CommandText = @"DELETE FROM CompetitionScore
+            WHERE CriteriaID = @selectedCriteriaID";
+            cmd1.Parameters.AddWithValue("@selectedCriteriaID", criteriaId);
+
             SqlCommand cmd2 = conn.CreateCommand();
-            cmd2.CommandText = @"DELETE FROM Criteria WHERE CriteriaID = @selectCriteriaID";
-            cmd2.Parameters.AddWithValue("@selectCriteriaID", criteriaId);
+            cmd2.CommandText = @"DELETE FROM Criteria WHERE CriteriaID = @selectedCriteriaID";
+            cmd2.Parameters.AddWithValue("@selectedCriteriaID", criteriaId);
+
+
             //Open a database connection
             conn.Open();
             int rowAffected = 0;
 
             //Execute the DELETE SQL to remove the Criteria record
             //rowAffected += cmd1.ExecuteNonQuery();
+            rowAffected += cmd1.ExecuteNonQuery();
             rowAffected += cmd2.ExecuteNonQuery();
+            
 
             //Close database connection
             conn.Close();
