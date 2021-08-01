@@ -32,6 +32,20 @@ namespace WEB2021Apr_P04_T4.Controllers
             return View(submissionList);         
         }
 
+        //private List<CompetitionSubmission> GetAvailableSubmissions(int CompetitorID)
+        //{
+        //    // Get a list of branches from database
+        //    List<CompetitionSubmission> submissionList = competitionSubmissionContext.GetAvailableSubmissions(CompetitorID);
+        //    Console.WriteLine(submissionList);
+        //    // Adding a select prompt at the first row of the branch list
+        //    submissionList.Insert(0, new CompetitionSubmission
+        //    {
+        //        CompetitorID = 0
+        //    });
+        //    Console.WriteLine(submissionList);
+        //    return submissionList;
+        //}
+
         // GET: CompetitionSubmissionController/Details/5
         public ActionResult Details(int id)
         {
@@ -50,11 +64,12 @@ namespace WEB2021Apr_P04_T4.Controllers
 
         public CompetitionSubmissionViewModel MapToSubmissionVM(CompetitionSubmission submission)
         {
+            string loginID = HttpContext.Session.GetString("LoginID");
             int criteriaID = 0;
             int criteriaScore = 0;
             if (submission.CompetitionID != null)
             {
-                List<CompetitionScore> scoreList = scoreContext.GetAllScore();
+                List<CompetitionScore> scoreList = scoreContext.GetAllScore(Convert.ToInt32(loginID));
                 foreach (CompetitionScore score in scoreList)
                 {
                     if (score.CompetitionID == submission.CompetitionID)
@@ -131,17 +146,21 @@ namespace WEB2021Apr_P04_T4.Controllers
     // POST: CompetitionSubmissionController/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public ActionResult Edit(int id, IFormCollection collection)
+    public ActionResult Edit(CompetitionSubmission submission)
     {
-        try
-        {
-            return RedirectToAction(nameof(Index));
+            if (ModelState.IsValid)
+            {
+                //Update submission score record to database
+                competitionSubmissionContext.Update(submission);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                //Input validation fails, return to the view
+                //to display error message
+                return View(submission);
+            }
         }
-        catch
-        {
-            return View();
-        }
-    }
 
     // GET: CompetitionSubmissionController/Delete/5
     public ActionResult Delete(int id)

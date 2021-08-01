@@ -28,7 +28,7 @@
             <label class="col-sm-3 col-form-label">Judge</label>
             <div class="col-sm-9 col-md-5">
                 <!-- Drop-down list displaying Branch Address,
-                with Branch Number as returned value -->
+            with Branch Number as returned value -->
                 <select asp-for="JudgeID"
                         asp-items="@(new SelectList(
  @ViewData["JudgeList"] as List <Judge>,
@@ -54,6 +54,9 @@
                 <input type="submit" value="Remove Judge"
                        class="btn btn-primary" />
             </div>
+        </div>
+        <div>
+            <a asp-action="Details" asp-route-id="@ViewData["CompetitionID"]">Return</a>
         </div>
     </fieldset>
 </form>

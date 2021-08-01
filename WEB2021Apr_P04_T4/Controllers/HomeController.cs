@@ -39,7 +39,7 @@ namespace WEB2021Apr_P04_T4.Controllers
 
         public IActionResult Login()
         {
-            if ((HttpContext.Session.GetString("Role") == "Admin") || (HttpContext.Session.GetString("Role") == "Admin") || (HttpContext.Session.GetString("Role") == "Competitor"))
+            if ((HttpContext.Session.GetString("Role") == "Admin") || (HttpContext.Session.GetString("Role") == "Judge") || (HttpContext.Session.GetString("Role") == "Competitor"))
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -64,7 +64,7 @@ namespace WEB2021Apr_P04_T4.Controllers
                     HttpContext.Session.SetString("LoginID", judge.JudgeID.ToString());
                     // Store user role “Judge” as a string in session with the key “Role” 
                     HttpContext.Session.SetString("Role", "Judge");
-                    return RedirectToAction("JudgeMain");
+                    return RedirectToAction("Index");
                 }
             }
             //Check if login is Competitor
@@ -77,7 +77,7 @@ namespace WEB2021Apr_P04_T4.Controllers
                     HttpContext.Session.SetString("LoginID", competitor.CompetitorID.ToString());
                     // Store user role “Judge” as a string in session with the key “Role” 
                     HttpContext.Session.SetString("Role", "Competitor");
-                    return RedirectToAction("CompetitorMain");
+                    return RedirectToAction("Index");
 
                 }
             }
@@ -89,23 +89,8 @@ namespace WEB2021Apr_P04_T4.Controllers
                 // Store user role “Staff” as a string in session with the key “Role” 
                 HttpContext.Session.SetString("Role", "Admin");
                 return RedirectToAction("Index");
-            }/*
-            else if (loginID == "abc1@lcu.edu.sg" && password == "p@55Judge")
-            {
-                // Store Login ID in session with the key “LoginID”
-                HttpContext.Session.SetString("LoginID", loginID);
-                // Store user role “Judge” as a string in session with the key “Role” 
-                HttpContext.Session.SetString("Role", "Judge");
-                return RedirectToAction("JudgeMain");
             }
-            else if (loginID == "competitor1@lcu.edu.sg" && password == "p@55Competitor")
-            {
-                // Store Login ID in session with the key “LoginID”
-                HttpContext.Session.SetString("LoginID", loginID);
-                // Store user role “Judge” as a string in session with the key “Role” 
-                HttpContext.Session.SetString("Role", "Competitor");
-                return RedirectToAction("CompetitorMain");
-            }*/
+            //Invalid credentials
             else
             {
                 // Store an error message in TempData for display at the index view
@@ -116,39 +101,21 @@ namespace WEB2021Apr_P04_T4.Controllers
             }
         }
 
-        public ActionResult AdminMain()
-        {
-            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Admin"))
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            return View();
-        }
-
-        public ActionResult JudgeMain()
-        {
-            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Judge"))
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            return View();
-        }
-
-        public ActionResult CompetitorMain()
-        {
-            if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Competitor"))
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            return View();
-        }
-
         public ActionResult LogOut()
         {
             // Clear all key-values pairs stored in session state
             HttpContext.Session.Clear();
             // Call the Index action of Home controller
             return RedirectToAction("Index");
+        }
+
+        public ActionResult DisplayError()
+        {
+            if (TempData["ErrorMsg"] == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

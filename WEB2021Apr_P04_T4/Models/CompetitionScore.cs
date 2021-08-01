@@ -9,22 +9,20 @@ namespace WEB2021Apr_P04_T4.Models
 {
     public class CompetitionScore
     {
+        [Required(ErrorMessage = "Please select a criteria.")]
         [Display(Name = "Criteria ID")]
         public int CriteriaID { get; set; }
 
         [Display(Name = "Competitor ID")]
         public int CompetitorID { get; set; }
 
+        [Required(ErrorMessage = "Please enter a name.")]
         [Display(Name = "Competition ID")]
         public int CompetitionID { get; set; }
 
         [Display(Name = "Score")]
+        [Range(0, 10)]
         public int Score { get; set; }
 
-        [Display(Name = "Last Edited")]
-        [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{yyyy-MM-DD HH:mm}", ApplyFormatInEditMode = true)]
-        [ValidateCompetitionResult]
-        public DateTime? DateTimeLastEdit { get; set; }
     }
 }

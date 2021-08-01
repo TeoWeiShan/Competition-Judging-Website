@@ -37,15 +37,15 @@ namespace WEB2021Apr_P04_T4.DAL
             conn.Open();
             //Execute the SELECT SQL through a DataReader
             SqlDataReader reader = cmd.ExecuteReader();
-            //Read all records until the end, save data into a staff list
+            //Read all records until the end, save data into a list
             List<Competition> competitionList = new List<Competition>();
             while (reader.Read())
             {
                 competitionList.Add(
                 new Competition
                 {
-                    CompetitionID = reader.GetInt32(0), //0: 1st column
-                    AreaInterestID = reader.GetInt32(1),//1: 2nd column
+                    CompetitionID = reader.GetInt32(0), 
+                    AreaInterestID = reader.GetInt32(1),
                     CompetitionName = reader.GetString(2),
                     StartDate = !reader.IsDBNull(3) ? reader.GetDateTime(3) : (DateTime?)null,
                     EndDate = !reader.IsDBNull(4) ? reader.GetDateTime(4) : (DateTime?)null,
@@ -65,8 +65,7 @@ namespace WEB2021Apr_P04_T4.DAL
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify an INSERT SQL statement which will
-            //return the auto-generated StaffID after insertion
-            //, StartDate, EndDate,ResultReleaseDate  //, @start, @end, @result
+            //return the auto-generated id after insertion
             cmd.CommandText = @"INSERT INTO Competition (AreaInterestID, CompetitionName, StartDate, EndDate, ResultReleasedDate)
 OUTPUT INSERTED.CompetitionID
 VALUES(@interest, @name, @startDate, @endDate, @resultDate)";
@@ -86,13 +85,11 @@ VALUES(@interest, @name, @startDate, @endDate, @resultDate)";
                 cmd.Parameters.AddWithValue("@resultDate", competition.ResultReleasedDate.Value);
             else
                 cmd.Parameters.AddWithValue("@resultDate", DBNull.Value);
-            //cmd.Parameters.AddWithValue("@start", competition.StartDate);
-            //cmd.Parameters.AddWithValue("@end", competition.EndDate);
-            //cmd.Parameters.AddWithValue("@result", competition.ResultReleasedDate);
+            
             //A connection to database must be opened before any operations made.
             conn.Open();
             //ExecuteScalar is used to retrieve the auto-generated
-            //StaffID after executing the INSERT SQL statement
+            //id after executing the INSERT SQL statement
             competition.CompetitionID = (int)cmd.ExecuteScalar();
             //A connection should be closed after operations.
             conn.Close();
@@ -104,7 +101,7 @@ VALUES(@interest, @name, @startDate, @endDate, @resultDate)";
         {
             bool competitionFound = false;
             //Create a SqlCommand object and specify the SQL statement
-            //to get a staff record with the email address to be validated
+            //to get a record with the comp to be validated
             SqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = @"SELECT CompetitionID FROM Competition
  WHERE CompetitionName=@selectedCompetitionName";
@@ -117,13 +114,13 @@ VALUES(@interest, @name, @startDate, @endDate, @resultDate)";
                 while (reader.Read())
                 {
                     if (reader.GetInt32(0) != competitionID)
-                        //The email address is used by another staff
+                        //The comp exist 
                         competitionFound = true;
                 }
             }
             else
             { //No record
-                competitionFound = false; // The email address given does not exist
+                competitionFound = false; // The comp does not exist
             }
             reader.Close();
             conn.Close();
@@ -137,11 +134,11 @@ VALUES(@interest, @name, @startDate, @endDate, @resultDate)";
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
             //Specify the SELECT SQL statement that
-            //retrieves all attributes of a staff record.
+            //retrieves all attributes of a record.
             cmd.CommandText = @"SELECT * FROM Competition
  WHERE CompetitionID = @selectedCompetitionID";
             //Define the parameter used in SQL statement, value for the
-            //parameter is retrieved from the method parameter “staffId”.
+            //parameter is retrieved from the method parameter 
             cmd.Parameters.AddWithValue("@selectedCompetitionID", competitionId);
             //Open a database connection
             conn.Open();
@@ -152,13 +149,11 @@ VALUES(@interest, @name, @startDate, @endDate, @resultDate)";
                 //Read the record from database
                 while (reader.Read())
                 {
-                    // Fill staff object with values from the data reader
+                    // Fill object with values from the data reader
                     competition.CompetitionID = competitionId;
                     competition.AreaInterestID =
                     reader.GetInt32(1);
                     competition.CompetitionName = !reader.IsDBNull(2) ? reader.GetString(2) : null;
-                    // (char) 0 - ASCII Code 0 - null value
-                    
                     competition.StartDate= !reader.IsDBNull(3) ?
                     reader.GetDateTime(3) : (DateTime?)null;
                     competition.EndDate = !reader.IsDBNull(4) ?
@@ -211,7 +206,7 @@ WHERE CompetitionID = @selectedCompetitionID";
         {
             bool recordFound = false;
             //Create a SqlCommand object and specify the SQL statement
-            //to get a staff record with the email address to be validated
+            //to get a record with the email address to be validated
             SqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = @"SELECT CompetitionID FROM CompetitionSubmission
  WHERE CompetitionID=@selectedCompetitionID";
@@ -260,7 +255,7 @@ WHERE CompetitionID = @selectedCompetitionID";
 INNER JOIN Competition ON Competition.CompetitionID = CompetitionJudge.CompetitionID)
 INNER JOIN Judge ON Judge.JudgeID = CompetitionJudge.JudgeID) Where CompetitionJudge.CompetitionID = @selectedCompetitionID";
             //Define the parameter used in SQL statement, value for the
-            //parameter is retrieved from the method parameter “branchNo”.
+            //parameter is retrieved from the method parameter 
             cmd.Parameters.AddWithValue("@selectedCompetitionID", competitionID);
 
             //Open a database connection
@@ -273,13 +268,12 @@ INNER JOIN Judge ON Judge.JudgeID = CompetitionJudge.JudgeID) Where CompetitionJ
                 judgeList.Add(
                 new Judge
                 {
-                    JudgeID = reader.GetInt32(0), //0: 1st column
-                    JudgeName = reader.GetString(1), //1: 2nd column
+                    JudgeID = reader.GetInt32(0), 
+                    JudgeName = reader.GetString(1), 
                     Salutation = reader.GetString(2),
                     AreaInterestID = reader.GetInt32(3),
                     EmailAddr = reader.GetString(4),
                     Password = reader.GetString(5)
-                    //Get the first character of a string
                 }
                 );
             }
@@ -303,7 +297,7 @@ INNER JOIN Judge ON Judge.JudgeID = CompetitionJudge.JudgeID) Where CompetitionJ
             conn.Open();
             //Execute the SELECT SQL through a DataReader
             SqlDataReader reader = cmd.ExecuteReader();
-            //Read all records until the end, save data into a staff list
+            //Read all records until the end, save data into a list
             List<Competition> competitionList = new List<Competition>();
             while (reader.Read())
             {

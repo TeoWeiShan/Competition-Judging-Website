@@ -6,7 +6,6 @@
         <table id="viewCriteria" class="table table-striped table-bordered">
             <thead class="thead-dark">
                 <tr>
-                    <th>Criteria ID</th>
                     <th>Criteria Name</th>
                     <th>Weightage</th>
                     <th></th>
@@ -16,7 +15,6 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>@item.CriteriaID.ToString()</td>
                         <td>@item.CriteriaName</td>
                         <td>@item.Weightage.ToString()</td>
                         <td>

@@ -13,6 +13,7 @@ namespace WEB2021Apr_P04_T4.DAL
     {
         private IConfiguration Configuration { get; }
         private SqlConnection conn;
+
         //Constructor
         public CompetitionScoreDAL()
         {
@@ -28,12 +29,18 @@ namespace WEB2021Apr_P04_T4.DAL
             conn = new SqlConnection(strConn);
         }
 
-        public List<CompetitionScore> GetAllScore()
+        public List<CompetitionScore> GetAllScore(int JudgeID)
         {
             //Create a SqlCommand object from connection object
             SqlCommand cmd = conn.CreateCommand();
-            //Specify the SELECT SQL statement
-            cmd.CommandText = @"SELECT * FROM CompetitionScore ORDER BY CompetitionID";
+
+            //Specify the SELECT SQL statement to select CompetitionScore only
+            //for the competition the Judge is currently in
+            cmd.CommandText = @"SELECT * FROM CompetitionScore WHERE
+            CompetitionID IN (SELECT CompetitionID FROM CompetitionJudge WHERE JudgeID = @selectedJudgeID)
+            AND CompetitionID IN (SELECT CompetitionID from Competition WHERE ResultReleasedDate > GETDATE())";
+            cmd.Parameters.AddWithValue("@selectedJudgeID", JudgeID);
+
             //Open a database connection
             conn.Open();
             //Execute the SELECT SQL through a DataReader
@@ -46,10 +53,10 @@ namespace WEB2021Apr_P04_T4.DAL
                 scoreList.Add(
                 new CompetitionScore
                 {
-                    CompetitionID = reader.GetInt32(0), //0: 1st column
-                    CompetitorID = reader.GetInt32(1), //1: 2nd column
-                    Score = reader.GetInt32(2),
-                   // DateTimeLastEdit = reader.GetDateTime(3)                    
+                    CriteriaID = reader.GetInt32(0),
+                    CompetitorID = reader.GetInt32(1), //0: 1st column
+                    CompetitionID = reader.GetInt32(2), //1: 2nd column
+                    Score = reader.GetInt32(3),
                 }
                 );
             }
@@ -60,6 +67,172 @@ namespace WEB2021Apr_P04_T4.DAL
             conn.Close();
 
             return scoreList;
+        }
+
+        public List<Competition> GetAvailableCompetition(int JudgeID)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify the SELECT SQL statement to select the ongoing competition where the judge is judging
+            cmd.CommandText = @"select * from Competition where CompetitionID IN (select CompetitionID
+            FROM CompetitionJudge WHERE JudgeID = @selectedJudgeID AND CompetitionID IN
+            (select CompetitionID from Competition where ResultReleasedDate > GETDATE()))";
+            cmd.Parameters.AddWithValue("@selectedJudgeID", JudgeID);
+            //Open a database connection
+            conn.Open();
+            //Execute the SELECT SQL through a DataReader
+            SqlDataReader reader = cmd.ExecuteReader();
+            //Read all records until the end, save data into a competition list
+            List<Competition> competitionList = new List<Competition>();
+            while (reader.Read())
+            {
+                competitionList.Add(
+                new Competition
+                {
+                    CompetitionID = reader.GetInt32(0), //0: 1st column
+                    AreaInterestID = reader.GetInt32(1), //1: 2nd column
+                    CompetitionName = reader.GetString(2),
+                    StartDate = reader.GetDateTime(3),
+                    EndDate = reader.GetDateTime(4),
+                    ResultReleasedDate = reader.GetDateTime(5)
+                }
+                );
+            }
+            //Close DataReader
+            reader.Close();
+            //Close the database connection
+            conn.Close();
+
+            return competitionList;
+        }
+
+        public List<Criteria> GetAvailableCriteria(int JudgeID)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify the SELECT SQL statement
+            cmd.CommandText = @"select * from Criteria where CompetitionID IN (select CompetitionID
+            FROM CompetitionJudge WHERE JudgeID = @selectedJudgeID AND CompetitionID IN
+            (select CompetitionID from Competition where ResultReleasedDate > GETDATE()))";
+            cmd.Parameters.AddWithValue("@selectedJudgeID", JudgeID);
+            //Open a database connection
+            conn.Open();
+            //Execute the SELECT SQL through a DataReader
+            SqlDataReader reader = cmd.ExecuteReader();
+            //Read all records until the end, save data into a staff list
+            List<Criteria> criteriaList = new List<Criteria>();
+            while (reader.Read())
+            {
+                criteriaList.Add(
+                new Criteria
+                {
+                    CriteriaID = reader.GetInt32(0), //0: 1st column
+                    CompetitionID = reader.GetInt32(1), //1: 2nd column
+                    CriteriaName = reader.GetString(2),
+                    Weightage = reader.GetInt32(3),
+                    //Get the first character of a string
+                }
+                );
+            }
+            //Close DataReader
+            reader.Close();
+            //Close the database connection
+            conn.Close();
+
+            return criteriaList;
+        }
+
+        public int Add(CompetitionScore score)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+            //Specify an INSERT SQL statement which will
+            //return the auto-generated StaffID after insertion
+            cmd.CommandText = @"INSERT INTO CompetitionScore (CriteriaID, CompetitorID, CompetitionID, Score)
+            OUTPUT INSERTED.CompetitorID
+            VALUES(@criteriaid, @competitorid, @competitionid, @score)";
+
+            //Define the parameters used in SQL statement, value for each parameter
+            //is retrieved from respective class's property.
+            cmd.Parameters.AddWithValue("@criteriaid", score.CriteriaID);
+            cmd.Parameters.AddWithValue("@competitorid", score.CompetitorID);
+            cmd.Parameters.AddWithValue("@competitionid", score.CompetitionID);
+            cmd.Parameters.AddWithValue("@score", score.Score);
+
+            //A connection to database must be opened before any operations made.
+            conn.Open();
+
+            //ExecuteScalar is used to retrieve the auto-generated
+            //StaffID after executing the INSERT SQL statement
+            score.CompetitorID = (int)cmd.ExecuteScalar();
+
+            //A connection should be closed after operations.
+            conn.Close();
+            //Return id when no error occurs.
+            return score.CompetitorID;
+        }
+
+        public CompetitionScore GetDetails(int competitionID)
+        {
+            CompetitionScore score = new CompetitionScore();
+
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+
+            //Specify the SELECT SQL statement that
+            //retrieves all attributes of a criteria record.
+            cmd.CommandText = @"select * from CompetitionScore where CompetitionID = @selectedCompetitionID";
+            //Define the parameter used in SQL statement, value for the
+            //parameter is retrieved from the method parameter “CriteriaId”.
+            cmd.Parameters.AddWithValue("@selectedCompetitionID", competitionID);
+            //Open a database connection
+            conn.Open();
+            //Execute SELCT SQL through a DataReader
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    //Fill Competitionscore object with values from data reader
+                    score.CriteriaID = reader.GetInt32(0); //0: 1st column
+                    score.CompetitorID = reader.GetInt32(1); 
+                    score.CompetitionID = competitionID;
+                    score.Score = reader.GetInt32(3);
+                }
+            }
+            //Close DataReader
+            reader.Close();
+            //Close the database connection
+            conn.Close();
+
+            return score;
+        }
+
+        public int Update(CompetitionScore score)
+        {
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+
+            //Specify an UPDATE SQL statement
+            cmd.CommandText = @"UPDATE CompetitionScore SET CriteriaID=@criteriaID,
+            CompetitionID=@competitionID, Score=@score WHERE CompetitorID = @selectedCompetitorID";
+
+            //Define the parameters used in SQL statement, value for each parameter
+            //is retrieved from respective class's property.
+            cmd.Parameters.AddWithValue("@criteriaID", score.CriteriaID);
+            cmd.Parameters.AddWithValue("@selectedCompetitorID", score.CompetitorID);            
+            cmd.Parameters.AddWithValue("@competitionID", score.CompetitionID);
+            cmd.Parameters.AddWithValue("@score", score.Score);
+
+            //Open a database connection
+            conn.Open();
+            //ExecuteNonQuery is used for UPDATE and DELETE
+            int count = cmd.ExecuteNonQuery();
+
+            //Close the database connection
+            conn.Close();
+            return count;
         }
     }
 }

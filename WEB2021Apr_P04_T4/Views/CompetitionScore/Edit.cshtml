@@ -1,19 +1,28 @@
-﻿@model WEB2021Apr_P04_T4.Models.CompetitionSubmission
+﻿@model WEB2021Apr_P04_T4.Models.CompetitionScore
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h4 class="PageTitle">Edit Competitor Ranking </h4>
+<h4 class="PageTitle">Edit Score</h4>
 <hr />
 <form asp-action="Edit">
     <fieldset class="FormContent">
+        <div class="form-group row">
+        </div>
         <div class="form-group row">
             <label asp-for="CompetitionID"
                    class="col-sm-3 col-form-label"></label>
             <div class="col-sm-9 col-md-5">
                 <input asp-for="CompetitionID" readonly
                        class="form-control-plaintext" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-3 col-form-label">Competition Name</label>
+            <div class="col-sm-9 form-control-plaintext">
+                @ViewData["CompetitionName"]
             </div>
         </div>
 
@@ -27,49 +36,32 @@
         </div>
 
         <div class="form-group row">
-            <label asp-for="FileSubmitted"
+            <label asp-for="CriteriaID"
                    class="col-sm-3 col-form-label"></label>
             <div class="col-sm-9 col-md-5">
-                <input asp-for="FileSubmitted" readonly
+                <input asp-for="CriteriaID" readonly
                        class="form-control-plaintext" />
             </div>
         </div>
 
         <div class="form-group row">
-            <label asp-for="DateTimeFileUpload"
+            <label asp-for="Score"
                    class="col-sm-3 col-form-label"></label>
             <div class="col-sm-9 col-md-5">
-                <input asp-for="DateTimeFileUpload" readonly
-                       class="form-control-plaintext" />
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label asp-for="VoteCount"
-                   class="col-sm-3 col-form-label"></label>
-            <div class="col-sm-9 col-md-5">
-                <input asp-for="VoteCount" readonly
-                       class="form-control-plaintext" />
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label asp-for="Ranking"
-                   class="col-sm-3 col-form-label"></label>
-            <div class="col-sm-9 col-md-5">
-                <input asp-for="Ranking" class="form-control" />
-                <span asp-validation-for="Ranking"
+                <input asp-for="Score" class="form-control" />
+                <span asp-validation-for="Score"
                       class="text-danger"></span>
             </div>
         </div>
 
-        <div class="col-sm-9 offset-sm-3">
-            <input type="submit" value="Save"
-                   class="btn btn-primary" />
+        <div class="form-group row">
+            <div class="col-sm-9 offset-sm-3">
+                <input type="submit" value="Save"
+                       class="btn btn-primary" />
+            </div>
         </div>
-
         <div>
-            <a asp-action="Index">Back to Submissions</a>
+            <a asp-action="Index">Back to List</a>
         </div>
     </fieldset>
 </form>

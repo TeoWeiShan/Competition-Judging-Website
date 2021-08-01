@@ -18,10 +18,36 @@
                 {
                     <tr>
                         <td>@item.CompetitorID.ToString()</td>
-                        <td>@item.FileSubmitted</td>
-                        <td>@item.DateTimeFileUpload.ToString()</td>
-                        <td>@item.Ranking.ToString()</td>
                         <td>
+                            @{if (item.FileSubmitted == null)
+                                {<p> NIL </p>}
+                                else
+                                {
+                                    @item.FileSubmitted
+                                }
+                            }
+                        </td>
+                        <td>
+                            @{if (@item.DateTimeFileUpload == null)
+                                {<p> NIL </p>}
+                                else
+                                {
+                                    @item.DateTimeFileUpload.ToString()
+                                }
+                            }
+                        </td>
+                        <td>
+                            @{if (@item.Ranking == null)
+                                {<p> NIL </p>}
+                                else
+                                {
+                                    @item.Ranking.ToString()
+                                }
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-controller="CompetitionSubmission"
+                               asp-route-id="@item.CompetitorID">Edit Ranking</a> |
                             <a asp-action="Details" asp-controller="CompetitionSubmission"
                                asp-route-id="@item.CompetitorID">Details</a>
                         </td>
