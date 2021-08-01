@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WEB2021Apr_P04_T4.DAL;
 using WEB2021Apr_P04_T4.Models;
 using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace WEB2021Apr_P04_T4.Controllers
 {
@@ -16,6 +17,8 @@ namespace WEB2021Apr_P04_T4.Controllers
         private CompetitionDAL competitionContext = new CompetitionDAL();
         private AreaInterestDAL areaInterestContext = new AreaInterestDAL();
         private CompetitionSubmissionDAL competitionSubmissionContext = new CompetitionSubmissionDAL();
+        private CompetitionSubmissionDAL submissionContext = new CompetitionSubmissionDAL();
+        private IHostingEnvironment _env;
         // GET: CompetitorCompetitionController
         public ActionResult Index()
         {
@@ -139,25 +142,139 @@ namespace WEB2021Apr_P04_T4.Controllers
             }
         }
 
+        //public CompetitionSubmissionViewModel MapToSubmissionVM(CompetitionSubmission competitionSubmission)
+        //{
+        //    string CompetitorID = "";
+        //    if (competitionSubmission.CompetitorID != null)
+        //    {
+        //        List<CompetitionSubmission> submissionList = submissionContext.GetDetails();
+        //        foreach (Competitor competitor in submissionList)
+        //        {
+        //            if (competitor.CompetitorID == competitionSubmission.CompetitorID.Value)
+        //            {
+        //                CompetitorID = competitor.CompetitorID;
+        //                //Exit the foreach loop once the name is found
+        //                break;
+        //            }
+        //        }
+        //    }
+        //    CompetitionSubmissionViewModel submissionVM = new CompetitionSubmissionViewModel
+        //    {
+        //        CompetitionID = competitionSubmission.CompetitionID,
+        //        CompetitorID = competitionSubmission.CompetitorID,
+        //        FileSubmitted = competitionSubmission.FileSubmitted,
+        //        //fileToUpload = competitionSubmission.,
+        //        DateTimeFileUpload = competitionSubmission.DateTimeFileUpload,
+        //        Appeal = competitionSubmission.Appeal,
+        //        VoteCount = competitionSubmission.VoteCount,
+        //        Ranking = competitionSubmission.Ranking,
+        //        //CriteriaID = competitionSubmission.,
+        //        //Score = competitionSubmission.,
+        //    };
+        //    return submissionVM;
+        //}
+
+        //public CompetitionSubmissionViewModel MapToSubmissionVM(CompetitionSubmission competitionSubmission)
+        //{
+        //    string interestName = "";
+
+        //    List<AreaInterest> interestList = areaInterestContext.GetAllAreaInterest();
+        //    foreach (AreaInterest interest in interestList)
+        //    {
+        //        if (interest.AreaInterestID == competition.AreaInterestID)
+        //        {
+        //            interestName = interest.Name;
+        //            //Exit the foreach loop once the name is found
+        //            break;
+        //        }
+        //    }
+
+        //    CompetitionViewModel competitionVM = new CompetitionViewModel
+        //    {
+        //        CompetitionID = competition.CompetitionID,
+        //        Name = interestName,
+        //        CompetitionName = competition.CompetitionName,
+        //        StartDate = competition.StartDate,
+        //        EndDate = competition.EndDate,
+        //        ResultReleasedDate = competition.ResultReleasedDate
+        //    };
+        //    return competitionVM;
+        //}
+
         // GET: CompetitorCompetitionController/Edit/5
-        public ActionResult Edit(int id)
+        //public ActionResult Edit(int id)
+        //{
+        //    // Stop accessing the action if not logged in
+        //    // or account not in the "Staff" role
+        //    if ((HttpContext.Session.GetString("Role") == null) ||
+        //    (HttpContext.Session.GetString("Role") != "Competitor"))
+        //    {
+        //        return RedirectToAction("Index", "Home");
+        //    }
+        //    Competitor competitior = competitorContext.GetDetails(id);
+        //    CompetitionSubmissionViewModel submissionVM = MapToSubmissionVM(competitionSubmission);
+        //    return View(submissionVM);
+        //}
+
+        //// POST: CompetitorCompetitionController/Edit/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit(CompetitionSubmissionViewModel submissionVM)
+        //{
+        //    if (submissionVM.fileToUpload != null && submissionVM.fileToUpload.Length > 0)
+        //    {
+        //        try
+        //        {
+        //            // Find the filename extension of the file to be uploaded.
+        //            string fileExt = Path.GetExtension(
+        //             submissionVM.fileToUpload.FileName);
+        //            // Rename the uploaded file with the staff’s name.
+        //            string uploadedFile = submissionVM.Name + fileExt;
+        //            // Get the complete path to the images folder in server
+        //            string savePath = Path.Combine(
+        //             Directory.GetCurrentDirectory(),
+        //             "wwwroot\\images", uploadedFile);
+        //            // Upload the file to server
+        //            using (var fileSteam = new FileStream(
+        //             savePath, FileMode.Create))
+        //            {
+        //                await submissionVM.fileToUpload.CopyToAsync(fileSteam);
+        //            }
+        //            submissionVM.fileToUpload = uploadedFile;
+        //            ViewData["Message"] = "File uploaded successfully.";
+        //        }
+        //        catch (IOException)
+        //        {
+        //            //File IO error, could be due to access rights denied
+        //            ViewData["Message"] = "File uploading fail!";
+        //        }
+        //        catch (Exception ex) //Other type of error
+        //        {
+        //            ViewData["Message"] = ex.Message;
+        //        }
+        //    }
+        //    return View(submissionVM);
+        //}
+
+        //File upload part
+        public CompetitorCompetitionController(IHostingEnvironment env)
         {
-            return View();
+            _env = env;
         }
 
-        // POST: CompetitorCompetitionController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public IActionResult Edit(IEnumerable<IFormFile> files)
         {
-            try
+            int i = 0;
+            foreach (var file in files)
             {
-                return RedirectToAction(nameof(Index));
+                var dir = _env.ContentRootPath;
+                
+                using (var fileStream = new FileStream(Path.Combine(dir, $"file(i++).pdf"), FileMode.Create, FileAccess.Write))
+                {
+                    file.CopyTo(fileStream);
+                }
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction("Index");
         }
 
         // GET: CompetitorCompetitionController/Delete/5
@@ -180,21 +297,5 @@ namespace WEB2021Apr_P04_T4.Controllers
                 return View();
             }
         }
-
-        public CompetitionSubmissionViewModel MapToSubmissionVM(CompetitionSubmission submission)
-        {
-            CompetitionSubmissionViewModel submissionVM = new CompetitionSubmissionViewModel
-            {
-                CompetitionID = submission.CompetitionID,
-                CompetitorID = submission.CompetitorID,
-                FileSubmitted = submission.FileSubmitted,
-                DateTimeFileUpload = submission.DateTimeFileUpload,
-                Appeal = submission.Appeal,
-                Ranking = submission.Ranking,
-            };
-            return submissionVM;
-        }
-
-        
     }
 }
