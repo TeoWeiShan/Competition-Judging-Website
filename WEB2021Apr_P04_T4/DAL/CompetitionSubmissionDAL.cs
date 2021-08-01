@@ -118,6 +118,50 @@ namespace WEB2021Apr_P04_T4.DAL
 
             return submission;
         }
+
+        public CompetitionSubmission GetCompetitorSubmission(int competitorId)
+        {
+            CompetitionSubmission submission = new CompetitionSubmission();
+
+            //Create a SqlCommand object from connection object
+            SqlCommand cmd = conn.CreateCommand();
+
+            //Specify the SELECT SQL statement that retrieves all attributes of
+            //a submission record for the competition that the Judge is in
+            cmd.CommandText = @"SELECT * FROM CompetitionSubmission WHERE CompetitorID = @selectedCompetitorID";
+
+            //Define the parameter used in SQL statement, value for the
+            //parameter is retrieved from the method parameter “competitionId”.
+            cmd.Parameters.AddWithValue("@selectedCompetitorID", competitorId);
+
+            //Open a database connection
+            conn.Open();
+
+            //Execute SELCT SQL through a DataReader
+            SqlDataReader reader = cmd.ExecuteReader();
+            if (reader.HasRows)
+            {
+                //Read the record from database
+                while (reader.Read())
+                {
+                    // Fill competitionsubmission object with values from the data reader 
+                    submission.CompetitorID = competitorId;
+                    submission.CompetitionID = reader.GetInt32(1);
+                    submission.FileSubmitted = reader.IsDBNull(2) ? null : reader.GetString(2);
+                    submission.DateTimeFileUpload = !reader.IsDBNull(3) ? reader.GetDateTime(3) : (DateTime?)null;
+                    submission.Appeal = reader.IsDBNull(4) ? null : reader.GetString(4);
+                    submission.VoteCount = reader.GetInt32(5);
+                    submission.Ranking = !reader.IsDBNull(6) ? reader.GetInt32(6) : (int?)null;
+                }
+            }
+
+            //Close DataReader
+            reader.Close();
+            //Close Database connection
+            conn.Close();
+
+            return submission;
+        }
     }
 }
 

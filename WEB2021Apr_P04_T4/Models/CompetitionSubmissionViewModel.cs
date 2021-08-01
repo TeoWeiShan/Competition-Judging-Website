@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace WEB2021Apr_P04_T4.Models
 {
@@ -16,6 +17,8 @@ namespace WEB2021Apr_P04_T4.Models
 
         [Display(Name = "File submitted")]
         public string? FileSubmitted { get; set; }
+
+        public IFormFile fileToUpload { get; set; }
 
         [Display(Name = "Date/Time of submission")]
         public DateTime? DateTimeFileUpload { get; set; }

@@ -18,9 +18,9 @@
                         <td>@item.CompetitionID.ToString()</td>
                         <td>@item.CompetitionName</td>
                         <td>
-                            <a asp-action="Edit" asp-controller="Competition"
+                            <a asp-action="Edit" asp-controller="CompetitorCompetition"
                                asp-route-id="@item.CompetitionID">Submit</a> |
-                            <a asp-action="Join" asp-controller="CompetitorCompetition"
+                            <a asp-action="Details" asp-controller="CompetitorCompetition"
                                asp-route-id="@item.CompetitionID">Details</a>
                         </td>
                     </tr>

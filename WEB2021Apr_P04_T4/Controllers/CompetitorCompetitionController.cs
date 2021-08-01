@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WEB2021Apr_P04_T4.DAL;
 using WEB2021Apr_P04_T4.Models;
+using System.IO;
 
 namespace WEB2021Apr_P04_T4.Controllers
 {
@@ -14,6 +15,7 @@ namespace WEB2021Apr_P04_T4.Controllers
         private CompetitorCompetitionDAL competitorcompetitionContext = new CompetitorCompetitionDAL();
         private CompetitionDAL competitionContext = new CompetitionDAL();
         private AreaInterestDAL areaInterestContext = new AreaInterestDAL();
+        private CompetitionSubmissionDAL competitionSubmissionContext = new CompetitionSubmissionDAL();
         // GET: CompetitorCompetitionController
         public ActionResult Index()
         {
@@ -28,14 +30,42 @@ namespace WEB2021Apr_P04_T4.Controllers
 
         // GET: CompetitorCompetitionController/Details/5
         public ActionResult Details(int id)
-        {/*
+        {
             if ((HttpContext.Session.GetString("Role") == null) || (HttpContext.Session.GetString("Role") != "Competitor"))
             {
                 return RedirectToAction("Index", "Home");
             }
-            CompetitorCompetition competitorcompetition = competitorcompetitionContext.GetDetails(id);
-            //CompetitionJudgeViewModel competitionVM = MapToCompetitionJudgeVM(competition);*/
-            return View();
+            Competition competition = competitionContext.GetDetails(id);
+            CompetitionViewModel competitionVM = MapToCompetitionVM(competition);
+            return View(competitionVM);
+        }
+
+        public CompetitionViewModel MapToCompetitionVM(Competition competition)
+        {
+            string interestName = "";
+            if (competition.CompetitionID != null)
+            {
+                List<AreaInterest> interestList = areaInterestContext.GetAllAreaInterest();
+                foreach (AreaInterest interest in interestList)
+                {
+                    if (interest.AreaInterestID == competition.AreaInterestID)
+                    {
+                        interestName = interest.Name;
+                        //Exit the foreach loop once the name is found
+                        break;
+                    }
+                }
+            }
+            CompetitionViewModel competitionVM = new CompetitionViewModel
+            {
+                CompetitionID = competition.CompetitionID,
+                Name = interestName,
+                CompetitionName = competition.CompetitionName,
+                StartDate = competition.StartDate,
+                EndDate = competition.EndDate,
+                ResultReleasedDate = competition.ResultReleasedDate
+            };
+            return competitionVM;
         }
 
         // GET: CompetitorCompetitionController/Create
@@ -150,5 +180,21 @@ namespace WEB2021Apr_P04_T4.Controllers
                 return View();
             }
         }
+
+        public CompetitionSubmissionViewModel MapToSubmissionVM(CompetitionSubmission submission)
+        {
+            CompetitionSubmissionViewModel submissionVM = new CompetitionSubmissionViewModel
+            {
+                CompetitionID = submission.CompetitionID,
+                CompetitorID = submission.CompetitorID,
+                FileSubmitted = submission.FileSubmitted,
+                DateTimeFileUpload = submission.DateTimeFileUpload,
+                Appeal = submission.Appeal,
+                Ranking = submission.Ranking,
+            };
+            return submissionVM;
+        }
+
+        
     }
 }
